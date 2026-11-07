@@ -1,20 +1,20 @@
-// Builds src/ui/tokens/tokens.json (DTCG) into generated CSS vars and a TS module.
+// Builds tokens/tokens.json (DTCG) into generated CSS vars and a TS module.
 import StyleDictionary from 'style-dictionary';
 
-const out = 'src/ui/tokens/generated/';
+const out = 'src/tokens/generated/';
 
 const sd = new StyleDictionary({
-    source: ['src/ui/tokens/tokens.json'],
+    source: ['tokens/tokens.json'],
     log: { verbosity: 'silent' },
     hooks: {
         transforms: {
             // Dimensions are authored as px numbers.
-            'rri/dimension-px': {
+            'grille/dimension-px': {
                 type: 'value',
                 filter: (token) => token.$type === 'dimension',
                 transform: (token) => `${token.$value}px`,
             },
-            'rri/font-family-css': {
+            'grille/font-family-css': {
                 type: 'value',
                 filter: (token) => token.$type === 'fontFamily',
                 transform: (token) =>
@@ -22,19 +22,19 @@ const sd = new StyleDictionary({
             },
         },
         transformGroups: {
-            rri: ['attribute/cti', 'name/kebab', 'rri/dimension-px', 'rri/font-family-css'],
-            'rri-ts': ['attribute/cti', 'name/camel', 'rri/dimension-px', 'rri/font-family-css'],
+            grille: ['attribute/cti', 'name/kebab', 'grille/dimension-px', 'grille/font-family-css'],
+            'grille-ts': ['attribute/cti', 'name/camel', 'grille/dimension-px', 'grille/font-family-css'],
         },
     },
     platforms: {
         css: {
-            transformGroup: 'rri',
+            transformGroup: 'grille',
             prefix: 'ui',
             buildPath: out,
             files: [{ destination: 'tokens.css', format: 'css/variables', options: { outputReferences: true } }],
         },
         ts: {
-            transformGroup: 'rri-ts',
+            transformGroup: 'grille-ts',
             buildPath: out,
             files: [{ destination: 'tokens.ts', format: 'javascript/es6' }],
         },

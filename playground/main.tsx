@@ -1,10 +1,10 @@
-// Dev-only page (npm run dev, /playground.html). Not part of the production build.
-import './ui/fonts.css';
-import './ui/tokens.css';
-import './styles/base.css';
+// Dev-only page (npm run dev). Not part of the package.
+import '../src/fonts.css';
+import '../src/tokens.css';
+import './playground.css';
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Button, Callout, Disclosure, FieldList, FieldNote, FileTrigger, Select, Slider, StatusMessage, Tabs, TextField } from './ui';
+import { Button, Callout, Disclosure, FieldList, FieldNote, FileTrigger, Select, Slider, StatusMessage, Tabs, TextField } from '../src';
 
 function Playground() {
     const [text, setText] = useState('Artist');
@@ -13,7 +13,7 @@ function Playground() {
     const [level, setLevel] = useState(1);
     return (
         <main style={{ maxWidth: 480, margin: '2rem auto', display: 'grid', gap: '1.5rem' }}>
-            <h1>src/ui playground</h1>
+            <h1>Grille playground</h1>
             <section>
                 <h2>Button</h2>
                 <Button>Default</Button> <Button variant="primary">Primary</Button> <Button isDisabled>Disabled</Button>
