@@ -6,10 +6,10 @@ comes built in.
 
 ## Install
 
-Grille installs from a git tag. Pin an exact version:
+Grille installs from git. Pin an exact commit:
 
 ```sh
-npm install github:weblings/grille#v0.1.0
+npm install github:weblings/GrilleDS#<commit>
 ```
 
 React 19 is a peer dependency. It's optional, so projects that only use tokens don't need it.
