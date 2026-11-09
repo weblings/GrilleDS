@@ -12,3 +12,6 @@ src/tokens/generated/
 .beads/proxieddb/
 *.gate.lock*
 cosmos-export/
+
+# Base-ref tokens for the viewer diff (build-tokens.mjs)
+viewer/generated/

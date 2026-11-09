@@ -11,3 +11,14 @@ body {
 .cosmos-page {
   padding: var(--ui-size-space-md);
 }
+
+.tokens-page { display: grid; gap: var(--ui-size-space-2xl); font-size: var(--ui-size-font-md); }
+.tokens-page h2 { font-size: var(--ui-size-font-xl); margin-bottom: var(--ui-size-space-md); }
+.tokens-page h3 { font-size: var(--ui-size-font-sm); color: var(--ui-color-text-muted); font-weight: 600; margin: var(--ui-size-space-xl) 0 var(--ui-size-space-sm); }
+.tokens-page code { font-size: var(--ui-size-font-xs); color: var(--ui-color-text-muted); }
+.tokens-row { display: grid; grid-template-columns: 56px minmax(180px, 1fr) minmax(120px, 1fr) minmax(220px, 1.4fr); gap: var(--ui-size-space-xl); align-items: center; padding: var(--ui-size-space-sm) 0; border-bottom: 1px solid var(--ui-color-border-subtle); }
+.tokens-swatch { width: 56px; height: 32px; border-radius: var(--ui-size-radius-sm); border: 1px solid var(--ui-color-border-default); }
+.tokens-bar { height: 12px; background: var(--ui-color-primary-bg); border-radius: 2px; }
+.tokens-demo { display: flex; align-items: center; min-height: 32px; }
+.tokens-diff-pair { display: flex; gap: var(--ui-size-space-md); align-items: center; }
+.tokens-tag { font-size: var(--ui-size-font-xs); font-weight: 600; padding: 1px var(--ui-size-space-md); border-radius: var(--ui-size-radius-pill); background: var(--ui-color-control-bg); }

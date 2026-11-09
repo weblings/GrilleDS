@@ -27,6 +27,7 @@
   },
   "include": [
     "src",
-    "cosmos.decorator.tsx"
+    "cosmos.decorator.tsx",
+    "viewer"
   ]
 }

@@ -42,3 +42,25 @@ const sd = new StyleDictionary({
 });
 
 await sd.buildAllPlatforms();
+
+// Viewer only: the token file at a base ref, for the Tokens page diff.
+// GRILLE_BASE_REF picks the ref (default main). null when git cannot supply it.
+import { execFileSync } from 'node:child_process';
+import { mkdirSync, writeFileSync } from 'node:fs';
+
+const ref = process.env.GRILLE_BASE_REF || 'main';
+let base = null;
+for (const candidate of [ref, `origin/${ref}`]) {
+    try {
+        const text = execFileSync('git', ['show', `${candidate}:tokens/tokens.json`], {
+            encoding: 'utf8',
+            stdio: ['ignore', 'pipe', 'ignore'],
+        });
+        base = { ref: candidate, tokens: JSON.parse(text) };
+        break;
+    } catch {
+        // try the next candidate
+    }
+}
+mkdirSync('viewer/generated', { recursive: true });
+writeFileSync('viewer/generated/base-tokens.json', JSON.stringify(base ?? { ref, tokens: null }, null, 2));
