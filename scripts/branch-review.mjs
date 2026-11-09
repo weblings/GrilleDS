@@ -5,7 +5,7 @@
 //   npm run review -- --base v0.1.0-dev.1 --out review-out
 //
 // The base ref is checked out into a temp git worktree. The viewer harness (Cosmos config,
-// decorator) and the branch's fixtures are copied in, so both sides render identical fixture
+// decorator, the viewer modules it imports) and the branch's fixtures are copied in, so both sides render identical fixture
 // code against different component code. A fixture file that cannot build there is New.
 // Fixture files that exist only at the base are Removed. (A fixture name dropped from a file
 // that exists on both sides is not detected: the branch's version of the file is what renders.)
@@ -156,10 +156,17 @@ function compare(beforeFile, afterFile, diffFile) {
 
 // ---- base worktree ---------------------------------------------------------------------
 const harness = ['index.html', 'cosmos.config.json', 'cosmos.css', 'cosmos.decorator.tsx', 'vite.cosmos.config.ts'];
+// The decorator imports viewer modules (the Inspector and its models), so they go in too. Viewer
+// fixtures, tests and generated files stay out: they are not part of the review.
+const viewerRuntime = (src) => {
+    const name = src.split(/[\\/]/).pop();
+    return !name.endsWith('.fixture.tsx') && !name.endsWith('.test.ts') && name !== 'generated';
+};
 
 function buildBase(worktree, headFixtures) {
     symlinkSync(join(repo, 'node_modules'), join(worktree, 'node_modules'));
     for (const f of harness) cpSync(join(repo, f), join(worktree, f));
+    cpSync(join(repo, 'viewer'), join(worktree, 'viewer'), { recursive: true, filter: viewerRuntime });
     const copied = headFixtures.filter((f) => !f.startsWith('viewer/'));
     for (const f of copied) {
         mkdirSync(dirname(join(worktree, f)), { recursive: true });
