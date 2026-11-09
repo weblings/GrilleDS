@@ -4,7 +4,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
-import { Button, Callout, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField } from './index';
+import { useRef, useState } from 'react';
+import { Button, Callout, Dialog, Menu, MenuItem, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField } from './index';
 
 afterEach(cleanup);
 
@@ -222,5 +223,113 @@ describe('mountIsland', () => {
         unmount();
         expect(screen.queryByRole('listbox')).toBeNull();
         el.remove();
+    });
+});
+
+function Harness({ point, nonModal, onAction, onRestore, onKeyDown }: {
+    point?: { x: number; y: number }; nonModal?: boolean; onAction?: (id: string) => void;
+    onRestore?: (el: HTMLElement | null) => void; onKeyDown?: (e: React.KeyboardEvent) => void;
+}) {
+    const [open, setOpen] = useState(false);
+    const ref = useRef<HTMLButtonElement>(null);
+    return (
+        <>
+            <button ref={ref} onClick={() => setOpen(true)}>Open</button>
+            <button>Elsewhere</button>
+            <Popover isOpen={open} onOpenChange={setOpen} triggerRef={ref} point={point} isNonModal={nonModal} onRestoreFocus={onRestore} aria-label="Pop">
+                <Menu aria-label="Actions" onAction={(id) => { onAction?.(id); setOpen(false); }} onKeyDown={onKeyDown}>
+                    <MenuItem id="save">Save</MenuItem>
+                    <MenuItem id="rename">Rename</MenuItem>
+                </Menu>
+            </Popover>
+        </>
+    );
+}
+
+describe('Popover and Menu', () => {
+    it('anchors to a point and repositions when the point changes', async () => {
+        const { rerender } = render(<Harness point={{ x: 40, y: 50 }} />);
+        await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+        const first = screen.getByRole('menu').closest('.ui-popover')!;
+        expect(first.getAttribute('data-anchor')).toBe('point');
+        rerender(<Harness point={{ x: 300, y: 200 }} />);
+        const second = screen.getByRole('menu').closest('.ui-popover')!;
+        expect(second).not.toBe(first);
+    });
+
+    it('runs onAction and passes keys through onKeyDown', async () => {
+        const onAction = vi.fn();
+        const onKeyDown = vi.fn();
+        render(<Harness onAction={onAction} onKeyDown={onKeyDown} />);
+        await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+        await userEvent.keyboard('{ArrowDown}{ArrowDown}{Enter}');
+        expect(onKeyDown).toHaveBeenCalled();
+        expect(onAction).toHaveBeenCalledWith('rename');
+    });
+
+    it('lets the page behind take clicks when non-modal, and reports the focus to restore on close', async () => {
+        const onRestore = vi.fn();
+        render(<Harness nonModal onRestore={onRestore} />);
+        const open = screen.getByRole('button', { name: 'Open' });
+        await userEvent.click(open);
+        expect(screen.getByRole('menu')).toBeTruthy();
+        expect(document.querySelector('[data-react-aria-top-layer]')?.getAttribute('aria-hidden')).not.toBe('true');
+        expect(screen.getByRole('button', { name: 'Elsewhere' }).closest('[aria-hidden="true"]')).toBeNull();
+        await userEvent.keyboard('{Escape}');
+        expect(screen.queryByRole('menu')).toBeNull();
+        expect(onRestore).toHaveBeenCalledTimes(1);
+        expect(onRestore).toHaveBeenCalledWith(open);
+    });
+
+    it('has no axe violations', async () => {
+        const { container } = render(<Harness />);
+        await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+        await expectNoViolations(container);
+    });
+});
+
+describe('Dialog in a Popover', () => {
+    function TitleMenu({ onAction }: { onAction: (id: string) => void }) {
+        const [open, setOpen] = useState(true);
+        const [name, setName] = useState('Effect');
+        const ref = useRef<HTMLButtonElement>(null);
+        return (
+            <>
+                <button ref={ref}>Title</button>
+                <Popover isOpen={open} onOpenChange={setOpen} triggerRef={ref} isNonModal>
+                    <Dialog aria-label="Effect">
+                        <TextField label="Name" value={name} onChange={setName} />
+                        <Menu aria-label="File" onAction={onAction} autoFocus={false}>
+                            <MenuItem id="save">Save</MenuItem>
+                            <MenuItem id="new">New empty effect</MenuItem>
+                        </Menu>
+                    </Dialog>
+                </Popover>
+            </>
+        );
+    }
+
+    it('holds a field and command items that take arrow keys and focus', async () => {
+        const onAction = vi.fn();
+        render(<TitleMenu onAction={onAction} />);
+        expect(screen.getByRole('dialog', { name: 'Effect' })).toBeTruthy();
+        const name = screen.getByRole('textbox', { name: 'Name' });
+        act(() => name.focus());
+        expect(document.activeElement).toBe(name);
+        const items = screen.getAllByRole('menuitem');
+        act(() => items[0].focus());
+        await userEvent.keyboard('{ArrowDown}');
+        expect(document.activeElement).toBe(items[1]);
+        await userEvent.keyboard('{Enter}');
+        expect(onAction).toHaveBeenCalledWith('new');
+    });
+});
+
+describe('Button size and icon', () => {
+    it('sets size and icon markers and names an icon button', () => {
+        render(<Button icon size="sm" aria-label="More">⋯</Button>);
+        const b = screen.getByRole('button', { name: 'More' });
+        expect(b.getAttribute('data-size')).toBe('sm');
+        expect(b.hasAttribute('data-icon')).toBe(true);
     });
 });

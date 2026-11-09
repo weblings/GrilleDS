@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "Grille",
+  "project_id": "538079e2-7ce4-4577-9b43-85f42c381011"
+}
