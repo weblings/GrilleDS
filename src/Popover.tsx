@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, type ReactNode, type RefObject } from 'react';
+import { useEffect, useRef, useState, type ReactNode, type RefObject } from 'react';
 import { Popover as AriaPopover } from 'react-aria-components';
 
 export interface PopoverPoint { x: number; y: number }
@@ -19,15 +19,28 @@ export interface PopoverProps {
     children: ReactNode;
 }
 
-function pointRef(point: PopoverPoint): RefObject<Element | null> {
-    const { x, y } = point;
-    return { current: { getBoundingClientRect: () => new DOMRect(x, y, 0, 0) } as Element };
+// React Aria passes the anchor to ResizeObserver, which rejects anything that is not a real Element. So a point
+// anchor is a zero-size fixed element at the point, in the body for as long as the popover has that point.
+function usePointAnchor(point: PopoverPoint | undefined): RefObject<Element | null> | null {
+    const px = point?.x;
+    const py = point?.y;
+    const [anchor, setAnchor] = useState<RefObject<Element | null> | null>(null);
+    useEffect(() => {
+        if (px === undefined || py === undefined) { setAnchor(null); return; }
+        const el = document.createElement('div');
+        el.setAttribute('aria-hidden', 'true');
+        el.style.cssText = `position:fixed;width:0;height:0;pointer-events:none;left:${px}px;top:${py}px`;
+        document.body.appendChild(el);
+        setAnchor({ current: el });
+        return () => { el.remove(); setAnchor(null); };
+    }, [px, py]);
+    return anchor;
 }
 
 export function Popover({ isOpen, onOpenChange, triggerRef, point, isNonModal, placement = 'bottom start', onRestoreFocus, children, ...rest }: PopoverProps) {
     const px = point?.x;
     const py = point?.y;
-    const virtual = useMemo(() => (px === undefined || py === undefined ? null : pointRef({ x: px, y: py })), [px, py]);
+    const virtual = usePointAnchor(point);
 
     // Captured in render, since the menu inside takes focus in an effect that runs before any effect here.
     const previous = useRef<HTMLElement | null>(null);
@@ -43,14 +56,15 @@ export function Popover({ isOpen, onOpenChange, triggerRef, point, isNonModal, p
         wasOpen.current = isOpen;
     }, [isOpen]);
 
-    const anchor = virtual ?? triggerRef;
+    // A point that has not got its anchor element yet renders nothing, rather than falling back to triggerRef.
+    const anchor = point ? virtual : triggerRef;
     if (!anchor) return null;
     return (
         // Keyed on the point so a new point repositions the popover instead of leaving it where it was.
         <AriaPopover
             key={px === undefined ? 'ref' : `${px},${py}`}
             className="ui-popover"
-            data-anchor={virtual ? 'point' : 'ref'}
+            data-anchor={point ? 'point' : 'ref'}
             triggerRef={anchor}
             isOpen={isOpen}
             onOpenChange={onOpenChange}
