@@ -1,0 +1,59 @@
+name: Branch review
+
+# Runs scripts/branch-review.mjs against the PR base and attaches the review page
+# (index.html plus screenshots) as a downloadable artifact. For PRs from this repo it
+# also comments with the New / Changed counts. Fork PRs get the artifact only, since
+# their token cannot write comments.
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The review checks the base ref out into a worktree and the Tokens diff reads
+          # tokens.json there, so it needs history.
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Build the review page
+        run: npm run review -- --base "origin/${{ github.base_ref }}" --out review-out
+      - uses: actions/upload-artifact@v4
+        with:
+          name: branch-review
+          path: review-out
+          retention-days: 14
+      - name: Comment with counts
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          body="$(node -e '
+            const r = JSON.parse(require("fs").readFileSync("review-out/review.json", "utf8"));
+            const n = (k) => (r[k] ?? []).length;
+            const lines = [
+              "### Branch review",
+              `New **${n("new")}** · Changed **${n("changed")}** · Unchanged ${n("unchanged")} · Removed ${n("removed")}` + (n("broken") ? ` · Broken ${n("broken")}` : ""),
+            ];
+            if (n("changed")) lines.push("", "Changed: " + r.changed.join(", "));
+            if (n("new")) lines.push("", "New: " + r.new.join(", "));
+            lines.push("", `Download the **branch-review** artifact from [this run](${process.env.RUN_URL}) and open index.html.`);
+            console.log(lines.join("\n"));
+          ')"
+          gh pr comment "$PR" --edit-last --create-if-none --body "$body"
