@@ -8,6 +8,6 @@ body {
   font-family: var(--ui-font-family-sans);
 }
 
-h1, h2 {
-  margin-bottom: var(--ui-size-space-md);
+.cosmos-page {
+  padding: var(--ui-size-space-md);
 }

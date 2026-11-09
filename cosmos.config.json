@@ -1,0 +1,7 @@
+{
+  "$schema": "http://json.schemastore.org/cosmos-config",
+  "plugins": ["react-cosmos-plugin-vite"],
+  "vite": { "configPath": "vite.cosmos.config.ts" },
+  "watchDirs": ["src"],
+  "exportPath": "cosmos-export"
+}

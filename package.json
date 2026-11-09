@@ -27,7 +27,7 @@
     "tokens"
   ],
   "scripts": {
-    "dev": "npm run build:tokens && vite --open /playground/",
+    "dev": "npm run build:tokens && cosmos",
     "build": "npm run build:tokens && vite build && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs",
     "build:tokens": "node scripts/build-tokens.mjs",
     "prepare": "npm run build",
@@ -35,7 +35,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "npm run lint:css && npm run lint:boundary",
     "lint:css": "stylelint \"src/**/*.css\"",
-    "lint:boundary": "node scripts/check-ui-boundary.mjs"
+    "lint:boundary": "node scripts/check-ui-boundary.mjs",
+    "cosmos:export": "npm run build:tokens && cosmos-export"
   },
   "peerDependencies": {
     "react": "^19.0.0",
@@ -61,6 +62,8 @@
     "@vitejs/plugin-react": "6.1.1",
     "jsdom": "30.1.3",
     "react": "19.3.0",
+    "react-cosmos": "7.4.1",
+    "react-cosmos-plugin-vite": "7.4.0",
     "react-dom": "19.3.0",
     "style-dictionary": "5.7.1",
     "stylelint": "17.16.0",

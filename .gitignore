@@ -11,3 +11,4 @@ src/tokens/generated/
 .beads-credential-key
 .beads/proxieddb/
 *.gate.lock*
+cosmos-export/
