@@ -5,7 +5,7 @@ import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 import { useRef, useState } from 'react';
-import { Button, Callout, Dialog, Menu, MenuItem, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField } from './index';
+import { Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, Menu, MenuItem, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField } from './index';
 
 afterEach(cleanup);
 
@@ -331,5 +331,50 @@ describe('Button size and icon', () => {
         const b = screen.getByRole('button', { name: 'More' });
         expect(b.getAttribute('data-size')).toBe('sm');
         expect(b.hasAttribute('data-icon')).toBe(true);
+    });
+});
+
+describe('Autocomplete', () => {
+    function Browser() {
+        const [q, setQ] = useState('');
+        return (
+            <Autocomplete label="Add node" value={q} onChange={setQ}>
+                <ListBox aria-label="Nodes" emptyMessage="No matches">
+                    <Section title="Audio"><ListBoxItem id="gain">Gain</ListBoxItem><ListBoxItem id="mixer">Mixer</ListBoxItem></Section>
+                    <Section title="Effects"><ListBoxItem id="delay">Delay</ListBoxItem><ListBoxItem id="reverb">Reverb</ListBoxItem></Section>
+                </ListBox>
+            </Autocomplete>
+        );
+    }
+
+    it('filters in list order and drops empty sections', async () => {
+        render(<Browser />);
+        expect(screen.getAllByRole('option').map((o) => o.textContent)).toEqual(['Gain', 'Mixer', 'Delay', 'Reverb']);
+        await userEvent.type(screen.getByRole('searchbox', { name: 'Add node' }), 'e');
+        expect(screen.getAllByRole('option').map((o) => o.textContent)).toEqual(['Mixer', 'Delay', 'Reverb']);
+        await userEvent.type(screen.getByRole('searchbox', { name: 'Add node' }), 'v');
+        expect(screen.getAllByRole('option').map((o) => o.textContent)).toEqual(['Reverb']);
+        expect(screen.queryByText('Audio')).toBeNull();
+        expect(screen.getByText('Effects')).toBeTruthy();
+    });
+
+    it('shows the empty message when nothing matches', async () => {
+        render(<Browser />);
+        await userEvent.type(screen.getByRole('searchbox', { name: 'Add node' }), 'zzz');
+        expect(screen.getByText('No matches')).toBeTruthy();
+    });
+
+    it('has no axe violations', async () => {
+        const { container } = render(<Browser />);
+        await expectNoViolations(container);
+    });
+});
+
+describe('SearchField', () => {
+    it('is named by its label and reports typed values', async () => {
+        const onChange = vi.fn();
+        render(<SearchField label="Search" value="" onChange={onChange} />);
+        await userEvent.type(screen.getByRole('searchbox', { name: 'Search' }), 'a');
+        expect(onChange).toHaveBeenLastCalledWith('a');
     });
 });
