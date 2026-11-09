@@ -22,3 +22,18 @@ body {
 .tokens-demo { display: flex; align-items: center; min-height: 32px; }
 .tokens-diff-pair { display: flex; gap: var(--ui-size-space-md); align-items: center; }
 .tokens-tag { font-size: var(--ui-size-font-xs); font-weight: 600; padding: 1px var(--ui-size-space-md); border-radius: var(--ui-size-radius-pill); background: var(--ui-color-control-bg); }
+
+/* V5 inspector overlay. Plain literals on purpose: it must not depend on the tokens it audits. */
+.inspector-toggle { position: fixed; right: 8px; top: 8px; z-index: 2147483647; font: 12px/1.2 system-ui, sans-serif; padding: 4px 8px; border: 1px solid #888; border-radius: 4px; background: #fff; color: #111; cursor: pointer; }
+.inspector-toggle[aria-pressed="true"] { background: #111; color: #fff; }
+.inspector-outline { position: fixed; z-index: 2147483646; pointer-events: none; outline: 2px solid #e5484d; outline-offset: -1px; background: rgb(229 72 77 / 12%); }
+.inspector-panel { position: fixed; right: 8px; bottom: 8px; z-index: 2147483647; width: min(460px, calc(100vw - 16px)); max-height: 60vh; overflow: auto; padding: 8px; border: 1px solid #888; border-radius: 6px; background: #fff; color: #111; font: 11px/1.4 ui-monospace, monospace; box-shadow: 0 4px 16px rgb(0 0 0 / 25%); }
+.inspector-panel table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+.inspector-panel th { text-align: left; font-weight: 600; padding: 2px 6px 2px 0; white-space: nowrap; vertical-align: top; }
+.inspector-panel td { padding: 2px 6px 2px 0; vertical-align: top; }
+.inspector-panel tr[data-trace="none"] { background: #ffe5e5; }
+.inspector-head { font-weight: 700; word-break: break-all; }
+.inspector-flag { color: #b00020; font-weight: 600; }
+.inspector-ok { color: #1a7f37; }
+.inspector-layer, .inspector-vars { color: #666; font-size: 10px; }
+.inspector-vars { margin-top: 6px; word-break: break-all; }
