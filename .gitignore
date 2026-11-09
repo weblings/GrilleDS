@@ -15,3 +15,6 @@ cosmos-export/
 
 # Base-ref tokens for the viewer diff (build-tokens.mjs)
 viewer/generated/
+
+# Branch review page output (npm run review)
+review-out/
