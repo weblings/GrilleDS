@@ -1,0 +1,26 @@
+v0.1.0-dev.8:
+- Drawer - New side="bottom": full width, half height by default, with an Expand/Collapse toggle and optional controlled expanded props
+- Drawer - Escape closes an open Drawer even when focus is outside it, unless a menu, popover or dialog is open and takes that Escape first
+
+v0.1.0-dev.7:
+- Drawer - New non-modal side panel: no scrim, outside click leaves it open, Escape and the close button close it, focus moves in on open and back to the opener on close
+
+v0.1.0-dev.6:
+- Autocomplete - New autoFocus prop, so one in a popup takes typing on open
+
+v0.1.0-dev.5:
+- Menu - Submenus: SubmenuItem opens a flyout beside its row (hover or ArrowRight to open, ArrowLeft or Esc to close one level)
+- Menu - MenuItem and SubmenuItem take a description, shown as a tooltip and exposed to screen readers
+
+v0.1.0-dev.4:
+- Modal - New scrim overlay with focus trap and dismiss
+- Autocomplete, SearchField, sectioned ListBox, Section and Header added
+- Dev - Cosmos fixtures for every component export, guarded by a test. Branch review page, token diff and inspector overlay run on each PR
+- Dev - dev.3 was never published; its changes ship here
+
+v0.1.0-dev.2:
+- Popup skin, Popover anchored at a point, Menu and Dialog added
+- Button - New size and icon props
+
+v0.1.0-dev.1:
+- First release: design tokens and React Aria components, published as a GitHub release tarball for Aurora to install
