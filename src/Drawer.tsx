@@ -1,4 +1,4 @@
-import { useEffect, useRef, useId, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react';
+import { useEffect, useRef, useId, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react';
 import { Button } from 'react-aria-components';
 
 export interface DrawerProps {
@@ -7,16 +7,29 @@ export interface DrawerProps {
     title: string;
     subtitle?: string;
     // The edge it is fixed to.
-    side?: 'right' | 'left';
+    // 'bottom' spans the full width and opens at half the space below `top`, for narrow windows.
+    side?: 'right' | 'left' | 'bottom';
     // Distance from the top of the viewport, so the drawer can sit below an app bar. A number is px.
     top?: number | string;
+    // Bottom only: full height instead of half. Uncontrolled unless `expanded` is given.
+    expanded?: boolean;
+    onExpandedChange?: (expanded: boolean) => void;
     children: ReactNode;
 }
 
+// An open popup (menu, popover, dialog) takes the next Escape before the drawer does.
+const POPUP = '.ui-popover, .ui-modal-overlay, [role="menu"], [role="dialog"]';
+
 // A panel fixed to one edge that stays open beside the page. Non-modal: no scrim, nothing is trapped or hidden, and
-// a click outside does not close it. Escape closes it while focus is inside, and so does the close button. Focus
-// moves in on open and back to where it was on close. Showing one at a time is up to the owner.
-export function Drawer({ isOpen, onOpenChange, title, subtitle, side = 'right', top = 0, children }: DrawerProps) {
+// a click outside does not close it. Escape closes it wherever focus is (unless a popup is open, which takes that
+// Escape first), and so does the close button. Focus moves in on open and back to where it was on close. Showing
+// one at a time is up to the owner.
+export function Drawer({ isOpen, onOpenChange, title, subtitle, side = 'right', top = 0, expanded, onExpandedChange, children }: DrawerProps) {
+    const [innerExpanded, setInnerExpanded] = useState(false);
+    const isExpanded = expanded ?? innerExpanded;
+    const toggle = () => { setInnerExpanded(!isExpanded); onExpandedChange?.(!isExpanded); };
+    const onOpenChangeRef = useRef(onOpenChange);
+    onOpenChangeRef.current = onOpenChange;
     const ref = useRef<HTMLElement>(null);
     const titleId = useId();
     const subtitleId = useId();
@@ -35,6 +48,18 @@ export function Drawer({ isOpen, onOpenChange, title, subtitle, side = 'right', 
         };
     }, [isOpen]);
 
+    // Escape with focus outside the drawer (a host that keeps working beside it). Focus inside is handled by the
+    // section's own onKeyDown, which stops the event before it gets here.
+    useEffect(() => {
+        if (!isOpen) return;
+        const onKey = (e: globalThis.KeyboardEvent) => {
+            if (e.key !== 'Escape' || e.defaultPrevented || document.querySelector(POPUP)) return;
+            onOpenChangeRef.current(false);
+        };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+    }, [isOpen]);
+
     if (!isOpen) return null;
 
     const onKeyDown = (e: KeyboardEvent) => {
@@ -51,6 +76,7 @@ export function Drawer({ isOpen, onOpenChange, title, subtitle, side = 'right', 
             ref={ref}
             className="ui-drawer"
             data-side={side}
+            data-expanded={side === 'bottom' && isExpanded ? '' : undefined}
             style={style}
             tabIndex={-1}
             aria-labelledby={titleId}
@@ -59,6 +85,11 @@ export function Drawer({ isOpen, onOpenChange, title, subtitle, side = 'right', 
         >
             <div className="ui-drawer-head">
                 <h2 id={titleId} className="ui-drawer-title">{title}</h2>
+                {side === 'bottom' ? (
+                    <Button className="ui-button ui-drawer-toggle" aria-expanded={isExpanded} onPress={toggle}>
+                        {isExpanded ? 'Collapse' : 'Expand'}
+                    </Button>
+                ) : null}
                 <Button className="ui-button ui-drawer-close" aria-label="Close" onPress={() => onOpenChange(false)}>×</Button>
             </div>
             {subtitle ? <p id={subtitleId} className="ui-drawer-subtitle">{subtitle}</p> : null}

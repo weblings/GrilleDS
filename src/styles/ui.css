@@ -100,6 +100,12 @@
   }
   .ui-drawer[data-side="right"] { right: 0; border-left-width: 1px; }
   .ui-drawer[data-side="left"] { left: 0; border-right-width: 1px; }
+  .ui-drawer[data-side="bottom"] {
+    top: auto; left: 0; right: 0; width: auto; border-top-width: 1px;
+    height: max(var(--ui-size-drawer-height-min), calc((100dvh - var(--ui-drawer-top, 0px)) / 2));
+  }
+  .ui-drawer[data-side="bottom"][data-expanded] { top: var(--ui-drawer-top, 0); height: auto; }
+  .ui-drawer-toggle { margin-left: auto; margin-right: var(--ui-size-space-md); }
   .ui-drawer-head {
     flex: none; display: flex; align-items: center; justify-content: space-between;
     padding: var(--ui-size-space-xl) var(--ui-size-space-xl) var(--ui-size-space-md) var(--ui-size-space-2xl);

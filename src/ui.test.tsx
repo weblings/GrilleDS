@@ -584,6 +584,64 @@ describe('Drawer', () => {
         expect(screen.getByRole('button', { name: 'Page 1' }).closest('[aria-hidden="true"]')).toBeNull();
     });
 
+    it('closes on Escape when focus is outside it', async () => {
+        render(<DrawerHarness />);
+        await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+        await userEvent.click(screen.getByRole('button', { name: 'Page 0' }));
+        await userEvent.keyboard('{Escape}');
+        expect(screen.queryByRole('region')).toBeNull();
+    });
+
+    it('leaves Escape to a menu open over it, then closes on the next one', async () => {
+        function Host() {
+            const [open, setOpen] = useState(true);
+            const [menu, setMenu] = useState(false);
+            const ref = useRef<HTMLButtonElement>(null);
+            return (
+                <>
+                    <button ref={ref} onClick={() => setMenu(true)}>Menu trigger</button>
+                    <Drawer isOpen={open} onOpenChange={setOpen} title="Details"><input aria-label="Label" /></Drawer>
+                    <Popover isOpen={menu} onOpenChange={setMenu} triggerRef={ref}>
+                        <Menu aria-label="Actions" autoFocus="first"><MenuItem id="a">Add</MenuItem></Menu>
+                    </Popover>
+                </>
+            );
+        }
+        render(<Host />);
+        await userEvent.click(screen.getByRole('button', { name: 'Menu trigger' }));
+        await screen.findByRole('menu');
+        await userEvent.keyboard('{Escape}');
+        await waitFor(() => expect(screen.queryByRole('menu')).toBeNull());
+        expect(screen.getByRole('region')).toBeTruthy();
+        await userEvent.keyboard('{Escape}');
+        expect(screen.queryByRole('region')).toBeNull();
+    });
+
+    it('bottom side toggles half and full with aria-expanded, and still closes on Escape', async () => {
+        function Bottom() {
+            const [open, setOpen] = useState(true);
+            return <Drawer isOpen={open} onOpenChange={setOpen} title="Details" side="bottom"><input aria-label="Label" /></Drawer>;
+        }
+        render(<Bottom />);
+        const region = screen.getByRole('region', { name: 'Details' });
+        const toggle = screen.getByRole('button', { name: 'Expand' });
+        expect(region.dataset.side).toBe('bottom');
+        expect(toggle.getAttribute('aria-expanded')).toBe('false');
+        await userEvent.click(toggle);
+        const collapse = screen.getByRole('button', { name: 'Collapse' });
+        expect(collapse.getAttribute('aria-expanded')).toBe('true');
+        expect(region.hasAttribute('data-expanded')).toBe(true);
+        await userEvent.click(collapse);
+        expect(region.hasAttribute('data-expanded')).toBe(false);
+        await userEvent.keyboard('{Escape}');
+        expect(screen.queryByRole('region')).toBeNull();
+    });
+
+    it('side drawers have no toggle', () => {
+        render(<Drawer isOpen onOpenChange={() => {}} title="Details"><input aria-label="Label" /></Drawer>);
+        expect(screen.queryByRole('button', { name: 'Expand' })).toBeNull();
+    });
+
     it('has no axe violations', async () => {
         const { container } = render(<DrawerHarness />);
         await userEvent.click(screen.getByRole('button', { name: 'Open' }));
