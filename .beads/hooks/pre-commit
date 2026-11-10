@@ -57,3 +57,40 @@ if command -v bd >/dev/null 2>&1; then
   if [ "$_bd_exit" -ne 0 ]; then exit "$_bd_exit"; fi
 fi
 # --- END BEADS INTEGRATION v1.3.0 ---
+
+# --- BEGIN PROJECT DOC-LINT HOOKS ---
+# Run the docs checkers only on commits touching what they check, so a
+# code-only commit pays nothing. Not piped: piping a validator hides its
+# real exit status.
+_repo_root=$(git rev-parse --show-toplevel)
+_py=python3
+command -v python3 >/dev/null 2>&1 || _py=python
+_docs_touched=0
+for _f in $(git diff --cached --name-only); do
+  case "$_f" in
+    docs/*|.claude/skills/*|*/README.md|*/CLAUDE.md|README.md|CONTRIBUTING.md|AGENTS.md|CLAUDE.md)
+      _docs_touched=1
+      break
+      ;;
+  esac
+done
+if [ "$_docs_touched" -eq 1 ]; then
+  if ! bash "$_repo_root/docs/check-lessons.sh"; then
+    echo >&2 "docs/check-lessons.sh failed -- fix the entries above, or 'git commit --no-verify' to bypass."
+    exit 1
+  fi
+  # check-links.py regenerates docs/_ids.md as a side effect; re-stage it
+  # so a successful run's fresh index lands in this same commit.
+  if ! "$_py" "$_repo_root/docs/check-links.py"; then
+    echo >&2 "docs/check-links.py failed -- fix the dead references above, or 'git commit --no-verify' to bypass."
+    exit 1
+  fi
+  git add "$_repo_root/docs/_ids.md"
+fi
+# Close gate: keys on the staged .beads/issues.jsonl and exits fast when no
+# bead closes, so it runs on every commit. Bypass: GRILLE_SKIP_CLOSE_GATE=1.
+if ! "$_py" "$_repo_root/docs/check-close.py"; then
+  echo >&2 "docs/check-close.py failed -- add the log entry above, or GRILLE_SKIP_CLOSE_GATE=1 / 'git commit --no-verify' to bypass."
+  exit 1
+fi
+# --- END PROJECT DOC-LINT HOOKS ---

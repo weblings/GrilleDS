@@ -1,27 +1,66 @@
-# Agent Instructions
+# Grille — agent instructions
 
-This project uses **bd** (beads) for issue tracking. Run `bd prime` for full workflow context.
+Grille is the React design-system library (React Aria components, design tokens, Cosmos fixtures)
+that Aurora installs from a GitHub release tarball. `CLAUDE.md` is only a pointer to this file.
 
-> **Architecture in one line:** Issues live in a local Dolt database
-> (`.beads/dolt/`); cross-machine sync uses `bd dolt push/pull` (a
-> git-compatible protocol), stored under `refs/dolt/data` on your git
-> remote — separate from `refs/heads/*` where your code lives.
-> `.beads/issues.jsonl` is a passive export, not the wire protocol.
->
-> See [sync-concepts](https://github.com/gastownhall/beads/blob/main/docs/core-concepts/sync-concepts.md)
-> for the one-screen overview and anti-patterns (don't treat JSONL as the
-> source of truth; don't `bd import` during normal operation; don't
-> reach for third-party Dolt hosting before trying the default).
-
-## Quick Reference
+## Build & test
 
 ```bash
-bd ready              # Find available work
-bd show <id>          # View issue details
-bd update <id> --claim  # Claim work atomically
-bd close <id>         # Complete work
-bd dolt push          # Push beads data to remote
+npm install
+npm run build        # tokens + vite + tsc + assets
+npm test             # vitest
+npm run typecheck
+npm run lint         # stylelint + UI-boundary check
+npm run dev          # Cosmos
 ```
+
+## Where things go
+
+- Tasks (open, blocked, deferred): `bd` (`bd ready`, `bd list`), not markdown TODOs or checkboxes.
+  Sync rides git, not the Dolt remote (unused; `sync.remote` stays as-is): `export.auto` is on but
+  debounced, so run `bd export -o .beads/issues.jsonl` immediately before `git add`ing task state
+  (`git-add` is off — staging is yours). After `git pull`, run `bd import` to upsert the tracked
+  export into your live DB — never `--reinit-local`. On a fresh machine/clone with no local DB, run
+  `bd bootstrap` first (`bd import` fails with no DB); if a failed import left an empty DB, delete
+  `.beads/embeddeddolt/` and retry. Don't use `bd dolt push/pull`.
+- Hooks: `core.hooksPath` must point at `.beads/hooks`; activate per clone with
+  `git config core.hooksPath .beads/hooks` (check: `git rev-parse --git-path hooks`). Doc-lint checks
+  join the pre-commit hook in Grille-x08.7; `--no-verify` bypasses.
+- Non-obvious gotchas worth saving future time: `docs/lessons/`, with `Tags:`/`Applies-when:`,
+  routed by the matching `.claude/skills/` skill (once they exist) — check it before changing that
+  area, file per `docs/lessons/README.md`. This is the only lessons location in the repo.
+- Milestone detail (closed or paused): dated file in `docs/log/` + `docs/log/INDEX.md` row on close —
+  every material fact, stated once and tightly; paused work logs state + resume pointer. Findings
+  over narration.
+- **Before any commit that closes a bead (Grille-* message):** (1) write or update its `docs/log/`
+  entry and `docs/log/INDEX.md` row, (2) file any lessons per `docs/lessons/README.md` (bump the README count)
+  and list them in the log (`## Lessons` or `- Lessons:`; "none" counts), (3) `bd export -o
+  .beads/issues.jsonl`, then stage. Do this before asking to commit. Once wired (Grille-x08.7) the
+  pre-commit hook enforces it via `docs/check-close.py` (bypass: `GRILLE_SKIP_CLOSE_GATE=1`).
+- Citing another doc under `docs/`: use `Id:`/`[[id]]`, not a bare relative path — see
+  `docs/README.md` "Citing other docs". New docs get an `Id:` line under the H1 at creation.
+  `check-links.py` scans `docs/` and `.claude/skills/` plus the root agent/contributor files, so keep
+  those citers live too.
+- **Required at close, not later:** when closing a milestone bead, check its description for a
+  referenced `docs/*.md` plan. If its `Status:` line doesn't already say shipped/superseded, correct
+  it and `git mv` it to `docs/archive/` in the same close.
+- Planning docs (`docs/planning/`): decisions, status, pointers only — no task lists or build
+  play-by-play. Every doc carries `Status:` and `Id:`. Before trusting "still open", check
+  `git log --follow -- <path>` for the last substantive edit; if stale, archive it with a corrected
+  `Status:`.
+- Shipped, superseded, or abandoned plans and analyses: `docs/archive/` — historical record, not
+  deleted or edited into the present tense.
+- Don't write paragraph-long comment blocks or lessons; condense to 2–3 lines when context survives.
+  Don't reference planning labels ("Phase 5") in comments.
+
+## Memory: what lives where
+
+- AGENTS.md / `docs/` — anything every clone, collaborator, or agent needs; tracked in git.
+- `docs/lessons/` — code/tooling gotchas (all clones).
+- `bd remember` — memory specific to this clone (debugging habits, environment quirks), readable via
+  `bd prime` / `bd memories`. Never export with `--include-memories` or `--all`; that would push
+  clone-local memory to other clones via `issues.jsonl`.
+- Claude memory files (`~/.claude/projects/<launch-dir>/memory/`) and MEMORY.md — not used here.
 
 ## Non-Interactive Shell Commands
 
@@ -67,13 +106,13 @@ bd close <id>         # Complete work
 - Run `bd prime` for detailed command reference and session close protocol
 - Use `bd remember` for persistent knowledge — do NOT use MEMORY.md files
 
-**Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote; `.beads/issues.jsonl` is a passive export. See https://github.com/gastownhall/beads/blob/main/docs/core-concepts/sync-concepts.md for details and anti-patterns.
+**Architecture in one line:** issues live in a local Dolt DB; sync rides git via the tracked `.beads/issues.jsonl` export (see "Where things go"); the Dolt remote (`bd dolt push/pull`, `refs/dolt/data`) is not used here.
 
 ## Agent Context Profiles
 
 The managed Beads block is task-tracking guidance, not permission to override repository, user, or orchestrator instructions.
 
-- **Conservative (default)**: Use `bd` for task tracking. Do not run git commits, git pushes, or Dolt remote sync unless explicitly asked. At handoff, report changed files, validation, and suggested next commands.
+- **Conservative (default)**: Use `bd` for task tracking. Do not run git commits or git pushes unless explicitly asked; Dolt remote sync is not used here. At handoff, report changed files, validation, and suggested next commands.
 - **Minimal**: Keep tool instruction files as pointers to `bd prime`; use the same conservative git policy unless active instructions say otherwise.
 - **Team-maintainer**: Only when the repository explicitly opts in, agents may close beads, run quality gates, commit, and push as part of session close. A current "do not commit" or "do not push" instruction still wins.
 
@@ -101,7 +140,8 @@ This protocol applies when ending a Beads implementation workflow. It is subordi
 
    # Team-maintainer opt-in only, unless current instructions forbid it:
    git pull --rebase
-   bd dolt push
+   bd import                          # upsert the pulled export into the live DB
+   bd export -o .beads/issues.jsonl   # before git add of task state
    git push
    git status
    ```
@@ -134,5 +174,5 @@ bd prime                # Refresh Beads context
 - Run `bd prime` when Beads context is missing or stale. Codex 0.129.0+ can load Beads context automatically through native hooks; use `/hooks` to inspect or toggle them.
 - Keep persistent project memory in Beads via `bd remember`; do not create ad hoc memory files.
 
-**Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote; `.beads/issues.jsonl` is a passive export. See https://github.com/gastownhall/beads/blob/main/docs/core-concepts/sync-concepts.md for details and anti-patterns.
+**Architecture in one line:** issues live in a local Dolt DB; sync rides git via the tracked `.beads/issues.jsonl` export (see "Where things go"); the Dolt remote (`bd dolt push/pull`, `refs/dolt/data`) is not used here.
 <!-- END BEADS CODEX SETUP -->
