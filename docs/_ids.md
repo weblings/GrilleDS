@@ -6,4 +6,5 @@ every run. Human lookup for `[[id]]` citations elsewhere in `docs/`.
 | Id | Path | Title |
 |---|---|---|
 | `2026-11-10-agents-md-rewrite` | [log/2026-11-10-agents-md-rewrite.md](log/2026-11-10-agents-md-rewrite.md) | AGENTS.md rewrite and CLAUDE.md stub |
+| `2026-11-10-lessons-seed` | [log/2026-11-10-lessons-seed.md](log/2026-11-10-lessons-seed.md) | Seed docs/lessons with generalized lessons |
 | `aurora-docs-migration` | [planning/AuroraDocsMigrationPlan.md](planning/AuroraDocsMigrationPlan.md) | Migrate docs infra to Aurora's system (docs/ tree, check scripts, AGENTS.md) |

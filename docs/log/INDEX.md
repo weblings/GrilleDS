@@ -10,3 +10,4 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | Date | Milestone | Beads |
 |---|---|---|
 | 2026-11-10 | [[2026-11-10-agents-md-rewrite]] — AGENTS.md rewrite, CLAUDE.md stub | Grille-x08.5 |
+| 2026-11-10 | [[2026-11-10-lessons-seed]] — seed docs/lessons from Aurora, RockyRoad, RockyRoadImport | Grille-x08.4 |
