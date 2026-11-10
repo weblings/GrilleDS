@@ -1,6 +1,6 @@
 # Migrate docs infra to Aurora's system (docs/ tree, check scripts, AGENTS.md)
 
-Status: planned 2026-11-10 — step 1 done; steps 2–9 open. Tracked as bead Grille-x08.
+Status: done 2026-11-10 — steps 1–9 complete; see [[2026-11-10-aurora-docs-migration]]. Tracked as bead Grille-x08.
 Id: aurora-docs-migration
 
 Owner-context: assessed 2026-11-10 against Aurora's live tree and the two finished migrations of the
