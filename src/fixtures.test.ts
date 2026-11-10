@@ -3,8 +3,9 @@ import indexSource from './index.ts?raw';
 
 const fixtureSources = import.meta.glob<string>('./*.fixture.tsx', { query: '?raw', import: 'default', eager: true });
 
-// Exports that are not components, so they have nothing to render in the catalog.
-const notRendered = new Set(['mountIsland']);
+// Exports with nothing of their own to render in the catalog: mountIsland is not a component, and Header only
+// renders inside a collection section, which the Section fixtures already show through Section's title.
+const notRendered = new Set(['mountIsland', 'Header']);
 
 // Value exports of src/index.ts. `type` re-exports are skipped, and so is the bare side-effect import.
 function valueExports(): string[] {
