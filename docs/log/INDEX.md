@@ -9,3 +9,4 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 
 | Date | Milestone | Beads |
 |---|---|---|
+| 2026-11-10 | [[2026-11-10-agents-md-rewrite]] — AGENTS.md rewrite, CLAUDE.md stub | Grille-x08.5 |
