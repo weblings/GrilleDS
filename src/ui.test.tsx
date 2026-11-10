@@ -5,7 +5,7 @@ import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 import { useRef, useState } from 'react';
-import { Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, Menu, MenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField } from './index';
+import { Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, Menu, MenuItem, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField } from './index';
 
 afterEach(cleanup);
 
@@ -454,5 +454,58 @@ describe('SearchField', () => {
         render(<SearchField label="Search" value="" onChange={onChange} />);
         await userEvent.type(screen.getByRole('searchbox', { name: 'Search' }), 'a');
         expect(onChange).toHaveBeenLastCalledWith('a');
+    });
+});
+
+describe('SubmenuItem', () => {
+    function Cascade({ onAction }: { onAction: (id: string) => void }) {
+        return (
+            <Menu aria-label="Add node" autoFocus="first" onAction={onAction}>
+                <SubmenuItem id="math" aria-label="Math" label="Math" description="Numeric nodes" onAction={onAction}>
+                    <MenuItem id="add" description="Adds two numbers">Add</MenuItem>
+                    <MenuItem id="mul">Multiply</MenuItem>
+                </SubmenuItem>
+                <MenuItem id="out">Output</MenuItem>
+            </Menu>
+        );
+    }
+
+    it('opens the flyout on ArrowRight, closes one level on ArrowLeft', async () => {
+        render(<Cascade onAction={() => {}} />);
+        const row = screen.getByRole('menuitem', { name: /Math/ });
+        expect(row.getAttribute('aria-haspopup')).toBe('menu');
+        act(() => row.focus());
+        await userEvent.keyboard('{ArrowRight}');
+        expect(await screen.findByRole('menu', { name: /Math/ })).toBeTruthy();
+        await userEvent.keyboard('{ArrowLeft}');
+        await waitFor(() => expect(screen.queryByRole('menu', { name: /Math/ })).toBeNull());
+        expect(screen.getByRole('menu', { name: 'Add node' })).toBeTruthy();
+    });
+
+    it('closes only the flyout on Escape', async () => {
+        render(<Cascade onAction={() => {}} />);
+        act(() => screen.getByRole('menuitem', { name: /Math/ }).focus());
+        await userEvent.keyboard('{ArrowRight}');
+        await screen.findByRole('menu', { name: /Math/ });
+        await userEvent.keyboard('{Escape}');
+        await waitFor(() => expect(screen.queryByRole('menu', { name: /Math/ })).toBeNull());
+        expect(screen.getByRole('menu', { name: 'Add node' })).toBeTruthy();
+    });
+
+    it('opens on hover and runs an action from the flyout', async () => {
+        const onAction = vi.fn();
+        render(<Cascade onAction={onAction} />);
+        await userEvent.hover(screen.getByRole('menuitem', { name: /Math/ }));
+        const add = await screen.findByRole('menuitem', { name: /Add/ });
+        await userEvent.click(add);
+        expect(onAction).toHaveBeenCalledWith('add');
+    });
+
+    it('exposes the description as a tooltip and an accessible description', async () => {
+        render(<Cascade onAction={() => {}} />);
+        await userEvent.hover(screen.getByRole('menuitem', { name: /Math/ }));
+        const add = await screen.findByRole('menuitem', { name: /Add/ });
+        expect(add.querySelector('[title="Adds two numbers"]')).toBeTruthy();
+        expect(add.getAttribute('aria-describedby')).toBeTruthy();
     });
 });

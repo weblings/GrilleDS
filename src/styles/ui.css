@@ -96,6 +96,10 @@
     padding: var(--ui-size-space-sm) var(--ui-size-control-pad-x); border-radius: var(--ui-size-radius-sm); cursor: pointer; outline: none;
     color: var(--ui-color-text-default); font-size: var(--ui-size-font-sm);
   }
+  .ui-menu-item-submenu { display: flex; align-items: center; justify-content: space-between; gap: var(--ui-size-space-lg); }
+  .ui-menu-item-submenu[data-open] { background: var(--ui-color-popup-bg-hover); }
+  .ui-menu-chevron { color: var(--ui-color-text-disabled); }
+  .ui-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .ui-menu-item[data-focused] { background: var(--ui-color-popup-bg-hover); }
   .ui-menu-item[data-disabled] { color: var(--ui-color-text-disabled); cursor: not-allowed; }
   .ui-menu-separator { height: 1px; margin: var(--ui-size-space-xs) 0; border: none; background: var(--ui-color-popup-border); }
