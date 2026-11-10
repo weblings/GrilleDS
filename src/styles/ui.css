@@ -77,6 +77,20 @@
     padding: var(--ui-size-popup-pad);
   }
   .ui-popover[data-trigger="Select"] { min-width: var(--trigger-width); }
+  .ui-modal-overlay {
+    position: fixed; inset: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    padding: var(--ui-size-modal-gutter);
+    background: var(--ui-color-scrim-bg);
+  }
+  .ui-modal {
+    width: var(--ui-size-modal-width); max-width: 100%; max-height: 100%; overflow: auto;
+    border-radius: var(--ui-size-radius-md);
+    background: var(--ui-color-popup-bg); border: 1px solid var(--ui-color-popup-border);
+    box-shadow: var(--ui-shadow-popup);
+    padding: var(--ui-size-modal-pad);
+  }
+  .ui-modal > .ui-dialog { gap: var(--ui-size-space-xl); }
   .ui-menu, .ui-dialog { outline: none; display: flex; flex-direction: column; }
   .ui-menu-item {
     padding: var(--ui-size-space-sm) var(--ui-size-control-pad-x); border-radius: var(--ui-size-radius-sm); cursor: pointer; outline: none;

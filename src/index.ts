@@ -2,6 +2,7 @@ export { Button, type ButtonProps } from './Button';
 export { Popover, type PopoverProps, type PopoverPoint } from './Popover';
 export { Menu, MenuItem, MenuSeparator, type MenuProps, type MenuItemProps } from './Menu';
 export { Dialog, type DialogProps } from './Dialog';
+export { Modal, type ModalProps } from './Modal';
 export { TextField, type TextFieldProps } from './TextField';
 export { FileTrigger, type FileTriggerProps } from './FileTrigger';
 export { Select, type SelectProps } from './Select';

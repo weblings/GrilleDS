@@ -5,7 +5,7 @@ import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 import { useRef, useState } from 'react';
-import { Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, Menu, MenuItem, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField } from './index';
+import { Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, Menu, MenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField } from './index';
 
 afterEach(cleanup);
 
@@ -322,6 +322,83 @@ describe('Dialog in a Popover', () => {
         expect(document.activeElement).toBe(items[1]);
         await userEvent.keyboard('{Enter}');
         expect(onAction).toHaveBeenCalledWith('new');
+    });
+});
+
+describe('Modal', () => {
+    function NameEffect({ dismissable, onRename }: { dismissable?: boolean; onRename?: (name: string) => void }) {
+        const [open, setOpen] = useState(false);
+        const [name, setName] = useState('Effect');
+        return (
+            <>
+                <button onClick={() => setOpen(true)}>Name</button>
+                <button>Behind</button>
+                <Modal isOpen={open} onOpenChange={setOpen} isDismissable={dismissable}>
+                    <Dialog aria-label="Name effect">
+                        <TextField label="Name" value={name} onChange={setName} />
+                        <Button onPress={() => { onRename?.(name); setOpen(false); }}>Create</Button>
+                    </Dialog>
+                </Modal>
+            </>
+        );
+    }
+
+    async function open() {
+        const trigger = screen.getByRole('button', { name: 'Name' });
+        await userEvent.click(trigger);
+        return trigger;
+    }
+
+    it('opens a named dialog over a scrim and hides the page behind', async () => {
+        render(<NameEffect />);
+        await open();
+        const dialog = screen.getByRole('dialog', { name: 'Name effect' });
+        expect(dialog.closest('.ui-modal')).toBeTruthy();
+        expect(dialog.closest('.ui-modal-overlay')).toBeTruthy();
+        expect(screen.queryByRole('button', { name: 'Behind' })).toBeNull();
+    });
+
+    it('traps focus and takes typing in a TextField', async () => {
+        const onRename = vi.fn();
+        render(<NameEffect onRename={onRename} />);
+        await open();
+        const dialog = screen.getByRole('dialog');
+        const field = screen.getByRole('textbox', { name: 'Name' });
+        await userEvent.click(field);
+        await userEvent.clear(field);
+        await userEvent.type(field, 'Glow');
+        for (let i = 0; i < 4; i++) {
+            await userEvent.tab();
+            expect(dialog.contains(document.activeElement)).toBe(true);
+        }
+        await userEvent.click(screen.getByRole('button', { name: 'Create' }));
+        expect(onRename).toHaveBeenCalledWith('Glow');
+        expect(screen.queryByRole('dialog')).toBeNull();
+    });
+
+    it('closes on Escape and returns focus to the trigger', async () => {
+        render(<NameEffect />);
+        const trigger = await open();
+        await userEvent.keyboard('{Escape}');
+        expect(screen.queryByRole('dialog')).toBeNull();
+        expect(document.activeElement).toBe(trigger);
+    });
+
+    it('closes on a scrim click unless dismissal is off', async () => {
+        const { rerender } = render(<NameEffect />);
+        await open();
+        await userEvent.click(document.querySelector('.ui-modal-overlay')!);
+        expect(screen.queryByRole('dialog')).toBeNull();
+        rerender(<NameEffect dismissable={false} />);
+        await open();
+        await userEvent.click(document.querySelector('.ui-modal-overlay')!);
+        expect(screen.getByRole('dialog')).toBeTruthy();
+    });
+
+    it('has no axe violations', async () => {
+        render(<NameEffect />);
+        await open();
+        await expectNoViolations(document.body);
     });
 });
 
