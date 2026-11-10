@@ -442,6 +442,25 @@ describe('Autocomplete', () => {
         expect(screen.getByText('No matches')).toBeTruthy();
     });
 
+    it('focuses the search field on mount only when autoFocus is set', () => {
+        const { unmount } = render(<Autocomplete label="Add node" value="" onChange={() => {}}><ListBox aria-label="Nodes"><ListBoxItem id="a">A</ListBoxItem></ListBox></Autocomplete>);
+        expect(document.activeElement).not.toBe(screen.getByRole('searchbox', { name: 'Add node' }));
+        unmount();
+        render(<Autocomplete label="Add node" value="" onChange={() => {}} autoFocus><ListBox aria-label="Nodes"><ListBoxItem id="a">A</ListBoxItem></ListBox></Autocomplete>);
+        expect(document.activeElement).toBe(screen.getByRole('searchbox', { name: 'Add node' }));
+    });
+
+    it('focuses the search field when mounted inside a Popover', async () => {
+        render(
+            <Popover isOpen onOpenChange={() => {}} point={{ x: 10, y: 10 }} aria-label="Add node">
+                <Autocomplete label="Add node" value="" onChange={() => {}} autoFocus>
+                    <ListBox aria-label="Nodes"><ListBoxItem id="a">A</ListBoxItem></ListBox>
+                </Autocomplete>
+            </Popover>,
+        );
+        await waitFor(() => expect(document.activeElement).toBe(screen.getByRole('searchbox', { name: 'Add node' })));
+    });
+
     it('has no axe violations', async () => {
         const { container } = render(<Browser />);
         await expectNoViolations(container);
