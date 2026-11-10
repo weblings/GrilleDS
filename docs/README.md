@@ -33,4 +33,4 @@ Run `python3 docs/check-links.py` and `bash docs/check-lessons.sh`, and `grep -r
 over the whole repo (not just `docs/`) — the checker also scans `.claude/skills/` and the root
 files, but a citer anywhere else can go dead silently. Convert what the grep finds to `[[id]]`.
 
-(The check scripts land with Grille-x08.3; until then, do the grep by hand.)
+

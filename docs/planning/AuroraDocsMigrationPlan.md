@@ -18,8 +18,8 @@ each step lists its done-criteria and the bead that carries it.
   - `docs/lessons/README.md` + topic files — table index with entry counts
   - `.beads/hooks/pre-commit` — the `PROJECT DOC-LINT HOOKS` block below the beads markers
 - RockyRoad (`../RockyRoad`) and RockyRoadImport (`../RockyRoadImport`): the same migration at smaller
-  scale. Their archived `docs/archive/AuroraDocsMigrationPlan.md` are this doc's template; their
-  `docs/README.md`, `docs/log/INDEX.md`, `CONTRIBUTING.md`, `CHANGELOG.txt` are the closest copies.
+  scale. Their archived copies of this plan (under their `docs/archive/`) are this doc's template; their
+  `docs/README.md`, `docs/log/INDEX.md`, CONTRIBUTING and `CHANGELOG.txt` are the closest copies.
 
 ## Current state (this repo)
 
@@ -33,7 +33,7 @@ each step lists its done-criteria and the bead that carries it.
   already has the `bd prime --hook-json` SessionStart hook.
 - Skills: none (`.claude/skills/` absent; `.agents/skills/` holds only the beads skill). Aurora has 7
   (`web-ui-lessons`, `engineering-hygiene-lessons`, …) to copy the shape from.
-- No `CONTRIBUTING.md`, no `CHANGELOG.txt`. `.github/workflows/` exists (ci, pages, release, review) but
+- No CONTRIBUTING file, no `CHANGELOG.txt`. `.github/workflows/` exists (ci, pages, release, review) but
   runs no doc checks.
 - Release flow documented in `AGENTS.md` ("Releasing") — must survive the rewrite verbatim in substance.
 
@@ -44,7 +44,7 @@ each step lists its done-criteria and the bead that carries it.
 - Every doc carries `Status:` + `Id:`; citations use `[[id]]`.
 - `docs/lessons/` seeded with generalized Grille-relevant lessons, every entry tagged `Tags:`/`Applies-when:`.
 - `AGENTS.md` is the instruction file in the siblings' shape; `CLAUDE.md` is Aurora's 3-line pointer stub.
-- `CONTRIBUTING.md` and `CHANGELOG.txt` exist.
+- CONTRIBUTING and `CHANGELOG.txt` exist.
 - `.claude/skills/*-lessons/SKILL.md` route agents into the lessons by tag.
 - `.beads/hooks/pre-commit` runs both checks when staged paths touch docs, rejects a broken `[[id]]`, and
   runs the close gate on commits that close a bead.
@@ -77,8 +77,8 @@ Open (recommendations inline — owner may override before the step runs):
    findings per `docs/lessons/README.md`). One skill per query-coherent group of lesson files, created
    with the lessons in step 4 so none points at an empty topic.
 7. **Lesson file layout.** Recommended: flat `docs/lessons/*.md` (what `check-lessons.sh` supports),
-   split by query vocabulary: `web-ui.md`, `layout-css.md`, `components.md`, `web-testing.md`,
-   `engineering-hygiene.md`, `build-toolchain.md`; fewer files if a topic has <3 entries.
+   split by query vocabulary: `web-ui`, `layout-css`, `components`, `web-testing`,
+   `engineering-hygiene`, `build-toolchain` (each a markdown file); fewer files if a topic has <3 entries.
 8. **Memory split.** `bd remember` for clone-specific notes (never `--include-memories`/`--all` on export);
    AGENTS.md/`docs/` for anything every clone needs; `docs/lessons/` for gotchas. Claude auto-memory is
    not used for this repo (CLAUDE.md already says so).
@@ -95,7 +95,7 @@ Open (recommendations inline — owner may override before the step runs):
    present). Done when: `ls docs` matches the target tree and README lists every folder.
 3. **Port the scripts** (Grille-x08.3). Copy Aurora's `check-links.py`, `check-lessons.sh` and
    `check-close.py` (decision 5; rename env var, `AURORA` → `GRILLE`). Empty the `GRANDFATHERED` list; point the outside-`docs/` citer scan at
-   `README.md`, `AGENTS.md`, `CLAUDE.md`, `CONTRIBUTING.md`. Run `check-links.py` twice (first run
+   `README.md`, `AGENTS.md`, `CLAUDE.md`, and CONTRIBUTING (once it exists). Run `check-links.py` twice (first run
    generates `_ids.md`). Done when: `python3 docs/check-links.py` → OK, `bash docs/check-lessons.sh`
    → `lessons OK`, and `python3 docs/check-close.py` exits 0 on a clean tree.
 4. **Seed lessons** (Grille-x08.4). Copy and generalize per decision 3/7 into `docs/lessons/`, with
@@ -117,12 +117,12 @@ Open (recommendations inline — owner may override before the step runs):
 8. **Wire pre-commit** (Grille-x08.7). Last of the build steps, so the hook doesn't block the migration's
    own commits. Copy Aurora's `PROJECT DOC-LINT HOOKS` block below the beads markers in
    `.beads/hooks/pre-commit`; path filter: `docs/*`, `.claude/skills/*`, `*/README.md`, `README.md`,
-   `CONTRIBUTING.md`, `AGENTS.md`, `CLAUDE.md`; re-stage `docs/_ids.md`. Also copy Aurora's `check-close.py`
+   CONTRIBUTING, `AGENTS.md`, `CLAUDE.md`; re-stage `docs/_ids.md`. Also copy Aurora's `check-close.py`
    invocation (it keys on the staged `.beads/issues.jsonl`, so it runs on every commit; it exits fast when
    no bead closes). Check `prepare-commit-msg` writes
    no attribution trailers. Done when: a commit with a deliberately broken `[[id]]` in `docs/` is
    rejected, a bead-closing commit without a log entry is rejected, and a code-only commit runs neither check.
-9. **Close out** (Grille-x08.8). Write `docs/log/2026-11-XX-aurora-docs-migration.md` + INDEX row; set this doc `Status: done` and `git mv` it to
+9. **Close out** (Grille-x08.8). Write a dated `docs/log/` entry for the migration + INDEX row; set this doc `Status: done` and `git mv` it to
    `docs/archive/`; rerun both scripts. Done when: epic acceptance criteria all hold.
 
 Bead map: x08.1 → step 1 · x08.2 → 2 · x08.3 → 3 · x08.4 → 4 · x08.5 → 5 · x08.6 → 6 · x08.9 → 7 · x08.7 → 8 · x08.8 → 9.

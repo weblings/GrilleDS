@@ -33,7 +33,7 @@ npm run dev          # Cosmos
   every material fact, stated once and tightly; paused work logs state + resume pointer. Findings
   over narration.
 - **Before any commit that closes a bead (Grille-* message):** (1) write or update its `docs/log/`
-  entry and `INDEX.md` row, (2) file any lessons per `docs/lessons/README.md` (bump the README count)
+  entry and `docs/log/INDEX.md` row, (2) file any lessons per `docs/lessons/README.md` (bump the README count)
   and list them in the log (`## Lessons` or `- Lessons:`; "none" counts), (3) `bd export -o
   .beads/issues.jsonl`, then stage. Do this before asking to commit. Once wired (Grille-x08.7) the
   pre-commit hook enforces it via `docs/check-close.py` (bypass: `GRILLE_SKIP_CLOSE_GATE=1`).
