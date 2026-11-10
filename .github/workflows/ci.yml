@@ -1,9 +1,9 @@
 name: CI
 
+# PRs only. A merge to main was already checked on its PR, and pages.yml rebuilds
+# the catalog from main on merge.
 on:
   pull_request:
-  push:
-    branches: [main]
 
 # A newer push to the same PR cancels the run still checking the older commit.
 concurrency:
