@@ -5,7 +5,7 @@ import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 import { useRef, useState } from 'react';
-import { Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, Menu, MenuItem, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField } from './index';
+import { Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, Drawer, Menu, MenuItem, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField } from './index';
 
 afterEach(cleanup);
 
@@ -526,5 +526,67 @@ describe('SubmenuItem', () => {
         const add = await screen.findByRole('menuitem', { name: /Add/ });
         expect(add.querySelector('[title="Adds two numbers"]')).toBeTruthy();
         expect(add.getAttribute('aria-describedby')).toBeTruthy();
+    });
+});
+
+describe('Drawer', () => {
+    function DrawerHarness({ onChange }: { onChange?: (open: boolean) => void }) {
+        const [open, setOpen] = useState(false);
+        const [clicks, setClicks] = useState(0);
+        return (
+            <>
+                <button onClick={() => setOpen(true)}>Open</button>
+                <button onClick={() => setClicks(clicks + 1)}>Page {clicks}</button>
+                <Drawer isOpen={open} onOpenChange={(o) => { onChange?.(o); setOpen(o); }} title="Details" subtitle="About this node.">
+                    <input aria-label="Label" />
+                </Drawer>
+            </>
+        );
+    }
+
+    it('is a labelled region, not a dialog, and renders nothing when closed', async () => {
+        render(<DrawerHarness />);
+        expect(screen.queryByRole('region')).toBeNull();
+        await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+        expect(screen.getByRole('region', { name: 'Details' })).toBeTruthy();
+        expect(screen.queryByRole('dialog')).toBeNull();
+        expect(screen.getByRole('heading', { name: 'Details' })).toBeTruthy();
+    });
+
+    it('moves focus in on open and back to the opener on close', async () => {
+        render(<DrawerHarness />);
+        const open = screen.getByRole('button', { name: 'Open' });
+        await userEvent.click(open);
+        expect(screen.getByRole('region').contains(document.activeElement)).toBe(true);
+        await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+        expect(screen.queryByRole('region')).toBeNull();
+        expect(document.activeElement).toBe(open);
+    });
+
+    it('closes on Escape while focus is inside', async () => {
+        const onChange = vi.fn();
+        render(<DrawerHarness onChange={onChange} />);
+        const open = screen.getByRole('button', { name: 'Open' });
+        await userEvent.click(open);
+        await userEvent.click(screen.getByRole('textbox', { name: 'Label' }));
+        await userEvent.keyboard('{Escape}');
+        expect(onChange).toHaveBeenLastCalledWith(false);
+        expect(screen.queryByRole('region')).toBeNull();
+        expect(document.activeElement).toBe(open);
+    });
+
+    it('stays open on an outside click, and the page behind stays interactive', async () => {
+        render(<DrawerHarness />);
+        await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+        await userEvent.click(screen.getByRole('button', { name: 'Page 0' }));
+        expect(screen.getByRole('button', { name: 'Page 1' })).toBeTruthy();
+        expect(screen.getByRole('region')).toBeTruthy();
+        expect(screen.getByRole('button', { name: 'Page 1' }).closest('[aria-hidden="true"]')).toBeNull();
+    });
+
+    it('has no axe violations', async () => {
+        const { container } = render(<DrawerHarness />);
+        await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+        await expectNoViolations(container);
     });
 });

@@ -3,6 +3,7 @@ export { Popover, type PopoverProps, type PopoverPoint } from './Popover';
 export { Menu, MenuItem, MenuSeparator, SubmenuItem, type MenuProps, type MenuItemProps, type SubmenuItemProps } from './Menu';
 export { Dialog, type DialogProps } from './Dialog';
 export { Modal, type ModalProps } from './Modal';
+export { Drawer, type DrawerProps } from './Drawer';
 export { TextField, type TextFieldProps } from './TextField';
 export { FileTrigger, type FileTriggerProps } from './FileTrigger';
 export { Select, type SelectProps } from './Select';
