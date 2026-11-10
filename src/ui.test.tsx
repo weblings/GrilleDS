@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { act } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 import { useRef, useState } from 'react';
@@ -381,7 +381,8 @@ describe('Modal', () => {
         const trigger = await open();
         await userEvent.keyboard('{Escape}');
         expect(screen.queryByRole('dialog')).toBeNull();
-        expect(document.activeElement).toBe(trigger);
+        // React Aria restores focus asynchronously, so a slow runner can get here first.
+        await waitFor(() => expect(document.activeElement).toBe(trigger));
     });
 
     it('closes on a scrim click unless dismissal is off', async () => {
