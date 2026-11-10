@@ -58,6 +58,16 @@ This protocol applies when ending a Beads implementation workflow. It is subordi
 <!-- END BEADS INTEGRATION -->
 
 
+## Releasing
+
+A "Version X.Y.Z" commit does **not** publish anything. Consumers (Aurora) install from a GitHub release tarball, which exists only after the `vX.Y.Z` tag is pushed and the Release workflow (`.github/workflows/release.yml`) has run.
+
+- Tag the version commit (`git tag vX.Y.Z <commit>`), then push the branch and the tag. The tag must match `package.json`'s version.
+- Tagging and pushing is outward-facing: ask first unless the user said to release.
+- Never re-tag or replace a release asset; consumers' lockfiles record its integrity hash. To fix a bad release, cut a new version.
+- Verify with `gh release view vX.Y.Z`.
+- In handoffs, say "committed, not yet tagged or released" until that is true. Don't call work shipped or published, and don't close beads as shipped, before the release exists.
+
 ## Build & Test
 
 _Add your build and test commands here_

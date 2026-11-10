@@ -5,7 +5,7 @@ import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 import { useRef, useState } from 'react';
-import { Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, Menu, MenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField } from './index';
+import { Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, Drawer, Menu, MenuItem, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField } from './index';
 
 afterEach(cleanup);
 
@@ -442,6 +442,25 @@ describe('Autocomplete', () => {
         expect(screen.getByText('No matches')).toBeTruthy();
     });
 
+    it('focuses the search field on mount only when autoFocus is set', () => {
+        const { unmount } = render(<Autocomplete label="Add node" value="" onChange={() => {}}><ListBox aria-label="Nodes"><ListBoxItem id="a">A</ListBoxItem></ListBox></Autocomplete>);
+        expect(document.activeElement).not.toBe(screen.getByRole('searchbox', { name: 'Add node' }));
+        unmount();
+        render(<Autocomplete label="Add node" value="" onChange={() => {}} autoFocus><ListBox aria-label="Nodes"><ListBoxItem id="a">A</ListBoxItem></ListBox></Autocomplete>);
+        expect(document.activeElement).toBe(screen.getByRole('searchbox', { name: 'Add node' }));
+    });
+
+    it('focuses the search field when mounted inside a Popover', async () => {
+        render(
+            <Popover isOpen onOpenChange={() => {}} point={{ x: 10, y: 10 }} aria-label="Add node">
+                <Autocomplete label="Add node" value="" onChange={() => {}} autoFocus>
+                    <ListBox aria-label="Nodes"><ListBoxItem id="a">A</ListBoxItem></ListBox>
+                </Autocomplete>
+            </Popover>,
+        );
+        await waitFor(() => expect(document.activeElement).toBe(screen.getByRole('searchbox', { name: 'Add node' })));
+    });
+
     it('has no axe violations', async () => {
         const { container } = render(<Browser />);
         await expectNoViolations(container);
@@ -454,5 +473,178 @@ describe('SearchField', () => {
         render(<SearchField label="Search" value="" onChange={onChange} />);
         await userEvent.type(screen.getByRole('searchbox', { name: 'Search' }), 'a');
         expect(onChange).toHaveBeenLastCalledWith('a');
+    });
+});
+
+describe('SubmenuItem', () => {
+    function Cascade({ onAction }: { onAction: (id: string) => void }) {
+        return (
+            <Menu aria-label="Add node" autoFocus="first" onAction={onAction}>
+                <SubmenuItem id="math" aria-label="Math" label="Math" description="Numeric nodes" onAction={onAction}>
+                    <MenuItem id="add" description="Adds two numbers">Add</MenuItem>
+                    <MenuItem id="mul">Multiply</MenuItem>
+                </SubmenuItem>
+                <MenuItem id="out">Output</MenuItem>
+            </Menu>
+        );
+    }
+
+    it('opens the flyout on ArrowRight, closes one level on ArrowLeft', async () => {
+        render(<Cascade onAction={() => {}} />);
+        const row = screen.getByRole('menuitem', { name: /Math/ });
+        expect(row.getAttribute('aria-haspopup')).toBe('menu');
+        act(() => row.focus());
+        await userEvent.keyboard('{ArrowRight}');
+        expect(await screen.findByRole('menu', { name: /Math/ })).toBeTruthy();
+        await userEvent.keyboard('{ArrowLeft}');
+        await waitFor(() => expect(screen.queryByRole('menu', { name: /Math/ })).toBeNull());
+        expect(screen.getByRole('menu', { name: 'Add node' })).toBeTruthy();
+    });
+
+    it('closes only the flyout on Escape', async () => {
+        render(<Cascade onAction={() => {}} />);
+        act(() => screen.getByRole('menuitem', { name: /Math/ }).focus());
+        await userEvent.keyboard('{ArrowRight}');
+        await screen.findByRole('menu', { name: /Math/ });
+        await userEvent.keyboard('{Escape}');
+        await waitFor(() => expect(screen.queryByRole('menu', { name: /Math/ })).toBeNull());
+        expect(screen.getByRole('menu', { name: 'Add node' })).toBeTruthy();
+    });
+
+    it('opens on hover and runs an action from the flyout', async () => {
+        const onAction = vi.fn();
+        render(<Cascade onAction={onAction} />);
+        await userEvent.hover(screen.getByRole('menuitem', { name: /Math/ }));
+        const add = await screen.findByRole('menuitem', { name: /Add/ });
+        await userEvent.click(add);
+        expect(onAction).toHaveBeenCalledWith('add');
+    });
+
+    it('exposes the description as a tooltip and an accessible description', async () => {
+        render(<Cascade onAction={() => {}} />);
+        await userEvent.hover(screen.getByRole('menuitem', { name: /Math/ }));
+        const add = await screen.findByRole('menuitem', { name: /Add/ });
+        expect(add.querySelector('[title="Adds two numbers"]')).toBeTruthy();
+        expect(add.getAttribute('aria-describedby')).toBeTruthy();
+    });
+});
+
+describe('Drawer', () => {
+    function DrawerHarness({ onChange }: { onChange?: (open: boolean) => void }) {
+        const [open, setOpen] = useState(false);
+        const [clicks, setClicks] = useState(0);
+        return (
+            <>
+                <button onClick={() => setOpen(true)}>Open</button>
+                <button onClick={() => setClicks(clicks + 1)}>Page {clicks}</button>
+                <Drawer isOpen={open} onOpenChange={(o) => { onChange?.(o); setOpen(o); }} title="Details" subtitle="About this node.">
+                    <input aria-label="Label" />
+                </Drawer>
+            </>
+        );
+    }
+
+    it('is a labelled region, not a dialog, and renders nothing when closed', async () => {
+        render(<DrawerHarness />);
+        expect(screen.queryByRole('region')).toBeNull();
+        await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+        expect(screen.getByRole('region', { name: 'Details' })).toBeTruthy();
+        expect(screen.queryByRole('dialog')).toBeNull();
+        expect(screen.getByRole('heading', { name: 'Details' })).toBeTruthy();
+    });
+
+    it('moves focus in on open and back to the opener on close', async () => {
+        render(<DrawerHarness />);
+        const open = screen.getByRole('button', { name: 'Open' });
+        await userEvent.click(open);
+        expect(screen.getByRole('region').contains(document.activeElement)).toBe(true);
+        await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+        expect(screen.queryByRole('region')).toBeNull();
+        expect(document.activeElement).toBe(open);
+    });
+
+    it('closes on Escape while focus is inside', async () => {
+        const onChange = vi.fn();
+        render(<DrawerHarness onChange={onChange} />);
+        const open = screen.getByRole('button', { name: 'Open' });
+        await userEvent.click(open);
+        await userEvent.click(screen.getByRole('textbox', { name: 'Label' }));
+        await userEvent.keyboard('{Escape}');
+        expect(onChange).toHaveBeenLastCalledWith(false);
+        expect(screen.queryByRole('region')).toBeNull();
+        expect(document.activeElement).toBe(open);
+    });
+
+    it('stays open on an outside click, and the page behind stays interactive', async () => {
+        render(<DrawerHarness />);
+        await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+        await userEvent.click(screen.getByRole('button', { name: 'Page 0' }));
+        expect(screen.getByRole('button', { name: 'Page 1' })).toBeTruthy();
+        expect(screen.getByRole('region')).toBeTruthy();
+        expect(screen.getByRole('button', { name: 'Page 1' }).closest('[aria-hidden="true"]')).toBeNull();
+    });
+
+    it('closes on Escape when focus is outside it', async () => {
+        render(<DrawerHarness />);
+        await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+        await userEvent.click(screen.getByRole('button', { name: 'Page 0' }));
+        await userEvent.keyboard('{Escape}');
+        expect(screen.queryByRole('region')).toBeNull();
+    });
+
+    it('leaves Escape to a menu open over it, then closes on the next one', async () => {
+        function Host() {
+            const [open, setOpen] = useState(true);
+            const [menu, setMenu] = useState(false);
+            const ref = useRef<HTMLButtonElement>(null);
+            return (
+                <>
+                    <button ref={ref} onClick={() => setMenu(true)}>Menu trigger</button>
+                    <Drawer isOpen={open} onOpenChange={setOpen} title="Details"><input aria-label="Label" /></Drawer>
+                    <Popover isOpen={menu} onOpenChange={setMenu} triggerRef={ref}>
+                        <Menu aria-label="Actions" autoFocus="first"><MenuItem id="a">Add</MenuItem></Menu>
+                    </Popover>
+                </>
+            );
+        }
+        render(<Host />);
+        await userEvent.click(screen.getByRole('button', { name: 'Menu trigger' }));
+        await screen.findByRole('menu');
+        await userEvent.keyboard('{Escape}');
+        await waitFor(() => expect(screen.queryByRole('menu')).toBeNull());
+        expect(screen.getByRole('region')).toBeTruthy();
+        await userEvent.keyboard('{Escape}');
+        expect(screen.queryByRole('region')).toBeNull();
+    });
+
+    it('bottom side toggles half and full with aria-expanded, and still closes on Escape', async () => {
+        function Bottom() {
+            const [open, setOpen] = useState(true);
+            return <Drawer isOpen={open} onOpenChange={setOpen} title="Details" side="bottom"><input aria-label="Label" /></Drawer>;
+        }
+        render(<Bottom />);
+        const region = screen.getByRole('region', { name: 'Details' });
+        const toggle = screen.getByRole('button', { name: 'Expand' });
+        expect(region.dataset.side).toBe('bottom');
+        expect(toggle.getAttribute('aria-expanded')).toBe('false');
+        await userEvent.click(toggle);
+        const collapse = screen.getByRole('button', { name: 'Collapse' });
+        expect(collapse.getAttribute('aria-expanded')).toBe('true');
+        expect(region.hasAttribute('data-expanded')).toBe(true);
+        await userEvent.click(collapse);
+        expect(region.hasAttribute('data-expanded')).toBe(false);
+        await userEvent.keyboard('{Escape}');
+        expect(screen.queryByRole('region')).toBeNull();
+    });
+
+    it('side drawers have no toggle', () => {
+        render(<Drawer isOpen onOpenChange={() => {}} title="Details"><input aria-label="Label" /></Drawer>);
+        expect(screen.queryByRole('button', { name: 'Expand' })).toBeNull();
+    });
+
+    it('has no axe violations', async () => {
+        const { container } = render(<DrawerHarness />);
+        await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+        await expectNoViolations(container);
     });
 });

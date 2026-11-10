@@ -77,6 +77,16 @@ The managed Beads block is task-tracking guidance, not permission to override re
 - **Minimal**: Keep tool instruction files as pointers to `bd prime`; use the same conservative git policy unless active instructions say otherwise.
 - **Team-maintainer**: Only when the repository explicitly opts in, agents may close beads, run quality gates, commit, and push as part of session close. A current "do not commit" or "do not push" instruction still wins.
 
+## Releasing
+
+A "Version X.Y.Z" commit does **not** publish anything. Consumers (Aurora) install from a GitHub release tarball, which exists only after the `vX.Y.Z` tag is pushed and the Release workflow (`.github/workflows/release.yml`) has run.
+
+- Tag the version commit (`git tag vX.Y.Z <commit>`), then push the branch and the tag. The tag must match `package.json`'s version.
+- Tagging and pushing is outward-facing: ask first unless the user said to release.
+- Never re-tag or replace a release asset; consumers' lockfiles record its integrity hash. To fix a bad release, cut a new version.
+- Verify with `gh release view vX.Y.Z`.
+- In handoffs, say "committed, not yet tagged or released" until that is true. Don't call work shipped or published, and don't close beads as shipped, before the release exists.
+
 ## Session Completion
 
 This protocol applies when ending a Beads implementation workflow. It is subordinate to explicit user, repository, and orchestrator instructions.

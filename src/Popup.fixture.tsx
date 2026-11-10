@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { Button, Dialog, Menu, MenuItem, MenuSeparator, Popover } from './index';
+import { Button, Dialog, Menu, MenuItem, MenuSeparator, Popover, SubmenuItem } from './index';
 
 const noop = () => {};
 
@@ -11,6 +11,20 @@ function ActionsMenu() {
             <MenuSeparator />
             <MenuItem id="delete">Delete</MenuItem>
         </Menu>
+    );
+}
+
+function CascadeFixture() {
+    return (
+        <div className="ui-popover" style={{ position: 'static', display: 'inline-block' }}>
+            <Menu aria-label="Add node" autoFocus={false}>
+                <SubmenuItem id="math" aria-label="Math" label="Math" description="Numeric nodes">
+                    <MenuItem id="add" description="Adds two numbers">Add</MenuItem>
+                    <MenuItem id="mul">Multiply</MenuItem>
+                </SubmenuItem>
+                <MenuItem id="out">Output</MenuItem>
+            </Menu>
+        </div>
     );
 }
 
@@ -42,5 +56,6 @@ function DialogFixture() {
 export default {
     'Popover at a point': <PopoverAtPoint />,
     Menu: <MenuFixture />,
+    'Menu with submenu': <CascadeFixture />,
     Dialog: <DialogFixture />,
 };
