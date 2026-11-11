@@ -1,4 +1,6 @@
 import type { ReactNode } from 'react';
+import { Icon } from './Icon';
+import { circledExclamationIcon, warningIcon } from './icons';
 
 export interface StatusMessageProps {
     id?: string;
@@ -18,7 +20,7 @@ export function StatusMessage({ id, tone = 'neutral', urgent = false, children }
             role={urgent ? 'alert' : 'status'}
             aria-live={urgent ? 'assertive' : 'polite'}
         >
-            {tone !== 'neutral' && children ? <span aria-hidden="true">{tone === 'error' ? '✖' : '⚠'} </span> : null}
+            {tone !== 'neutral' && children ? <Icon icon={tone === 'error' ? circledExclamationIcon : warningIcon} /> : null}
             {children}
         </div>
     );

@@ -1,4 +1,6 @@
 import type { KeyboardEventHandler, ReactNode } from 'react';
+import { Icon } from './Icon';
+import { chevronRightIcon } from './icons';
 import { Menu as AriaMenu, MenuItem as AriaMenuItem, Popover as AriaPopover, Separator, SubmenuTrigger, Text } from 'react-aria-components';
 
 export interface MenuProps {
@@ -59,7 +61,7 @@ export function SubmenuItem({ id, isDisabled, description, label, onAction, chil
         <SubmenuTrigger>
             <AriaMenuItem id={id} isDisabled={isDisabled} textValue={ariaLabel} className="ui-menu-item ui-menu-item-submenu">
                 <ItemBody description={description}>{label}</ItemBody>
-                <span className="ui-menu-chevron" aria-hidden="true">›</span>
+                <span className="ui-menu-chevron"><Icon icon={chevronRightIcon} size="sm" /></span>
             </AriaMenuItem>
             <AriaPopover className="ui-popover" data-submenu="">
                 <AriaMenu aria-label={ariaLabel} className="ui-menu" onAction={onAction ? (k) => onAction(String(k)) : undefined}>{children}</AriaMenu>

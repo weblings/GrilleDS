@@ -1,3 +1,10 @@
+v0.1.0-dev.9:
+- Icon - New Icon component and size tokens, with a vendored set of 20 icons and THIRD_PARTY_NOTICES for their licenses
+- Icon - Plain-SVG export (@weblings/grille/icons/*.svg) for pages without React
+- Drawer, Select, Disclosure, Menu submenu, Callout, StatusMessage - Render Grille icons instead of text glyphs
+- Button - .ui-button is now an inline flex row so icons sit beside labels
+- Slider - Track fill
+
 v0.1.0-dev.8:
 - Drawer - New side="bottom": full width, half height by default, with an Expand/Collapse toggle and optional controlled expanded props
 - Drawer - Escape closes an open Drawer even when focus is outside it, unless a menu, popover or dialog is open and takes that Escape first

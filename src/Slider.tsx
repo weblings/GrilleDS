@@ -15,7 +15,12 @@ export function Slider({ label, value, min, max, step = 1, onChange }: SliderPro
             <Label className="ui-field-label">{label}</Label>
             <div className="ui-slider-control">
                 <SliderTrack className="ui-slider-track">
-                    <SliderThumb className="ui-slider-thumb" />
+                    {({ state }) => (
+                        <>
+                            <div className="ui-slider-fill" style={{ width: `${state.getThumbPercent(0) * 100}%` }} />
+                            <SliderThumb className="ui-slider-thumb" />
+                        </>
+                    )}
                 </SliderTrack>
                 <SliderOutput className="ui-slider-output" />
             </div>

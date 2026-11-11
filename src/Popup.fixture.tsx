@@ -1,5 +1,6 @@
 import { useRef } from 'react';
-import { Button, Dialog, Menu, MenuItem, MenuSeparator, Popover, SubmenuItem } from './index';
+import { Button, Dialog, Icon, Menu, MenuItem, MenuSeparator, Popover, SubmenuItem } from './index';
+import { chevronDownIcon } from './icons';
 
 const noop = () => {};
 
@@ -45,7 +46,7 @@ function DialogFixture() {
     return (
         <>
             {/* Stands in for the trigger the popover drops down from, as in a title menu. */}
-            <span ref={ref} style={{ display: 'inline-block' }}><Button>File ▾</Button></span>
+            <span ref={ref} style={{ display: 'inline-block' }}><Button>File <Icon icon={chevronDownIcon} size="sm" /></Button></span>
             <Popover isOpen onOpenChange={noop} triggerRef={ref} isNonModal>
                 <Dialog aria-label="Effect"><ActionsMenu /></Dialog>
             </Popover>

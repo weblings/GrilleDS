@@ -34,6 +34,7 @@ stable API.
 | `./tokens.json` | DTCG source, for other generators |
 | `./ui.css` | Component skin |
 | `./fonts.css` | Inter 400, 600 and 700 |
+| `./icons/<name>.svg` | Each icon as a plain SVG, for pages without React |
 
 ### CSS layers
 
@@ -47,6 +48,31 @@ part of the API:
 
 `mountIsland(el, node)` renders React into one element and returns a function that removes it, so a
 page can convert one piece at a time.
+
+### Icons without React
+
+Each icon also ships as `dist/icons/<name>.svg` (kebab-case: `chevron-down.svg`, `x-mark.svg`),
+with the same paths as `Icon`. Copy the files you need into the page's folder:
+
+```html
+<img src="icons/chevron-down.svg" width="16" height="16" alt="">
+```
+
+The files have no width or height, so size them with CSS or attributes. They use `currentColor`,
+but an `<img>` can't inherit it and draws black. To color an icon, use it as a CSS mask, or paste
+the `<svg>` inline:
+
+```css
+.chevron {
+    width: 16px;
+    height: 16px;
+    background: currentColor;
+    mask: url(icons/chevron-down.svg) center / contain no-repeat;
+}
+```
+
+The files draw at the glyph's own box. `Icon` draws 4px past the layout box on each side
+(`--ui-size-icon-overhang`); a page that wants the same optical size should do likewise.
 
 ## Develop
 

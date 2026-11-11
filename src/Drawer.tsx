@@ -1,5 +1,7 @@
 import { useEffect, useRef, useId, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react';
 import { Button } from 'react-aria-components';
+import { Icon } from './Icon';
+import { fullscreenArrowIcon, fullscreenArrowExitIcon, xMarkIcon } from './icons';
 
 export interface DrawerProps {
     isOpen: boolean;
@@ -86,11 +88,11 @@ export function Drawer({ isOpen, onOpenChange, title, subtitle, side = 'right', 
             <div className="ui-drawer-head">
                 <h2 id={titleId} className="ui-drawer-title">{title}</h2>
                 {side === 'bottom' ? (
-                    <Button className="ui-button ui-drawer-toggle" aria-expanded={isExpanded} onPress={toggle}>
-                        {isExpanded ? 'Collapse' : 'Expand'}
+                    <Button className="ui-button ui-drawer-toggle" aria-label={isExpanded ? 'Collapse' : 'Expand'} aria-expanded={isExpanded} onPress={toggle}>
+                        <Icon icon={isExpanded ? fullscreenArrowExitIcon : fullscreenArrowIcon} />
                     </Button>
                 ) : null}
-                <Button className="ui-button ui-drawer-close" aria-label="Close" onPress={() => onOpenChange(false)}>×</Button>
+                <Button className="ui-button ui-drawer-close" aria-label="Close" onPress={() => onOpenChange(false)}><Icon icon={xMarkIcon} /></Button>
             </div>
             {subtitle ? <p id={subtitleId} className="ui-drawer-subtitle">{subtitle}</p> : null}
             <div className="ui-drawer-body">{children}</div>

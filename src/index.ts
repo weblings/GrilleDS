@@ -11,6 +11,8 @@ export { SearchField, type SearchFieldProps } from './SearchField';
 export { Autocomplete, type AutocompleteProps } from './Autocomplete';
 export { ListBox, ListBoxItem, Section, type ListBoxProps, type ListBoxItemProps, type SectionProps } from './ListBox';
 export { Header } from './Header';
+export { Icon, type IconProps } from './Icon';
+export * from './icons';
 export { Slider, type SliderProps } from './Slider';
 export { Disclosure, type DisclosureProps } from './Disclosure';
 export { Tabs, type TabsProps, type TabItem } from './Tabs';

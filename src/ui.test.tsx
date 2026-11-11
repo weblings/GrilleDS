@@ -5,7 +5,9 @@ import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 import { useRef, useState } from 'react';
-import { Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, Drawer, Menu, MenuItem, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField } from './index';
+import * as icons from './icons';
+import type { IconData } from './icons';
+import { Icon, Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, Drawer, Menu, MenuItem, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField } from './index';
 
 afterEach(cleanup);
 
@@ -93,6 +95,13 @@ describe('Select', () => {
         expect(onChange).not.toHaveBeenCalled();
     });
 
+    it('draws the chevron as an icon, not a text glyph', () => {
+        render(<Select label="Lyrics from" options={options} value="Vocals" onChange={() => {}} />);
+        const trigger = screen.getByRole('button');
+        expect(trigger.querySelector('svg.ui-icon')).toBeTruthy();
+        expect(trigger.textContent).toBe('Vocals');
+    });
+
     it('has no axe violations', async () => {
         const { container } = render(<FieldList><Select label="Lyrics from" options={options} value="Vocals" onChange={() => {}} /></FieldList>);
         await expectNoViolations(container);
@@ -106,6 +115,12 @@ describe('Slider', () => {
         screen.getByRole('slider').focus();
         await userEvent.keyboard('{ArrowRight}');
         expect(onChange).toHaveBeenCalledWith(1.5);
+    });
+
+    it('fills the track up to the thumb', () => {
+        const { container } = render(<Slider label="Difficulty" min={0} max={5} step={0.5} value={1.5} onChange={() => {}} />);
+        const fill = container.querySelector<HTMLElement>('.ui-slider-fill');
+        expect(fill?.style.width).toBe('30%');
     });
 
     it('has no axe violations', async () => {
@@ -122,6 +137,13 @@ describe('Disclosure', () => {
         await userEvent.click(trigger);
         expect(trigger.getAttribute('aria-expanded')).toBe('true');
         expect(screen.getByText('log text')).toBeTruthy();
+    });
+
+    it('draws its chevron as an icon, not a text glyph', () => {
+        render(<Disclosure title="Show log"><p>log text</p></Disclosure>);
+        const trigger = screen.getByRole('button', { name: 'Show log' });
+        expect(trigger.querySelector('svg.ui-icon')).toBeTruthy();
+        expect(trigger.textContent).toBe('Show log');
     });
 
     it('has no axe violations', async () => {
@@ -152,6 +174,13 @@ describe('Tabs', () => {
 });
 
 describe('Callout', () => {
+    it('draws the warning mark as an icon, not a text glyph', () => {
+        render(<Callout title="Heads up"><p>details</p></Callout>);
+        const title = screen.getByText('Heads up');
+        expect(title.querySelector('svg.ui-icon')).toBeTruthy();
+        expect(title.textContent).toBe('Heads up');
+    });
+
     it('renders as a note with its title and body', () => {
         render(<Callout title="Heads up"><p>details</p></Callout>);
         expect(screen.getByRole('note').textContent).toContain('Heads up');
@@ -176,14 +205,16 @@ describe('StatusMessage', () => {
         render(<StatusMessage tone="error" urgent>Failed</StatusMessage>);
         const region = screen.getByRole('alert');
         expect(region.getAttribute('data-tone')).toBe('error');
-        expect(region.textContent).toBe('✖ Failed');
+        expect(region.textContent).toBe('Failed');
+        expect(region.querySelector('svg.ui-icon')).toBeTruthy();
     });
 
     it('prefixes the warning tone with a warning icon', () => {
         render(<StatusMessage tone="warning">Partly done</StatusMessage>);
         const region = screen.getByRole('status');
         expect(region.getAttribute('data-tone')).toBe('warning');
-        expect(region.textContent).toBe('⚠ Partly done');
+        expect(region.textContent).toBe('Partly done');
+        expect(region.querySelector('svg.ui-icon')).toBeTruthy();
     });
 
     it('has no axe violations', async () => {
@@ -563,6 +594,14 @@ describe('Drawer', () => {
         expect(document.activeElement).toBe(open);
     });
 
+    it('draws the close button as an icon, not a text glyph', async () => {
+        render(<DrawerHarness />);
+        await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+        const close = screen.getByRole('button', { name: 'Close' });
+        expect(close.querySelector('svg.ui-icon')).toBeTruthy();
+        expect(close.textContent).toBe('');
+    });
+
     it('closes on Escape while focus is inside', async () => {
         const onChange = vi.fn();
         render(<DrawerHarness onChange={onChange} />);
@@ -625,6 +664,8 @@ describe('Drawer', () => {
         render(<Bottom />);
         const region = screen.getByRole('region', { name: 'Details' });
         const toggle = screen.getByRole('button', { name: 'Expand' });
+        expect(toggle.querySelector('svg.ui-icon')).toBeTruthy();
+        expect(toggle.textContent).toBe('');
         expect(region.dataset.side).toBe('bottom');
         expect(toggle.getAttribute('aria-expanded')).toBe('false');
         await userEvent.click(toggle);
@@ -645,6 +686,37 @@ describe('Drawer', () => {
     it('has no axe violations', async () => {
         const { container } = render(<DrawerHarness />);
         await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+        await expectNoViolations(container);
+    });
+});
+
+describe('Icon', () => {
+    const all = Object.entries(icons).filter((entry): entry is [string, IconData] => 'viewBox' in entry[1]);
+
+    it('exports every vendored icon', () => {
+        expect(all.length).toBe(20);
+    });
+
+    it.each(all)('%s has a viewBox and renders decorative with currentColor', (_name, icon) => {
+        expect(icon.viewBox).toMatch(/^0 0 \d+ \d+$/);
+        const { container } = render(<Icon icon={icon} />);
+        const svg = container.querySelector('svg')!;
+        expect(svg.getAttribute('viewBox')).toBe(icon.viewBox);
+        expect(svg.getAttribute('aria-hidden')).toBe('true');
+        expect(svg.getAttribute('fill')).toBe('currentColor');
+        for (const path of container.querySelectorAll('path')) {
+            expect([null, 'currentColor', 'none']).toContain(path.getAttribute('fill'));
+            if (path.getAttribute('fill') === 'none') expect(path.getAttribute('stroke')).toBe('currentColor');
+        }
+    });
+
+    it('is named only when given a label', () => {
+        render(<Icon icon={icons.playIcon} label="Play" />);
+        expect(screen.getByRole('img', { name: 'Play' })).toBeTruthy();
+    });
+
+    it('names an icon button and has no axe violations', async () => {
+        const { container } = render(<Button icon aria-label="Play"><Icon icon={icons.playIcon} /></Button>);
         await expectNoViolations(container);
     });
 });
