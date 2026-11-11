@@ -34,6 +34,16 @@
   .ui-button[data-variant="primary"][data-icon] { padding: var(--ui-size-space-lg); }
   .ui-button[data-disabled] { background: var(--ui-color-control-bg); color: var(--ui-color-text-disabled); cursor: not-allowed; }
 
+  /* The glyph is drawn larger than its layout box: the margin pulls the overhang back in, so Vidstack's 32 grid
+     and Zest's 24 grid (both padded) read at the same weight as text. Layout size is --ui-size-icon; glyph is that plus 2x overhang. */
+  .ui-icon {
+    --ui-icon-box: var(--ui-size-icon);
+    flex: none; display: block; color: inherit;
+    width: calc(var(--ui-icon-box) + 2 * var(--ui-size-icon-overhang)); height: calc(var(--ui-icon-box) + 2 * var(--ui-size-icon-overhang));
+    margin: calc(-1 * var(--ui-size-icon-overhang));
+  }
+  .ui-icon[data-size="sm"] { --ui-icon-box: var(--ui-size-icon-sm); }
+
   .ui-field-list { display: grid; grid-template-columns: max-content 1fr; }
   .ui-field {
     display: grid; grid-template-columns: subgrid; grid-column: 1 / -1; align-items: center;

@@ -1,7 +1,7 @@
 # Icon source: vendored Vidstack, Zest and Aurora SVGs
 
 Id: 2026-11-11-icon-source
-Status: shipped 2026-11-11 — Grille-ky2.1 closed. Not exported from the package entry yet; Grille-ky2.2 adds the `Icon` component.
+Status: shipped 2026-11-11 — Grille-ky2.1 closed. Exported from the package root by Grille-ky2.2.
 
 ## What landed
 

@@ -5,7 +5,9 @@ import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 import { useRef, useState } from 'react';
-import { Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, Drawer, Menu, MenuItem, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField } from './index';
+import * as icons from './icons';
+import type { IconData } from './icons';
+import { Icon, Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, Drawer, Menu, MenuItem, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField } from './index';
 
 afterEach(cleanup);
 
@@ -651,6 +653,37 @@ describe('Drawer', () => {
     it('has no axe violations', async () => {
         const { container } = render(<DrawerHarness />);
         await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+        await expectNoViolations(container);
+    });
+});
+
+describe('Icon', () => {
+    const all = Object.entries(icons).filter((entry): entry is [string, IconData] => 'viewBox' in entry[1]);
+
+    it('exports every vendored icon', () => {
+        expect(all.length).toBe(18);
+    });
+
+    it.each(all)('%s has a viewBox and renders decorative with currentColor', (_name, icon) => {
+        expect(icon.viewBox).toMatch(/^0 0 \d+ \d+$/);
+        const { container } = render(<Icon icon={icon} />);
+        const svg = container.querySelector('svg')!;
+        expect(svg.getAttribute('viewBox')).toBe(icon.viewBox);
+        expect(svg.getAttribute('aria-hidden')).toBe('true');
+        expect(svg.getAttribute('fill')).toBe('currentColor');
+        for (const path of container.querySelectorAll('path')) {
+            expect([null, 'currentColor', 'none']).toContain(path.getAttribute('fill'));
+            if (path.getAttribute('fill') === 'none') expect(path.getAttribute('stroke')).toBe('currentColor');
+        }
+    });
+
+    it('is named only when given a label', () => {
+        render(<Icon icon={icons.playIcon} label="Play" />);
+        expect(screen.getByRole('img', { name: 'Play' })).toBeTruthy();
+    });
+
+    it('names an icon button and has no axe violations', async () => {
+        const { container } = render(<Button icon aria-label="Play"><Icon icon={icons.playIcon} /></Button>);
         await expectNoViolations(container);
     });
 });
