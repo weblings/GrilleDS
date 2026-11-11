@@ -177,7 +177,7 @@ describe('Callout', () => {
     it('draws the warning mark as an icon, not a text glyph', () => {
         render(<Callout title="Heads up"><p>details</p></Callout>);
         const title = screen.getByText('Heads up');
-        expect(title.querySelector('svg.ui-icon[data-tight]')).toBeTruthy();
+        expect(title.querySelector('svg.ui-icon')).toBeTruthy();
         expect(title.textContent).toBe('Heads up');
     });
 
@@ -205,14 +205,16 @@ describe('StatusMessage', () => {
         render(<StatusMessage tone="error" urgent>Failed</StatusMessage>);
         const region = screen.getByRole('alert');
         expect(region.getAttribute('data-tone')).toBe('error');
-        expect(region.textContent).toBe('✖ Failed');
+        expect(region.textContent).toBe('Failed');
+        expect(region.querySelector('svg.ui-icon')).toBeTruthy();
     });
 
     it('prefixes the warning tone with a warning icon', () => {
         render(<StatusMessage tone="warning">Partly done</StatusMessage>);
         const region = screen.getByRole('status');
         expect(region.getAttribute('data-tone')).toBe('warning');
-        expect(region.textContent).toBe('⚠ Partly done');
+        expect(region.textContent).toBe('Partly done');
+        expect(region.querySelector('svg.ui-icon')).toBeTruthy();
     });
 
     it('has no axe violations', async () => {
@@ -692,7 +694,7 @@ describe('Icon', () => {
     const all = Object.entries(icons).filter((entry): entry is [string, IconData] => 'viewBox' in entry[1]);
 
     it('exports every vendored icon', () => {
-        expect(all.length).toBe(19);
+        expect(all.length).toBe(20);
     });
 
     it.each(all)('%s has a viewBox and renders decorative with currentColor', (_name, icon) => {

@@ -202,7 +202,9 @@
   .ui-callout-body li { margin-bottom: var(--ui-size-space-xs); }
   .ui-callout-body li strong { color: var(--ui-color-text-emphasis); }
 
-  .ui-status-message { margin-top: var(--ui-size-space-xs); }
+  .ui-status-message { margin-top: var(--ui-size-space-xs); display: flex; align-items: flex-start; gap: var(--ui-size-space-md); }
+  /* The sm icon's layout box is 12px; centre it on the first 15px line. */
+  .ui-status-message > .ui-icon { margin-top: calc(1.5px - var(--ui-size-icon-overhang)); }
   .ui-status-message[data-tone="warning"] { color: var(--ui-color-text-warning); }
   .ui-status-message[data-tone="error"] { color: var(--ui-color-text-error); }
 

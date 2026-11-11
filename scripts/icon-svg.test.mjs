@@ -7,7 +7,7 @@ import { createElement } from 'react';
 import { describe, expect, it } from 'vitest';
 import { Icon } from '../src/Icon';
 import * as icons from '../src/icons/index';
-import { iconFileName, writeIconSvgs } from './icon-svg.mjs';
+import { iconFileName, iconToSvg, writeIconSvgs } from './icon-svg.mjs';
 
 const dir = mkdtempSync(join(tmpdir(), 'grille-icons-'));
 const names = writeIconSvgs(icons, dir);
@@ -15,7 +15,7 @@ const ds = (svg) => [...svg.matchAll(/ d="([^"]+)"/g)].map((m) => m[1]);
 
 describe('icon svg export', () => {
     it('writes one file per icon', () => {
-        expect(names).toHaveLength(19);
+        expect(names).toHaveLength(20);
         expect(readdirSync(dir).sort()).toEqual(names.map((n) => `${n}.svg`).sort());
     });
 
@@ -33,8 +33,8 @@ describe('icon svg export', () => {
         expect(file).toContain('fill="currentColor"');
     });
 
-    it('strokes the warning outline', () => {
-        const svg = readFileSync(join(dir, 'warning.svg'), 'utf8');
-        expect(svg).toContain('fill="none" stroke="currentColor" stroke-width="1.8897638"');
+    it('strokes a path that asks for a stroke', () => {
+        const svg = iconToSvg({ viewBox: '0 0 10 10', paths: [{ d: 'M0 0h10', stroke: { width: 1.5 } }] });
+        expect(svg).toContain('fill="none" stroke="currentColor" stroke-width="1.5"');
     });
 });

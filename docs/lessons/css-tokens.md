@@ -87,10 +87,11 @@ Tags: icon, overhang, sizing, tokens
 Applies-when: adding an icon whose artwork fills its viewBox (no built-in padding)
 
 The overhang rule draws every glyph at box + 2x overhang (24px at md) and pulls it back with a negative margin.
-That equals the visual weight of padded grids (Vidstack 32, Zest 24). Aurora's warning mark is 34x29 with no
-padding, so it came out 24px wide beside about 13px text and looked huge.
+That equals the visual weight of padded grids (Vidstack 32, Zest 24). Aurora's own warning mark (34x29, no
+padding, since replaced by Zest's) came out 24px wide beside about 13px text and looked huge.
 
 **Fix:** set `tight: true` on the `IconData`. `Icon` emits `data-tight` and `.ui-icon[data-tight]` takes the
-layout box with no overhang or margin. Check any new icon by rendering it beside text at both sizes.
+layout box with no overhang or margin. No shipped icon uses it today; the flag stays for the next unpadded
+artwork. Check any new icon by rendering it beside text at both sizes.
 
 Origin: Grille-ky2.4, found in review of the Callout.
