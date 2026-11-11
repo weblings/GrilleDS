@@ -8,4 +8,6 @@ every run. Human lookup for `[[id]]` citations elsewhere in `docs/`.
 | `2026-11-10-agents-md-rewrite` | [log/2026-11-10-agents-md-rewrite.md](log/2026-11-10-agents-md-rewrite.md) | AGENTS.md rewrite and CLAUDE.md stub |
 | `2026-11-10-aurora-docs-migration` | [log/2026-11-10-aurora-docs-migration.md](log/2026-11-10-aurora-docs-migration.md) | Aurora docs-infra migration closed out |
 | `2026-11-10-lessons-seed` | [log/2026-11-10-lessons-seed.md](log/2026-11-10-lessons-seed.md) | Seed docs/lessons with generalized lessons |
+| `2026-11-11-icon-source` | [log/2026-11-11-icon-source.md](log/2026-11-11-icon-source.md) | Icon source: vendored Vidstack, Zest and Aurora SVGs |
+| `2026-11-11-slider-fill` | [log/2026-11-11-slider-fill.md](log/2026-11-11-slider-fill.md) | Slider fills the track up to the thumb |
 | `aurora-docs-migration` | [archive/AuroraDocsMigrationPlan.md](archive/AuroraDocsMigrationPlan.md) | Migrate docs infra to Aurora's system (docs/ tree, check scripts, AGENTS.md) |

@@ -156,6 +156,10 @@
     content: ''; position: absolute; top: 8px; left: 0; right: 0; height: 4px;
     border-radius: 2px; background: var(--ui-color-control-bg-active);
   }
+  .ui-slider-fill {
+    position: absolute; top: 8px; left: 0; height: 4px;
+    border-radius: 2px; background: var(--ui-color-control-accent);
+  }
   .ui-slider-thumb {
     top: 10px; width: 16px; height: 16px; border-radius: 50%; cursor: pointer;
     background: var(--ui-color-control-accent);

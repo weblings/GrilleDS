@@ -108,6 +108,12 @@ describe('Slider', () => {
         expect(onChange).toHaveBeenCalledWith(1.5);
     });
 
+    it('fills the track up to the thumb', () => {
+        const { container } = render(<Slider label="Difficulty" min={0} max={5} step={0.5} value={1.5} onChange={() => {}} />);
+        const fill = container.querySelector<HTMLElement>('.ui-slider-fill');
+        expect(fill?.style.width).toBe('30%');
+    });
+
     it('has no axe violations', async () => {
         const { container } = render(<FieldList><Slider label="Difficulty" min={0} max={5} step={0.5} value={1} onChange={() => {}} /></FieldList>);
         await expectNoViolations(container);
