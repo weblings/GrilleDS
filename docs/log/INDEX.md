@@ -15,3 +15,4 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | 2026-11-11 | [[2026-11-11-slider-fill]] — Slider fills the track up to the thumb | Grille-7o0 |
 | 2026-11-11 | [[2026-11-11-icon-source]] — vendored Vidstack, Zest and Aurora icons with third-party notices | Grille-ky2.1 |
 | 2026-11-11 | [[2026-11-11-icon-component]] — Icon component, size tokens, overhang rule | Grille-ky2.2 |
+| 2026-11-11 | [[2026-11-11-icon-svg-export]] — plain-SVG icon export in dist/icons | Grille-ky2.3 |

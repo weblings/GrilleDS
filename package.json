@@ -20,7 +20,8 @@
     "./tokens.css": "./dist/tokens.css",
     "./tokens.json": "./tokens/tokens.json",
     "./ui.css": "./dist/ui.css",
-    "./fonts.css": "./dist/fonts.css"
+    "./fonts.css": "./dist/fonts.css",
+    "./icons/*.svg": "./dist/icons/*.svg"
   },
   "files": [
     "dist",
@@ -29,7 +30,7 @@
   ],
   "scripts": {
     "dev": "npm run build:tokens && cosmos",
-    "build": "npm run build:tokens && vite build && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs",
+    "build": "npm run build:tokens && vite build && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && node scripts/build-icon-svgs.mjs",
     "build:tokens": "node scripts/build-tokens.mjs",
     "prepare": "npm run build",
     "test": "vitest run",
