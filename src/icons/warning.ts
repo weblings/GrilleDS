@@ -1,5 +1,4 @@
 // Origin: Zest Free icons, Copyright 2019-2021 32pixels, LLC (Zest Free License), symbols/triangle-exclaimation.svg. See THIRD_PARTY_NOTICES.
-// Trial swap for Aurora's own 34x29 warning mark (see git history before this change); padded 24 grid, so it takes the normal overhang.
 import type { IconData } from './types';
 
 export const warningIcon: IconData = {

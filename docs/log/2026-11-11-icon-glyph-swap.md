@@ -13,7 +13,7 @@ Status: shipped 2026-11-11 — Grille-ky2.4.
   instead of `⚠` / `✖`. Both use the md layout box with no overhang (owner found the overhang sm icons too big for text),
   baseline-aligned and translated so the icon centre meets the capital-letter centre (0.36em above the baseline).
   Measured within ~0.4px of cap centre; wrapped text keeps the icon on line one.
-- `warningIcon` is now Zest's `triangle-exclaimation` (trial swap by the owner; Aurora's 34x29 mark is in git history).
+- `warningIcon` is now Zest's `triangle-exclaimation` (the owner dropped Aurora's own 34x29 mark; it survives only in git history).
 - New `circledExclamationIcon`: Zest has no exclamation circle, so it joins the ring of `circled-info` with the bar
   and dot of `triangle-exclaimation` (derived, credited in THIRD_PARTY_NOTICES).
 - Vendored Vidstack `chevron-right` (20 icons now; notices, vendor script, counts in tests and icon-source log updated).

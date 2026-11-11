@@ -1,5 +1,5 @@
 // Regenerates the Vidstack icons in src/icons from media-icons raw/ (devDependency, pinned).
-// Zest icons and the warning mark are hand-kept files and are not touched here.
+// Zest icons (including warning and circled-exclamation) are hand-kept files and are not touched here.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
