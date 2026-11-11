@@ -11,7 +11,7 @@ export interface CalloutProps {
 export function Callout({ title, children }: CalloutProps) {
     return (
         <div className="ui-callout" role="note" data-tone="warning">
-            <strong className="ui-callout-title"><Icon icon={warningIcon} size="sm" />{title}</strong>
+            <strong className="ui-callout-title"><Icon icon={warningIcon} />{title}</strong>
             <div className="ui-callout-body">{children}</div>
         </div>
     );

@@ -47,6 +47,14 @@
   .ui-icon[data-size="sm"] { --ui-icon-box: var(--ui-size-icon-sm); }
   /* Artwork drawn edge to edge has no padding to overhang, so it takes the layout box exactly. */
   .ui-icon[data-tight] { width: var(--ui-icon-box); height: var(--ui-icon-box); margin: 0; }
+  /* Inline with text the overhang makes an icon taller than the line, so icons there take the layout box too, sitting on the
+     first line's baseline with their centre at the middle of the capitals (about 0.36em above the baseline). */
+  .ui-callout-title > .ui-icon, .ui-status-message > .ui-icon {
+    width: var(--ui-icon-box); height: var(--ui-icon-box);
+    margin: 0;
+    /* Flex puts the icon's bottom edge on the baseline; move it down so its centre is 0.36em up. */
+    translate: 0 calc(var(--ui-icon-box) / 2 - 0.36em);
+  }
 
   .ui-field-list { display: grid; grid-template-columns: max-content 1fr; }
   .ui-field {
@@ -195,16 +203,14 @@
     border-radius: var(--ui-size-radius-md); padding: var(--ui-size-callout-pad-y) var(--ui-size-callout-pad-x);
     margin: var(--ui-size-space-xl) 0; font-size: var(--ui-size-font-sm);
   }
-  .ui-callout-title { display: flex; align-items: center; gap: var(--ui-size-space-md); margin-bottom: var(--ui-size-space-sm); }
+  .ui-callout-title { display: flex; align-items: baseline; gap: var(--ui-size-space-md); margin-bottom: var(--ui-size-space-sm); }
   .ui-callout[data-tone="warning"] .ui-callout-title { color: var(--ui-color-text-warning); }
   .ui-callout-body { color: var(--ui-color-text-secondary); }
   .ui-callout-body ul { padding-left: 20px; }
   .ui-callout-body li { margin-bottom: var(--ui-size-space-xs); }
   .ui-callout-body li strong { color: var(--ui-color-text-emphasis); }
 
-  .ui-status-message { margin-top: var(--ui-size-space-xs); display: flex; align-items: flex-start; gap: var(--ui-size-space-md); }
-  /* The sm icon's layout box is 12px; centre it on the first 15px line. */
-  .ui-status-message > .ui-icon { margin-top: calc(1.5px - var(--ui-size-icon-overhang)); }
+  .ui-status-message { margin-top: var(--ui-size-space-xs); display: flex; align-items: baseline; gap: var(--ui-size-space-md); }
   .ui-status-message[data-tone="warning"] { color: var(--ui-color-text-warning); }
   .ui-status-message[data-tone="error"] { color: var(--ui-color-text-error); }
 

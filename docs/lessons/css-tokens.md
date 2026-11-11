@@ -95,3 +95,22 @@ layout box with no overhang or margin. No shipped icon uses it today; the flag s
 artwork. Check any new icon by rendering it beside text at both sizes.
 
 Origin: Grille-ky2.4, found in review of the Callout.
+
+---
+
+## An icon beside text needs the layout box and a cap-height offset, not the overhang or flex centring
+Tags: icon, text, alignment, baseline, flex
+Applies-when: placing an `Icon` inline with a label, title or status text
+
+Two things make an icon look off next to text. The overhang draws it about 4px past each side, so at 13-16px text it is
+taller than the line. And flex `align-items: center` or `flex-start` centres the box on the line, not on the capitals,
+so the icon sits 1-2px high. Flex also ignores an SVG's margins when it finds a baseline (it uses the border box), so
+a margin offset does nothing.
+
+**Fix:** give the icon the layout box with no overhang, set the container to `align-items: baseline`, and
+`translate: 0 calc(var(--ui-icon-box) / 2 - 0.36em)` so its centre meets the middle of the capitals (0.36em ~ Inter's
+cap-height centre). In `ui.css` this is the `.ui-callout-title > .ui-icon, .ui-status-message > .ui-icon` rule. Measure
+with a canvas `measureText('E')` cap height against the path's bounding box, not by eye; a headless browser without Inter
+falls back to a similar font, so confirm in Cosmos.
+
+Origin: Grille-ky2.4, owner review of Callout and StatusMessage.

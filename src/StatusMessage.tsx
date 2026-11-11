@@ -20,7 +20,7 @@ export function StatusMessage({ id, tone = 'neutral', urgent = false, children }
             role={urgent ? 'alert' : 'status'}
             aria-live={urgent ? 'assertive' : 'polite'}
         >
-            {tone !== 'neutral' && children ? <Icon icon={tone === 'error' ? circledExclamationIcon : warningIcon} size="sm" /> : null}
+            {tone !== 'neutral' && children ? <Icon icon={tone === 'error' ? circledExclamationIcon : warningIcon} /> : null}
             {children}
         </div>
     );
