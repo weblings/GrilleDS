@@ -1,4 +1,4 @@
-// Origin: Aurora web/ui/icons/warning.svg (Aurora's own mark, 34x29; outline triangle stroked, exclamation filled). Pending owner confirmation that it belongs in Grille.
+// Origin: Aurora web/ui/icons/warning.svg (Aurora's own mark, 34x29; outline triangle stroked, exclamation filled). Made by the project owner; shared across the projects that use Grille.
 import type { IconData } from './types';
 
 export const warningIcon: IconData = {

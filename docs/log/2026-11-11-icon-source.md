@@ -12,7 +12,7 @@ Status: shipped 2026-11-11 — Grille-ky2.1 closed. Not exported from the packag
 - Zest Free undo, redo, minus (24 grid). Aurora's minus.svg had no viewBox and `fill="#000"`; the copy
   has `0 0 24 24` and currentColor.
 - Aurora's warning mark (34x29, outline stroked via `stroke: { width }`, exclamation filled).
-  Still needs the owner to confirm it belongs in Grille.
+  Made by the owner and used across the projects that ingest Grille, so it belongs here (confirmed 2026-11-11).
 - `THIRD_PARTY_NOTICES` at the repo root (Vidstack MIT and Zest Free texts) added to `package.json`
   `files`.
 
