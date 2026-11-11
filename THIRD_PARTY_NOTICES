@@ -4,7 +4,7 @@ Grille ships the icon artwork below in `src/icons`. Each icon file carries an or
 
 ## Vidstack media-icons 0.10.0 (MIT)
 
-Source: <https://github.com/vidstack/media-icons> (npm `media-icons`). Used for: arrow-left, add, chevron-down, chevron-up, x-mark, fullscreen-arrow, fullscreen-arrow-exit, play, pause, stop, search, menu-horizontal, arrow-up, arrow-down.
+Source: <https://github.com/vidstack/media-icons> (npm `media-icons`). Used for: arrow-left, add, chevron-down, chevron-right, chevron-up, x-mark, fullscreen-arrow, fullscreen-arrow-exit, play, pause, stop, search, menu-horizontal, arrow-up, arrow-down.
 
 ```
 MIT License

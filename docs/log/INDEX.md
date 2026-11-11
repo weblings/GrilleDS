@@ -16,3 +16,4 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | 2026-11-11 | [[2026-11-11-icon-source]] — vendored Vidstack, Zest and Aurora icons with third-party notices | Grille-ky2.1 |
 | 2026-11-11 | [[2026-11-11-icon-component]] — Icon component, size tokens, overhang rule | Grille-ky2.2 |
 | 2026-11-11 | [[2026-11-11-icon-svg-export]] — plain-SVG icon export in dist/icons | Grille-ky2.3 |
+| 2026-11-11 | [[2026-11-11-icon-glyph-swap]] — Drawer, Select, Disclosure, Menu, Callout use icons not glyphs | Grille-ky2.4 |

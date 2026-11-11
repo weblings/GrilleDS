@@ -66,3 +66,31 @@ base rule (`flex: 0 0 auto`) wins silently.
 and let the component fill it.
 
 Origin: RockyRoad desktop-dom.md — A CSS child-combinator selector has to match where a component actually inserts itself, not where it's called from.
+
+---
+
+## An Icon is `display: block`, so any container that isn't flex stacks it under the label
+Tags: icon, flex, button, layout
+Applies-when: putting an `Icon` next to text inside a button, title or link
+
+`.ui-icon` is a block so the overhang margin works. Inside an inline-block `.ui-button` or a plain `<strong>`
+it breaks onto its own line. The Select trigger looked right only because it was already flex, which hid the
+problem until the Popup trigger, Disclosure and Callout hit it.
+
+**Fix:** make the container a flex row (`display: inline-flex; align-items: center; gap`). `.ui-button` now
+does this for every button; give any other icon-plus-text container the same.
+
+---
+
+## An icon drawn edge to edge must opt out of the overhang or it renders oversized
+Tags: icon, overhang, sizing, tokens
+Applies-when: adding an icon whose artwork fills its viewBox (no built-in padding)
+
+The overhang rule draws every glyph at box + 2x overhang (24px at md) and pulls it back with a negative margin.
+That equals the visual weight of padded grids (Vidstack 32, Zest 24). Aurora's warning mark is 34x29 with no
+padding, so it came out 24px wide beside about 13px text and looked huge.
+
+**Fix:** set `tight: true` on the `IconData`. `Icon` emits `data-tight` and `.ui-icon[data-tight]` takes the
+layout box with no overhang or margin. Check any new icon by rendering it beside text at both sizes.
+
+Origin: Grille-ky2.4, found in review of the Callout.

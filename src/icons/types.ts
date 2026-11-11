@@ -8,5 +8,7 @@ export interface IconPath {
 
 export interface IconData {
     viewBox: string;
+    /** The artwork fills its viewBox edge to edge (no built-in padding), so Icon skips the overhang. */
+    tight?: boolean;
     paths: IconPath[];
 }

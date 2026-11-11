@@ -4,6 +4,7 @@ export { arrowDownIcon } from './arrowDown';
 export { arrowLeftIcon } from './arrowLeft';
 export { arrowUpIcon } from './arrowUp';
 export { chevronDownIcon } from './chevronDown';
+export { chevronRightIcon } from './chevronRight';
 export { chevronUpIcon } from './chevronUp';
 export { fullscreenArrowIcon } from './fullscreenArrow';
 export { fullscreenArrowExitIcon } from './fullscreenArrowExit';

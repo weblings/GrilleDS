@@ -4,7 +4,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const version = JSON.parse(readFileSync('node_modules/media-icons/package.json', 'utf8')).version;
-const names = ['arrow-left', 'add', 'chevron-down', 'chevron-up', 'x-mark', 'fullscreen-arrow', 'fullscreen-arrow-exit',
+const names = ['arrow-left', 'add', 'chevron-down', 'chevron-right', 'chevron-up', 'x-mark', 'fullscreen-arrow', 'fullscreen-arrow-exit',
     'play', 'pause', 'stop', 'search', 'menu-horizontal', 'arrow-up', 'arrow-down'];
 const camel = (n) => n.replace(/-(\w)/g, (_, c) => c.toUpperCase());
 

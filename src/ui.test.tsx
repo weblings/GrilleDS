@@ -95,6 +95,13 @@ describe('Select', () => {
         expect(onChange).not.toHaveBeenCalled();
     });
 
+    it('draws the chevron as an icon, not a text glyph', () => {
+        render(<Select label="Lyrics from" options={options} value="Vocals" onChange={() => {}} />);
+        const trigger = screen.getByRole('button');
+        expect(trigger.querySelector('svg.ui-icon')).toBeTruthy();
+        expect(trigger.textContent).toBe('Vocals');
+    });
+
     it('has no axe violations', async () => {
         const { container } = render(<FieldList><Select label="Lyrics from" options={options} value="Vocals" onChange={() => {}} /></FieldList>);
         await expectNoViolations(container);
@@ -132,6 +139,13 @@ describe('Disclosure', () => {
         expect(screen.getByText('log text')).toBeTruthy();
     });
 
+    it('draws its chevron as an icon, not a text glyph', () => {
+        render(<Disclosure title="Show log"><p>log text</p></Disclosure>);
+        const trigger = screen.getByRole('button', { name: 'Show log' });
+        expect(trigger.querySelector('svg.ui-icon')).toBeTruthy();
+        expect(trigger.textContent).toBe('Show log');
+    });
+
     it('has no axe violations', async () => {
         const { container } = render(<Disclosure title="Show log"><p>log text</p></Disclosure>);
         await expectNoViolations(container);
@@ -160,6 +174,13 @@ describe('Tabs', () => {
 });
 
 describe('Callout', () => {
+    it('draws the warning mark as an icon, not a text glyph', () => {
+        render(<Callout title="Heads up"><p>details</p></Callout>);
+        const title = screen.getByText('Heads up');
+        expect(title.querySelector('svg.ui-icon[data-tight]')).toBeTruthy();
+        expect(title.textContent).toBe('Heads up');
+    });
+
     it('renders as a note with its title and body', () => {
         render(<Callout title="Heads up"><p>details</p></Callout>);
         expect(screen.getByRole('note').textContent).toContain('Heads up');
@@ -571,6 +592,14 @@ describe('Drawer', () => {
         expect(document.activeElement).toBe(open);
     });
 
+    it('draws the close button as an icon, not a text glyph', async () => {
+        render(<DrawerHarness />);
+        await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+        const close = screen.getByRole('button', { name: 'Close' });
+        expect(close.querySelector('svg.ui-icon')).toBeTruthy();
+        expect(close.textContent).toBe('');
+    });
+
     it('closes on Escape while focus is inside', async () => {
         const onChange = vi.fn();
         render(<DrawerHarness onChange={onChange} />);
@@ -633,6 +662,8 @@ describe('Drawer', () => {
         render(<Bottom />);
         const region = screen.getByRole('region', { name: 'Details' });
         const toggle = screen.getByRole('button', { name: 'Expand' });
+        expect(toggle.querySelector('svg.ui-icon')).toBeTruthy();
+        expect(toggle.textContent).toBe('');
         expect(region.dataset.side).toBe('bottom');
         expect(toggle.getAttribute('aria-expanded')).toBe('false');
         await userEvent.click(toggle);
@@ -661,7 +692,7 @@ describe('Icon', () => {
     const all = Object.entries(icons).filter((entry): entry is [string, IconData] => 'viewBox' in entry[1]);
 
     it('exports every vendored icon', () => {
-        expect(all.length).toBe(18);
+        expect(all.length).toBe(19);
     });
 
     it.each(all)('%s has a viewBox and renders decorative with currentColor', (_name, icon) => {

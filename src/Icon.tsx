@@ -12,6 +12,7 @@ export function Icon({ icon, label, size = 'md' }: IconProps) {
         <svg
             className="ui-icon"
             data-size={size}
+            {...(icon.tight ? { 'data-tight': '' } : {})}
             viewBox={icon.viewBox}
             fill="currentColor"
             focusable="false"
