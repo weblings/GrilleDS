@@ -16,7 +16,7 @@ sits under it. Fixture "Menu long grouped submenu" in `src/Popup.fixture.tsx`.
 - Tests in `src/ui.test.tsx`: default and numeric/CSS-length maxHeight, section group labels, arrow
   keys skip headings. Typecheck, lint, build pass.
 - jsdom has no layout, so scrolling, sticky headings, and the default against Aurora's Add node
-  cascade were not checked in a browser; check in Cosmos. Not released yet (no version bump).
+  cascade were not checked in a browser; check in Cosmos. Released in [[2026-11-12-release-dev11]].
 
 ## Lessons
 
