@@ -15,6 +15,7 @@ every run. Human lookup for `[[id]]` citations elsewhere in `docs/`.
 | `2026-11-11-icon-svg-export` | [log/2026-11-11-icon-svg-export.md](log/2026-11-11-icon-svg-export.md) | Plain-SVG icon export |
 | `2026-11-11-menu-selected-item` | [log/2026-11-11-menu-selected-item.md](log/2026-11-11-menu-selected-item.md) | Menu single selection shows a check |
 | `2026-11-11-popover-trigger-toggle` | [log/2026-11-11-popover-trigger-toggle.md](log/2026-11-11-popover-trigger-toggle.md) | Popover trigger press no longer closes then reopens |
+| `2026-11-11-release-dev10` | [log/2026-11-11-release-dev10.md](log/2026-11-11-release-dev10.md) | Release v0.1.0-dev.10: Aurora editor fixes |
 | `2026-11-11-release-dev9` | [log/2026-11-11-release-dev9.md](log/2026-11-11-release-dev9.md) | Release v0.1.0-dev.9: icons |
 | `2026-11-11-slider-fill` | [log/2026-11-11-slider-fill.md](log/2026-11-11-slider-fill.md) | Slider fills the track up to the thumb |
 | `2026-11-11-tooltip` | [log/2026-11-11-tooltip.md](log/2026-11-11-tooltip.md) | Tooltip component |
