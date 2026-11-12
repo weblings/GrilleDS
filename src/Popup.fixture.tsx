@@ -58,7 +58,7 @@ function DialogFixture() {
     return (
         <>
             {/* Stands in for the trigger the popover drops down from, as in a title menu. */}
-            <span ref={ref} style={{ display: 'inline-block' }}><Button>File <Icon icon={chevronDownIcon} size="sm" /></Button></span>
+            <span ref={ref} style={{ display: 'inline-block' }}><Button aria-expanded>File <Icon icon={chevronDownIcon} size="sm" /></Button></span>
             <Popover isOpen onOpenChange={noop} triggerRef={ref} isNonModal>
                 <Dialog aria-label="Effect"><ActionsMenu /></Dialog>
             </Popover>
@@ -72,7 +72,7 @@ function TriggerToggleFixture() {
     const [open, setOpen] = useState(true);
     return (
         <>
-            <span ref={ref} style={{ display: 'inline-block' }}><Button onPress={() => setOpen((o) => !o)}>View <Icon icon={chevronDownIcon} size="sm" /></Button></span>
+            <span ref={ref} style={{ display: 'inline-block' }}><Button aria-expanded={open} onPress={() => setOpen((o) => !o)}>View <Icon icon={chevronDownIcon} size="sm" /></Button></span>
             <Popover isOpen={open} onOpenChange={setOpen} triggerRef={ref} isNonModal>
                 <ActionsMenu />
             </Popover>
