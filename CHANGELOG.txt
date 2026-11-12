@@ -1,3 +1,7 @@
+Unreleased:
+- Menu submenu - New maxHeight prop (default --ui-size-submenu-max-height, 480px, never taller than the screen space): a long flyout scrolls inside its popup
+- Menu - New MenuSection with a title: a sticky, non-focusable group heading that labels its items
+
 v0.1.0-dev.10:
 - Popover - Pressing the trigger of an open non-modal Popover closes it instead of closing then reopening it
 - Autocomplete - The search field fills its container, so it fits a fixed-width popover

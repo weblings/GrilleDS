@@ -1,7 +1,7 @@
-import type { KeyboardEventHandler, ReactNode } from 'react';
+import type { CSSProperties, KeyboardEventHandler, ReactNode } from 'react';
 import { Icon } from './Icon';
 import { checkIcon, chevronRightIcon } from './icons';
-import { Menu as AriaMenu, MenuItem as AriaMenuItem, Popover as AriaPopover, Separator, SubmenuTrigger, Text } from 'react-aria-components';
+import { Header as AriaHeader, Menu as AriaMenu, MenuItem as AriaMenuItem, MenuSection as AriaMenuSection, Popover as AriaPopover, Separator, SubmenuTrigger, Text } from 'react-aria-components';
 
 export interface MenuProps {
     'aria-label': string;
@@ -74,12 +74,15 @@ export interface SubmenuItemProps {
     'aria-label': string;
     // Runs for an action in the flyout, with the item's id.
     onAction?: (id: string) => void;
-    // MenuItem children of the flyout.
+    // Tallest the flyout grows before its items scroll: px as a number, or any CSS length. Defaults to the
+    // --ui-size-submenu-max-height token; the flyout never exceeds the space left on screen.
+    maxHeight?: number | string;
+    // MenuItem and MenuSection children of the flyout.
     children: ReactNode;
 }
 
 // A row that opens a flyout menu beside it: hover or ArrowRight opens, ArrowLeft or Escape closes one level.
-export function SubmenuItem({ id, isDisabled, description, label, onAction, children, 'aria-label': ariaLabel }: SubmenuItemProps) {
+export function SubmenuItem({ id, isDisabled, description, label, onAction, maxHeight, children, 'aria-label': ariaLabel }: SubmenuItemProps) {
     return (
         <SubmenuTrigger>
             <AriaMenuItem id={id} isDisabled={isDisabled} textValue={ariaLabel} className="ui-menu-item ui-menu-item-submenu">
@@ -87,9 +90,28 @@ export function SubmenuItem({ id, isDisabled, description, label, onAction, chil
                 <span className="ui-menu-chevron"><Icon icon={chevronRightIcon} size="sm" /></span>
             </AriaMenuItem>
             <AriaPopover className="ui-popover" data-submenu="">
-                <AriaMenu aria-label={ariaLabel} className="ui-menu" onAction={onAction ? (k) => onAction(String(k)) : undefined}>{children}</AriaMenu>
+                <AriaMenu
+                    aria-label={ariaLabel}
+                    className="ui-menu"
+                    style={maxHeight === undefined ? undefined : ({ '--ui-submenu-max-height': typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight } as CSSProperties)}
+                    onAction={onAction ? (k) => onAction(String(k)) : undefined}>{children}</AriaMenu>
             </AriaPopover>
         </SubmenuTrigger>
+    );
+}
+
+export interface MenuSectionProps {
+    // The group's heading: sticky at the top of a scrolling menu, not focusable, and the group's accessible label.
+    title: string;
+    children: ReactNode;
+}
+
+export function MenuSection({ title, children }: MenuSectionProps) {
+    return (
+        <AriaMenuSection className="ui-menu-section">
+            <AriaHeader className="ui-menu-section-header">{title}</AriaHeader>
+            {children}
+        </AriaMenuSection>
     );
 }
 
