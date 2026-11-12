@@ -23,17 +23,27 @@ body {
 .tokens-diff-pair { display: flex; gap: var(--ui-size-space-md); align-items: center; }
 .tokens-tag { font-size: var(--ui-size-font-xs); font-weight: 600; padding: 1px var(--ui-size-space-md); border-radius: var(--ui-size-radius-pill); background: var(--ui-color-control-bg); }
 
-/* V5 inspector overlay. Plain literals on purpose: it must not depend on the tokens it audits. */
-.inspector-toggle { position: fixed; right: 8px; top: 8px; z-index: 2147483647; font: 12px/1.2 system-ui, sans-serif; padding: 4px 8px; border: 1px solid #888; border-radius: 4px; background: #fff; color: #111; cursor: pointer; }
-.inspector-toggle[aria-pressed="true"] { background: #111; color: #fff; }
-.inspector-outline { position: fixed; z-index: 2147483646; pointer-events: none; outline: 2px solid #e5484d; outline-offset: -1px; background: rgb(229 72 77 / 12%); }
-.inspector-panel { position: fixed; right: 8px; bottom: 8px; z-index: 2147483647; width: min(460px, calc(100vw - 16px)); max-height: 60vh; overflow: auto; padding: 8px; border: 1px solid #888; border-radius: 6px; background: #fff; color: #111; font: 11px/1.4 ui-monospace, monospace; box-shadow: 0 4px 16px rgb(0 0 0 / 25%); }
-.inspector-panel table { width: 100%; border-collapse: collapse; margin-top: 6px; }
-.inspector-panel th { text-align: left; font-weight: 600; padding: 2px 6px 2px 0; white-space: nowrap; vertical-align: top; }
-.inspector-panel td { padding: 2px 6px 2px 0; vertical-align: top; }
-.inspector-panel tr[data-trace="none"] { background: #ffe5e5; }
-.inspector-head { font-weight: 700; word-break: break-all; }
-.inspector-flag { color: #b00020; font-weight: 600; }
-.inspector-ok { color: #1a7f37; }
-.inspector-layer, .inspector-vars { color: #666; font-size: 10px; }
-.inspector-vars { margin-top: 6px; word-break: break-all; }
+/* V5 inspector overlay. Literal dark palette on purpose: it must not depend on the tokens it audits,
+   and it matches the Cosmos shell chrome whatever theme the fixture is showing. */
+.inspector-toggle { position: fixed; right: 8px; top: 8px; z-index: 2147483647; font: 500 12px/1.2 system-ui, sans-serif; padding: 5px 10px; border: 1px solid #3a4150; border-radius: 6px; background: #1c2028; color: #c9cfdb; cursor: pointer; box-shadow: 0 1px 4px rgb(0 0 0 / 30%); }
+.inspector-toggle:hover { background: #262b36; color: #fff; }
+.inspector-toggle:focus-visible { outline: 2px solid #e6e9ef; outline-offset: 1px; }
+.inspector-outline { position: fixed; z-index: 2147483646; pointer-events: none; outline: 2px solid #e6e9ef; outline-offset: -1px; background: rgb(230 233 239 / 14%); }
+.inspector-panel { position: fixed; right: 8px; bottom: 8px; z-index: 2147483647; width: min(480px, calc(100vw - 16px)); max-height: 60vh; overflow: auto; padding: 10px; border: 1px solid #3a4150; border-radius: 8px; background: #1c2028; color: #c9cfdb; font: 11px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace; box-shadow: 0 8px 24px rgb(0 0 0 / 45%); color-scheme: dark; }
+.inspector-panel table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.inspector-panel th { text-align: left; font-weight: 600; color: #8f98aa; padding: 3px 8px 3px 0; white-space: nowrap; vertical-align: top; }
+.inspector-panel td { padding: 3px 8px 3px 0; vertical-align: top; }
+.inspector-panel tr { border-top: 1px solid #2a303b; }
+.inspector-panel tr[data-trace="none"] { background: rgb(240 82 82 / 14%); }
+.inspector-head { font-weight: 700; color: #fff; word-break: break-all; }
+.inspector-box { color: #8f98aa; margin-top: 2px; }
+.inspector-flag { color: #ff8585; font-weight: 600; margin-top: 4px; }
+.inspector-ok { color: #5fd38d; margin-top: 4px; }
+.inspector-layer, .inspector-vars { color: #8f98aa; font-size: 10px; }
+.inspector-vars { margin-top: 8px; word-break: break-all; }
+.inspector-val { display: flex; align-items: center; gap: 6px; }
+.inspector-swatch { flex: none; width: 14px; height: 14px; border-radius: 3px; border: 1px solid #5b6577; background-image: linear-gradient(45deg, #444 25%, transparent 25% 75%, #444 75%), linear-gradient(45deg, #444 25%, transparent 25% 75%, #444 75%); background-size: 8px 8px; background-position: 0 0, 4px 4px; position: relative; overflow: hidden; }
+.inspector-swatch > i { position: absolute; inset: 0; }
+.inspector-size { flex: none; height: 8px; min-width: 1px; max-width: 120px; border-radius: 2px; background: #c9cfdb; }
+.inspector-radius { flex: none; width: 14px; height: 14px; border: 1px solid #5b6577; background: #2a303b; }
+.inspector-weight { flex: none; background: #c9cfdb; border-radius: 2px; min-width: 1px; max-width: 120px; }

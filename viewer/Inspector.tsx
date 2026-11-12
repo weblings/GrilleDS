@@ -115,6 +115,29 @@ function normalizer(prop: string) {
     };
 }
 
+const COLOR_PROPS = new Set(['color', 'background-color', 'border-top-color', 'outline-color']);
+const SIZE_PROPS = /^(padding-|row-gap|column-gap)/;
+const LINE_PROPS = new Set(['border-top-width', 'outline-width']);
+
+/** A small visual for the computed value: a colour square, or a bar as wide as the length. */
+function Preview({ prop, value }: { prop: string; value: string }) {
+    if (COLOR_PROPS.has(prop)) {
+        return (
+            <span className="inspector-swatch" aria-hidden>
+                <i style={{ background: value }} />
+            </span>
+        );
+    }
+    const n = parseFloat(value);
+    if (prop === 'border-top-left-radius' && n >= 0) {
+        return <span className="inspector-radius" style={{ borderTopLeftRadius: Math.min(n, 14) }} aria-hidden />;
+    }
+    if (prop === 'font-size' && n > 0) return <span style={{ fontSize: Math.min(n, 24), lineHeight: 1 }} aria-hidden>Aa</span>;
+    if (LINE_PROPS.has(prop) && n > 0) return <span className="inspector-weight" style={{ width: 24, height: Math.min(n, 8) }} aria-hidden />;
+    if (SIZE_PROPS.test(prop) && n > 0) return <span className="inspector-size" style={{ width: n }} aria-hidden />;
+    return null;
+}
+
 interface Row {
     prop: string;
     computed: string;
@@ -171,7 +194,12 @@ function Panel({ el }: { el: Element }) {
                     {rows.map((x) => (
                         <tr key={x.prop} data-trace={x.trace.kind}>
                             <th>{x.prop}</th>
-                            <td>{x.computed}</td>
+                            <td>
+                                <span className="inspector-val">
+                                    <Preview prop={x.prop} value={x.computed} />
+                                    {x.computed}
+                                </span>
+                            </td>
                             <td>
                                 {x.trace.kind === 'none' ? (
                                     'no token'

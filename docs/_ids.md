@@ -20,5 +20,6 @@ every run. Human lookup for `[[id]]` citations elsewhere in `docs/`.
 | `2026-11-11-slider-fill` | [log/2026-11-11-slider-fill.md](log/2026-11-11-slider-fill.md) | Slider fills the track up to the thumb |
 | `2026-11-11-tooltip` | [log/2026-11-11-tooltip.md](log/2026-11-11-tooltip.md) | Tooltip component |
 | `2026-11-11-trigger-chevron-flip` | [log/2026-11-11-trigger-chevron-flip.md](log/2026-11-11-trigger-chevron-flip.md) | Open dropdown triggers flip their chevron |
+| `2026-11-12-inspector-visual-pass` | [log/2026-11-12-inspector-visual-pass.md](log/2026-11-12-inspector-visual-pass.md) | Inspector visual pass |
 | `2026-11-12-submenu-max-height` | [log/2026-11-12-submenu-max-height.md](log/2026-11-12-submenu-max-height.md) | Submenu maxHeight and MenuSection |
 | `aurora-docs-migration` | [archive/AuroraDocsMigrationPlan.md](archive/AuroraDocsMigrationPlan.md) | Migrate docs infra to Aurora's system (docs/ tree, check scripts, AGENTS.md) |
