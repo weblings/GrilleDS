@@ -1,3 +1,10 @@
+v0.1.0-dev.10:
+- Popover - Pressing the trigger of an open non-modal Popover closes it instead of closing then reopening it
+- Autocomplete - The search field fills its container, so it fits a fixed-width popover
+- Tooltip - New Tooltip and TooltipTrigger (React Aria), skinned like a popup, with rich content; hover and focus show it, Esc hides it
+- Menu - New selectionMode, selectedKey and onSelectionChange: a single-select Menu marks the chosen item with a check
+- Select, dropdown triggers - The chevron flips while the popup is open (any button with aria-expanded and a direct-child chevron icon)
+
 v0.1.0-dev.9:
 - Icon - New Icon component and size tokens, with a vendored set of 20 icons and THIRD_PARTY_NOTICES for their licenses
 - Icon - Plain-SVG export (@weblings/grille/icons/*.svg) for pages without React
