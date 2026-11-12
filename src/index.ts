@@ -1,6 +1,7 @@
 export { Button, type ButtonProps } from './Button';
 export { Popover, type PopoverProps, type PopoverPoint } from './Popover';
 export { Menu, MenuItem, MenuSeparator, SubmenuItem, type MenuProps, type MenuItemProps, type SubmenuItemProps } from './Menu';
+export { Tooltip, TooltipTrigger, type TooltipProps, type TooltipTriggerProps } from './Tooltip';
 export { Dialog, type DialogProps } from './Dialog';
 export { Modal, type ModalProps } from './Modal';
 export { Drawer, type DrawerProps } from './Drawer';

@@ -7,7 +7,7 @@ import { axe } from 'vitest-axe';
 import { useRef, useState } from 'react';
 import * as icons from './icons';
 import { chevronDownIcon, type IconData } from './icons';
-import { Icon, Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, Drawer, Menu, MenuItem, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField } from './index';
+import { Icon, Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, Drawer, Menu, MenuItem, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField, Tooltip, TooltipTrigger } from './index';
 
 afterEach(cleanup);
 
@@ -784,5 +784,37 @@ describe('Icon', () => {
     it('names an icon button and has no axe violations', async () => {
         const { container } = render(<Button icon aria-label="Play"><Icon icon={icons.playIcon} /></Button>);
         await expectNoViolations(container);
+    });
+});
+
+describe('Tooltip', () => {
+    function Example() {
+        return (
+            <TooltipTrigger delay={0} closeDelay={0}>
+                <Button>Effect</Button>
+                <Tooltip><b>Reverb</b><ul><li>Mix</li></ul></Tooltip>
+            </TooltipTrigger>
+        );
+    }
+
+    it('shows rich content on keyboard focus, describes the trigger, and hides on Esc', async () => {
+        render(<Example />);
+        expect(screen.queryByRole('tooltip')).toBeNull();
+        await userEvent.tab();
+        const tip = await screen.findByRole('tooltip');
+        expect(tip.textContent).toContain('Reverb');
+        expect(tip.querySelector('b')).not.toBeNull();
+        expect(tip.querySelectorAll('li')).toHaveLength(1);
+        expect(screen.getByRole('button', { name: 'Effect' }).getAttribute('aria-describedby')).toBe(tip.id);
+        await userEvent.keyboard('{Escape}');
+        await waitFor(() => expect(screen.queryByRole('tooltip')).toBeNull());
+    });
+
+    it('shows on hover', async () => {
+        render(<Example />);
+        // React Aria ignores hover while its last input was the keyboard, which the test above leaves behind.
+        await userEvent.click(document.body);
+        await userEvent.hover(screen.getByRole('button', { name: 'Effect' }));
+        expect(await screen.findByRole('tooltip')).toBeTruthy();
     });
 });

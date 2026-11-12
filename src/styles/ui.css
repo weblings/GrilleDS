@@ -102,6 +102,17 @@
     padding: var(--ui-size-popup-pad);
   }
   .ui-popover[data-trigger="Select"] { min-width: var(--trigger-width); }
+  .ui-tooltip {
+    max-width: var(--ui-size-tooltip-max-width); box-sizing: border-box;
+    padding: var(--ui-size-tooltip-pad-y) var(--ui-size-tooltip-pad-x);
+    border-radius: var(--ui-size-radius-sm);
+    background: var(--ui-color-popup-bg); border: 1px solid var(--ui-color-popup-border);
+    box-shadow: var(--ui-shadow-popup);
+    color: var(--ui-color-text-default); font-size: var(--ui-size-font-xs); line-height: 1.5;
+    pointer-events: none;
+  }
+  .ui-tooltip ul { margin: var(--ui-size-space-xs) 0 0; padding-left: var(--ui-size-space-xl); }
+  .ui-tooltip p { margin: 0; }
   .ui-modal-overlay {
     position: fixed; inset: 0; z-index: 100;
     display: flex; align-items: center; justify-content: center;
