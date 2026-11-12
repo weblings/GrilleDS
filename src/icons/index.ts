@@ -3,6 +3,7 @@ export { addIcon } from './add';
 export { arrowDownIcon } from './arrowDown';
 export { arrowLeftIcon } from './arrowLeft';
 export { arrowUpIcon } from './arrowUp';
+export { checkIcon } from './check';
 export { circledExclamationIcon } from './circledExclamation';
 export { chevronDownIcon } from './chevronDown';
 export { chevronRightIcon } from './chevronRight';

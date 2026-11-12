@@ -1,6 +1,6 @@
 import type { KeyboardEventHandler, ReactNode } from 'react';
 import { Icon } from './Icon';
-import { chevronRightIcon } from './icons';
+import { checkIcon, chevronRightIcon } from './icons';
 import { Menu as AriaMenu, MenuItem as AriaMenuItem, Popover as AriaPopover, Separator, SubmenuTrigger, Text } from 'react-aria-components';
 
 export interface MenuProps {
@@ -10,11 +10,24 @@ export interface MenuProps {
     // Runs on every key in the menu, before React Aria's own handling. Stop propagation here for keys the page must not see.
     onKeyDown?: KeyboardEventHandler<HTMLDivElement>;
     autoFocus?: boolean | 'first' | 'last';
+    // 'single' makes the items menuitemradio and marks the chosen one with a check; picking an item closes the menu.
+    selectionMode?: 'single';
+    selectedKey?: string;
+    onSelectionChange?: (id: string) => void;
     children: ReactNode;
 }
 
-export function Menu({ onAction, autoFocus = true, ...rest }: MenuProps) {
-    return <AriaMenu {...rest} autoFocus={autoFocus} className="ui-menu" onAction={onAction ? (k) => onAction(String(k)) : undefined} />;
+export function Menu({ onAction, autoFocus = true, selectedKey, onSelectionChange, ...rest }: MenuProps) {
+    return (
+        <AriaMenu
+            {...rest}
+            autoFocus={autoFocus}
+            className="ui-menu"
+            onAction={onAction ? (k) => onAction(String(k)) : undefined}
+            selectedKeys={selectedKey === undefined ? undefined : [selectedKey]}
+            onSelectionChange={onSelectionChange ? (keys) => { const [id] = keys === 'all' ? [] : keys; if (id !== undefined) onSelectionChange(String(id)); } : undefined}
+        />
+    );
 }
 
 export interface MenuItemProps {
@@ -39,7 +52,17 @@ function ItemBody({ description, children }: { description?: string; children: R
 }
 
 export function MenuItem({ description, children, ...rest }: MenuItemProps) {
-    return <AriaMenuItem {...rest} className="ui-menu-item"><ItemBody description={description}>{children}</ItemBody></AriaMenuItem>;
+    return (
+        <AriaMenuItem {...rest} className="ui-menu-item">
+            {({ selectionMode, isSelected }) => (
+                <>
+                    {/* The slot is reserved on every row of a selectable menu so labels stay aligned. */}
+                    {selectionMode !== 'none' && <span className="ui-menu-check">{isSelected && <Icon icon={checkIcon} size="sm" />}</span>}
+                    <ItemBody description={description}>{children}</ItemBody>
+                </>
+            )}
+        </AriaMenuItem>
+    );
 }
 
 export interface SubmenuItemProps {

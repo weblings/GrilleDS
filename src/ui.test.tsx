@@ -6,8 +6,8 @@ import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 import { useRef, useState } from 'react';
 import * as icons from './icons';
-import type { IconData } from './icons';
-import { Icon, Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, Drawer, Menu, MenuItem, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField } from './index';
+import { chevronDownIcon, type IconData } from './icons';
+import { Icon, Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, Drawer, Menu, MenuItem, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField, Tooltip, TooltipTrigger } from './index';
 
 afterEach(cleanup);
 
@@ -100,6 +100,13 @@ describe('Select', () => {
         const trigger = screen.getByRole('button');
         expect(trigger.querySelector('svg.ui-icon')).toBeTruthy();
         expect(trigger.textContent).toBe('Vocals');
+    });
+
+    it('marks the chevron so an open trigger flips it, on Select and on plain buttons', () => {
+        render(<Select label="Lyrics from" options={options} value="Vocals" onChange={() => {}} />);
+        expect(screen.getByRole('button').querySelector('svg.ui-icon[data-chevron]')).toBeTruthy();
+        const { container } = render(<Button aria-expanded="true">View <Icon icon={chevronDownIcon} size="sm" /></Button>);
+        expect(container.querySelector('[aria-expanded="true"] > svg[data-chevron]')).toBeTruthy();
     });
 
     it('has no axe violations', async () => {
@@ -277,6 +284,38 @@ function Harness({ point, nonModal, onAction, onRestore, onKeyDown }: {
     );
 }
 
+describe('Menu single selection', () => {
+    function Picker({ onChange }: { onChange?: (id: string) => void }) {
+        const [mode, setMode] = useState('once');
+        return (
+            <Menu aria-label="Mode" autoFocus={false} selectionMode="single" selectedKey={mode} onSelectionChange={(id) => { setMode(id); onChange?.(id); }}>
+                <MenuItem id="once">Once</MenuItem>
+                <MenuItem id="live">Live</MenuItem>
+            </Menu>
+        );
+    }
+
+    it('marks the chosen item as a checked menuitemradio and moves the check on pick', async () => {
+        const onChange = vi.fn();
+        render(<Picker onChange={onChange} />);
+        const once = screen.getByRole('menuitemradio', { name: 'Once' });
+        const live = screen.getByRole('menuitemradio', { name: 'Live' });
+        expect(once.getAttribute('aria-checked')).toBe('true');
+        expect(live.getAttribute('aria-checked')).toBe('false');
+        expect(once.querySelector('.ui-menu-check svg')).not.toBeNull();
+        expect(live.querySelector('.ui-menu-check')).not.toBeNull();
+        expect(live.querySelector('.ui-menu-check svg')).toBeNull();
+        await userEvent.click(live);
+        expect(onChange).toHaveBeenCalledWith('live');
+        expect(screen.getByRole('menuitemradio', { name: 'Live' }).getAttribute('aria-checked')).toBe('true');
+    });
+
+    it('leaves plain menus without a check slot', () => {
+        render(<Menu aria-label="Plain" autoFocus={false}><MenuItem id="a">A</MenuItem></Menu>);
+        expect(screen.getByRole('menuitem', { name: 'A' }).querySelector('.ui-menu-check')).toBeNull();
+    });
+});
+
 describe('Popover and Menu', () => {
     it('anchors to a point and repositions when the point changes', async () => {
         const { rerender } = render(<Harness point={{ x: 40, y: 50 }} />);
@@ -310,6 +349,33 @@ describe('Popover and Menu', () => {
         expect(screen.queryByRole('menu')).toBeNull();
         expect(onRestore).toHaveBeenCalledTimes(1);
         expect(onRestore).toHaveBeenCalledWith(open);
+    });
+
+    it('leaves a non-modal popover closed when its trigger is clicked while open, and still closes on Tab out', async () => {
+        function Toggle() {
+            const [open, setOpen] = useState(false);
+            const ref = useRef<HTMLButtonElement>(null);
+            return (
+                <>
+                    <button ref={ref} onClick={() => setOpen((o) => !o)}>Toggle</button>
+                    <button>Elsewhere</button>
+                    <Popover isOpen={open} onOpenChange={setOpen} triggerRef={ref} isNonModal aria-label="Pop">
+                        <Menu aria-label="Actions"><MenuItem id="a">A</MenuItem></Menu>
+                    </Popover>
+                </>
+            );
+        }
+        render(<Toggle />);
+        const toggle = screen.getByRole('button', { name: 'Toggle' });
+        await userEvent.click(toggle);
+        expect(screen.getByRole('menu')).toBeTruthy();
+        await userEvent.click(toggle);
+        expect(screen.queryByRole('menu')).toBeNull();
+        await userEvent.click(toggle);
+        expect(screen.getByRole('menu')).toBeTruthy();
+        await userEvent.tab();
+        await userEvent.tab();
+        expect(screen.queryByRole('menu')).toBeNull();
     });
 
     it('has no axe violations', async () => {
@@ -694,7 +760,7 @@ describe('Icon', () => {
     const all = Object.entries(icons).filter((entry): entry is [string, IconData] => 'viewBox' in entry[1]);
 
     it('exports every vendored icon', () => {
-        expect(all.length).toBe(20);
+        expect(all.length).toBe(21);
     });
 
     it.each(all)('%s has a viewBox and renders decorative with currentColor', (_name, icon) => {
@@ -718,5 +784,37 @@ describe('Icon', () => {
     it('names an icon button and has no axe violations', async () => {
         const { container } = render(<Button icon aria-label="Play"><Icon icon={icons.playIcon} /></Button>);
         await expectNoViolations(container);
+    });
+});
+
+describe('Tooltip', () => {
+    function Example() {
+        return (
+            <TooltipTrigger delay={0} closeDelay={0}>
+                <Button>Effect</Button>
+                <Tooltip><b>Reverb</b><ul><li>Mix</li></ul></Tooltip>
+            </TooltipTrigger>
+        );
+    }
+
+    it('shows rich content on keyboard focus, describes the trigger, and hides on Esc', async () => {
+        render(<Example />);
+        expect(screen.queryByRole('tooltip')).toBeNull();
+        await userEvent.tab();
+        const tip = await screen.findByRole('tooltip');
+        expect(tip.textContent).toContain('Reverb');
+        expect(tip.querySelector('b')).not.toBeNull();
+        expect(tip.querySelectorAll('li')).toHaveLength(1);
+        expect(screen.getByRole('button', { name: 'Effect' }).getAttribute('aria-describedby')).toBe(tip.id);
+        await userEvent.keyboard('{Escape}');
+        await waitFor(() => expect(screen.queryByRole('tooltip')).toBeNull());
+    });
+
+    it('shows on hover', async () => {
+        render(<Example />);
+        // React Aria ignores hover while its last input was the keyboard, which the test above leaves behind.
+        await userEvent.click(document.body);
+        await userEvent.hover(screen.getByRole('button', { name: 'Effect' }));
+        expect(await screen.findByRole('tooltip')).toBeTruthy();
     });
 });

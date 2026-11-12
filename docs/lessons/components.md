@@ -118,3 +118,18 @@ stands, so it can silently test a stale build.
 depends on a changed API.
 
 Origin: Aurora webui-testing.md — A browser check against the built app needs a rebuilt binary, and `getByRole` misses react-aria submenus.
+
+---
+
+## Pressing a popover's trigger blur-closes it, then the trigger's toggle reopens it
+Tags: react-aria, popover, focus, toggle, non-modal
+Applies-when: a non-modal Popover has a trigger that toggles it open and closed
+
+React Aria's popover closes on blur. In Chrome a press focuses the trigger, so `onOpenChange(false)`
+fires first and the trigger's `onClick` toggle then sees closed and reopens. Safari does not focus
+buttons on click, so it hides the bug.
+
+**Fix:** record whether the last `pointerdown` (capture, on `document`) landed inside `triggerRef`
+and ignore the close while it did. Tab out still closes. jsdom with `userEvent.click` reproduces it.
+
+Origin: Grille-uqg.1 — Aurora editor menus flashed back open when their trigger was clicked.

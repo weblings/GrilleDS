@@ -8,9 +8,16 @@ every run. Human lookup for `[[id]]` citations elsewhere in `docs/`.
 | `2026-11-10-agents-md-rewrite` | [log/2026-11-10-agents-md-rewrite.md](log/2026-11-10-agents-md-rewrite.md) | AGENTS.md rewrite and CLAUDE.md stub |
 | `2026-11-10-aurora-docs-migration` | [log/2026-11-10-aurora-docs-migration.md](log/2026-11-10-aurora-docs-migration.md) | Aurora docs-infra migration closed out |
 | `2026-11-10-lessons-seed` | [log/2026-11-10-lessons-seed.md](log/2026-11-10-lessons-seed.md) | Seed docs/lessons with generalized lessons |
+| `2026-11-11-autocomplete-field-width` | [log/2026-11-11-autocomplete-field-width.md](log/2026-11-11-autocomplete-field-width.md) | Autocomplete search field fills its container |
 | `2026-11-11-icon-component` | [log/2026-11-11-icon-component.md](log/2026-11-11-icon-component.md) | Icon component, size tokens and overhang rule |
 | `2026-11-11-icon-glyph-swap` | [log/2026-11-11-icon-glyph-swap.md](log/2026-11-11-icon-glyph-swap.md) | Components use Grille icons instead of text glyphs |
 | `2026-11-11-icon-source` | [log/2026-11-11-icon-source.md](log/2026-11-11-icon-source.md) | Icon source: vendored Vidstack, Zest and Aurora SVGs |
 | `2026-11-11-icon-svg-export` | [log/2026-11-11-icon-svg-export.md](log/2026-11-11-icon-svg-export.md) | Plain-SVG icon export |
+| `2026-11-11-menu-selected-item` | [log/2026-11-11-menu-selected-item.md](log/2026-11-11-menu-selected-item.md) | Menu single selection shows a check |
+| `2026-11-11-popover-trigger-toggle` | [log/2026-11-11-popover-trigger-toggle.md](log/2026-11-11-popover-trigger-toggle.md) | Popover trigger press no longer closes then reopens |
+| `2026-11-11-release-dev10` | [log/2026-11-11-release-dev10.md](log/2026-11-11-release-dev10.md) | Release v0.1.0-dev.10: Aurora editor fixes |
+| `2026-11-11-release-dev9` | [log/2026-11-11-release-dev9.md](log/2026-11-11-release-dev9.md) | Release v0.1.0-dev.9: icons |
 | `2026-11-11-slider-fill` | [log/2026-11-11-slider-fill.md](log/2026-11-11-slider-fill.md) | Slider fills the track up to the thumb |
+| `2026-11-11-tooltip` | [log/2026-11-11-tooltip.md](log/2026-11-11-tooltip.md) | Tooltip component |
+| `2026-11-11-trigger-chevron-flip` | [log/2026-11-11-trigger-chevron-flip.md](log/2026-11-11-trigger-chevron-flip.md) | Open dropdown triggers flip their chevron |
 | `aurora-docs-migration` | [archive/AuroraDocsMigrationPlan.md](archive/AuroraDocsMigrationPlan.md) | Migrate docs infra to Aurora's system (docs/ tree, check scripts, AGENTS.md) |

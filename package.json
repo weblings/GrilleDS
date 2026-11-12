@@ -1,6 +1,6 @@
 {
   "name": "@weblings/grille",
-  "version": "0.1.0-dev.9",
+  "version": "0.1.0-dev.10",
   "description": "Shared design tokens and React Aria components for the weblings projects",
   "license": "MIT",
   "type": "module",

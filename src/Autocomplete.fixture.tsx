@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Autocomplete, FieldList, ListBox, ListBoxItem, Section } from './index';
 
-function Browser({ initial = '', flat = false }: { initial?: string; flat?: boolean }) {
+function Browser({ initial = '', flat = false, width }: { initial?: string; flat?: boolean; width?: number }) {
     const [q, setQ] = useState(initial);
-    return (
+    const list = (
         <FieldList>
             <Autocomplete label="Add node" value={q} onChange={setQ} placeholder="Search">
                 <ListBox aria-label="Nodes" emptyMessage="No matches">
@@ -29,6 +29,7 @@ function Browser({ initial = '', flat = false }: { initial?: string; flat?: bool
             </Autocomplete>
         </FieldList>
     );
+    return width ? <div style={{ width, outline: '1px dashed gray' }}>{list}</div> : list;
 }
 
 export default {
@@ -36,4 +37,5 @@ export default {
     'flat': <Browser flat />,
     'filtered, one section left': <Browser initial="rev" />,
     'filtered, no matches': <Browser initial="zzz" />,
+    'in a 340px container': <Browser width={340} />,
 };
