@@ -149,6 +149,8 @@
   }
   .ui-menu-item-submenu { display: flex; align-items: center; justify-content: space-between; gap: var(--ui-size-space-lg); }
   .ui-menu-item-submenu[data-open] { background: var(--ui-color-popup-bg-hover); }
+  .ui-menu-item:has(> .ui-menu-check) { display: flex; align-items: center; }
+  .ui-menu-check { display: inline-flex; flex: none; width: var(--ui-size-icon-sm); margin-right: var(--ui-size-space-md); }
   .ui-menu-chevron { color: var(--ui-color-text-disabled); }
   .ui-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .ui-menu-item[data-focused] { background: var(--ui-color-popup-bg-hover); }

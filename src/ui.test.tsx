@@ -277,6 +277,38 @@ function Harness({ point, nonModal, onAction, onRestore, onKeyDown }: {
     );
 }
 
+describe('Menu single selection', () => {
+    function Picker({ onChange }: { onChange?: (id: string) => void }) {
+        const [mode, setMode] = useState('once');
+        return (
+            <Menu aria-label="Mode" autoFocus={false} selectionMode="single" selectedKey={mode} onSelectionChange={(id) => { setMode(id); onChange?.(id); }}>
+                <MenuItem id="once">Once</MenuItem>
+                <MenuItem id="live">Live</MenuItem>
+            </Menu>
+        );
+    }
+
+    it('marks the chosen item as a checked menuitemradio and moves the check on pick', async () => {
+        const onChange = vi.fn();
+        render(<Picker onChange={onChange} />);
+        const once = screen.getByRole('menuitemradio', { name: 'Once' });
+        const live = screen.getByRole('menuitemradio', { name: 'Live' });
+        expect(once.getAttribute('aria-checked')).toBe('true');
+        expect(live.getAttribute('aria-checked')).toBe('false');
+        expect(once.querySelector('.ui-menu-check svg')).not.toBeNull();
+        expect(live.querySelector('.ui-menu-check')).not.toBeNull();
+        expect(live.querySelector('.ui-menu-check svg')).toBeNull();
+        await userEvent.click(live);
+        expect(onChange).toHaveBeenCalledWith('live');
+        expect(screen.getByRole('menuitemradio', { name: 'Live' }).getAttribute('aria-checked')).toBe('true');
+    });
+
+    it('leaves plain menus without a check slot', () => {
+        render(<Menu aria-label="Plain" autoFocus={false}><MenuItem id="a">A</MenuItem></Menu>);
+        expect(screen.getByRole('menuitem', { name: 'A' }).querySelector('.ui-menu-check')).toBeNull();
+    });
+});
+
 describe('Popover and Menu', () => {
     it('anchors to a point and repositions when the point changes', async () => {
         const { rerender } = render(<Harness point={{ x: 40, y: 50 }} />);
@@ -721,7 +753,7 @@ describe('Icon', () => {
     const all = Object.entries(icons).filter((entry): entry is [string, IconData] => 'viewBox' in entry[1]);
 
     it('exports every vendored icon', () => {
-        expect(all.length).toBe(20);
+        expect(all.length).toBe(21);
     });
 
     it.each(all)('%s has a viewBox and renders decorative with currentColor', (_name, icon) => {

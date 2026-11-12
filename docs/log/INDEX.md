@@ -20,3 +20,4 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | 2026-11-11 | [[2026-11-11-release-dev9]] — v0.1.0-dev.9 released with the icons | Grille-ky2.5 |
 | 2026-11-11 | [[2026-11-11-popover-trigger-toggle]] — trigger press on an open non-modal Popover stays closed | Grille-uqg.1 |
 | 2026-11-11 | [[2026-11-11-autocomplete-field-width]] — Autocomplete search field fills a fixed-width container | Grille-uqg.2 |
+| 2026-11-11 | [[2026-11-11-menu-selected-item]] — single-select Menu marks the chosen item with a check | Grille-uqg.4 |

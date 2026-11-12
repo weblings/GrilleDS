@@ -29,6 +29,18 @@ function CascadeFixture() {
     );
 }
 
+function SingleSelectFixture() {
+    const [mode, setMode] = useState('once');
+    return (
+        <div className="ui-popover" style={{ position: 'static', display: 'inline-block', minWidth: 140 }}>
+            <Menu aria-label="Test mode" autoFocus={false} selectionMode="single" selectedKey={mode} onSelectionChange={setMode}>
+                <MenuItem id="once">Once</MenuItem>
+                <MenuItem id="live">Live</MenuItem>
+            </Menu>
+        </div>
+    );
+}
+
 function PopoverAtPoint() {
     return (
         <Popover isOpen onOpenChange={noop} point={{ x: 120, y: 80 }} isNonModal aria-label="Context">
@@ -71,6 +83,7 @@ function TriggerToggleFixture() {
 export default {
     'Popover at a point': <PopoverAtPoint />,
     Menu: <MenuFixture />,
+    'Menu single select': <SingleSelectFixture />,
     'Menu with submenu': <CascadeFixture />,
     Dialog: <DialogFixture />,
     'Trigger toggles open popover': <TriggerToggleFixture />,
