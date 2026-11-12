@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Button, Dialog, Icon, Menu, MenuItem, MenuSeparator, Popover, SubmenuItem } from './index';
 import { chevronDownIcon } from './icons';
 
@@ -54,9 +54,24 @@ function DialogFixture() {
     );
 }
 
+// Click the trigger while the menu is open: it should close and stay closed, not flash back open.
+function TriggerToggleFixture() {
+    const ref = useRef<HTMLSpanElement>(null);
+    const [open, setOpen] = useState(true);
+    return (
+        <>
+            <span ref={ref} style={{ display: 'inline-block' }}><Button onPress={() => setOpen((o) => !o)}>View <Icon icon={chevronDownIcon} size="sm" /></Button></span>
+            <Popover isOpen={open} onOpenChange={setOpen} triggerRef={ref} isNonModal>
+                <ActionsMenu />
+            </Popover>
+        </>
+    );
+}
+
 export default {
     'Popover at a point': <PopoverAtPoint />,
     Menu: <MenuFixture />,
     'Menu with submenu': <CascadeFixture />,
     Dialog: <DialogFixture />,
+    'Trigger toggles open popover': <TriggerToggleFixture />,
 };

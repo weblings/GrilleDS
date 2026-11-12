@@ -56,6 +56,24 @@ export function Popover({ isOpen, onOpenChange, triggerRef, point, isNonModal, p
         wasOpen.current = isOpen;
     }, [isOpen]);
 
+    // Pressing the trigger blurs the popover (Chrome focuses the button), which React Aria reports as a close. The
+    // trigger's own toggle then sees it closed and reopens it. So a close while the last press was on the trigger is
+    // ignored, leaving the trigger's toggle as the only closer.
+    const pressOnTrigger = useRef(false);
+    useEffect(() => {
+        if (!isOpen || point) return;
+        const onDown = (e: PointerEvent) => {
+            const t = triggerRef?.current;
+            pressOnTrigger.current = !!t && e.target instanceof Node && t.contains(e.target);
+        };
+        document.addEventListener('pointerdown', onDown, true);
+        return () => { document.removeEventListener('pointerdown', onDown, true); pressOnTrigger.current = false; };
+    }, [isOpen, point, triggerRef]);
+    const handleOpenChange = (open: boolean) => {
+        if (!open && pressOnTrigger.current) return;
+        onOpenChange(open);
+    };
+
     // A point that has not got its anchor element yet renders nothing, rather than falling back to triggerRef.
     const anchor = point ? virtual : triggerRef;
     if (!anchor) return null;
@@ -67,7 +85,7 @@ export function Popover({ isOpen, onOpenChange, triggerRef, point, isNonModal, p
             data-anchor={point ? 'point' : 'ref'}
             triggerRef={anchor}
             isOpen={isOpen}
-            onOpenChange={onOpenChange}
+            onOpenChange={handleOpenChange}
             isNonModal={isNonModal}
             placement={placement}
             {...rest}

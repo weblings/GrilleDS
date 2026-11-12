@@ -312,6 +312,33 @@ describe('Popover and Menu', () => {
         expect(onRestore).toHaveBeenCalledWith(open);
     });
 
+    it('leaves a non-modal popover closed when its trigger is clicked while open, and still closes on Tab out', async () => {
+        function Toggle() {
+            const [open, setOpen] = useState(false);
+            const ref = useRef<HTMLButtonElement>(null);
+            return (
+                <>
+                    <button ref={ref} onClick={() => setOpen((o) => !o)}>Toggle</button>
+                    <button>Elsewhere</button>
+                    <Popover isOpen={open} onOpenChange={setOpen} triggerRef={ref} isNonModal aria-label="Pop">
+                        <Menu aria-label="Actions"><MenuItem id="a">A</MenuItem></Menu>
+                    </Popover>
+                </>
+            );
+        }
+        render(<Toggle />);
+        const toggle = screen.getByRole('button', { name: 'Toggle' });
+        await userEvent.click(toggle);
+        expect(screen.getByRole('menu')).toBeTruthy();
+        await userEvent.click(toggle);
+        expect(screen.queryByRole('menu')).toBeNull();
+        await userEvent.click(toggle);
+        expect(screen.getByRole('menu')).toBeTruthy();
+        await userEvent.tab();
+        await userEvent.tab();
+        expect(screen.queryByRole('menu')).toBeNull();
+    });
+
     it('has no axe violations', async () => {
         const { container } = render(<Harness />);
         await userEvent.click(screen.getByRole('button', { name: 'Open' }));
