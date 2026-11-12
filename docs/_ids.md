@@ -8,6 +8,7 @@ every run. Human lookup for `[[id]]` citations elsewhere in `docs/`.
 | `2026-11-10-agents-md-rewrite` | [log/2026-11-10-agents-md-rewrite.md](log/2026-11-10-agents-md-rewrite.md) | AGENTS.md rewrite and CLAUDE.md stub |
 | `2026-11-10-aurora-docs-migration` | [log/2026-11-10-aurora-docs-migration.md](log/2026-11-10-aurora-docs-migration.md) | Aurora docs-infra migration closed out |
 | `2026-11-10-lessons-seed` | [log/2026-11-10-lessons-seed.md](log/2026-11-10-lessons-seed.md) | Seed docs/lessons with generalized lessons |
+| `2026-11-11-autocomplete-field-width` | [log/2026-11-11-autocomplete-field-width.md](log/2026-11-11-autocomplete-field-width.md) | Autocomplete search field fills its container |
 | `2026-11-11-icon-component` | [log/2026-11-11-icon-component.md](log/2026-11-11-icon-component.md) | Icon component, size tokens and overhang rule |
 | `2026-11-11-icon-glyph-swap` | [log/2026-11-11-icon-glyph-swap.md](log/2026-11-11-icon-glyph-swap.md) | Components use Grille icons instead of text glyphs |
 | `2026-11-11-icon-source` | [log/2026-11-11-icon-source.md](log/2026-11-11-icon-source.md) | Icon source: vendored Vidstack, Zest and Aurora SVGs |

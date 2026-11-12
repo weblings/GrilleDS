@@ -114,3 +114,18 @@ with a canvas `measureText('E')` cap height against the path's bounding box, not
 falls back to a similar font, so confirm in Cosmos.
 
 Origin: Grille-ky2.4, owner review of Callout and StatusMessage.
+
+---
+
+## A grid `1fr` column holding a sized `<input>` overflows its container
+Tags: grid, input, overflow, min-width, search-field
+Applies-when: a text input sits in a grid or flex row inside a fixed-width container (popover, menu, panel)
+
+`1fr` means `minmax(auto, 1fr)`, so the column cannot shrink below its content's minimum. An `<input size=40>`
+has a wide intrinsic width, so the column grows past the container and the field spills out. `width: 100%` on
+the input alone does not help while the track's minimum is still `auto`.
+
+**Fix:** use `minmax(0, 1fr)` for the track and give the input `min-width: 0` (plus `justify-self: stretch` if
+a rule sets `start`). Scope it to the container that needs it so other uses keep their intrinsic width.
+
+Origin: Grille-uqg.2, Aurora Add node menu.

@@ -166,6 +166,9 @@
   .ui-autocomplete { display: flex; flex-direction: column; }
   .ui-search-field { grid-template-columns: max-content 1fr; }
   .ui-search-field .ui-text-input::-webkit-search-cancel-button { display: none; }
+  /* The input's size=40 gives it an intrinsic width; inside an Autocomplete the field fills its container instead. */
+  .ui-autocomplete .ui-search-field { grid-template-columns: max-content minmax(0, 1fr); }
+  .ui-autocomplete .ui-search-field .ui-text-input { justify-self: stretch; min-width: 0; }
   .ui-section-header {
     padding: var(--ui-size-space-sm) var(--ui-size-control-pad-x);
     color: var(--ui-color-text-secondary); font-size: var(--ui-size-font-sm); font-weight: var(--ui-font-weight-semibold);
