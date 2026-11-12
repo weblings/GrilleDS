@@ -44,6 +44,12 @@ part of the API:
 - Put your CSS reset in `@layer reset`. An unlayered reset overrides the skin.
 - `@layer app` rules can't override `ui`. Only unlayered rules can.
 
+### Dropdown triggers
+
+A trigger with `aria-expanded="true"` shows its chevron flipped. `Select` does this on its own. For
+your own trigger, set `aria-expanded` and render `<Icon icon={chevronDownIcon} />` as a direct child
+of the button.
+
 ### Adding React to a non-React page
 
 `mountIsland(el, node)` renders React into one element and returns a function that removes it, so a

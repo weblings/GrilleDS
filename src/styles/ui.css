@@ -46,6 +46,9 @@
   }
   .ui-icon[data-size="sm"] { --ui-icon-box: var(--ui-size-icon-sm); }
   /* Artwork drawn edge to edge has no padding to overhang, so it takes the layout box exactly. */
+  /* Design-system rule: a trigger with aria-expanded="true" shows its down chevron flipped. */
+  .ui-icon[data-chevron] { transition: rotate 0.1s; }
+  [aria-expanded="true"] > .ui-icon[data-chevron] { rotate: 180deg; }
   .ui-icon[data-tight] { width: var(--ui-icon-box); height: var(--ui-icon-box); margin: 0; }
   /* Inline with text the overhang makes an icon taller than the line, so icons there take the layout box too, sitting on the
      first line's baseline with their centre at the middle of the capitals (about 0.36em above the baseline). */

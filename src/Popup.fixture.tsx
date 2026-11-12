@@ -80,7 +80,18 @@ function TriggerToggleFixture() {
     );
 }
 
+// Plain buttons carrying aria-expanded: the chevron flips with the attribute alone.
+function ChevronStatesFixture() {
+    return (
+        <div style={{ display: 'flex', gap: 12 }}>
+            <Button aria-expanded="false">Closed <Icon icon={chevronDownIcon} size="sm" /></Button>
+            <Button aria-expanded="true">Open <Icon icon={chevronDownIcon} size="sm" /></Button>
+        </div>
+    );
+}
+
 export default {
+    'Trigger chevron states': <ChevronStatesFixture />,
     'Popover at a point': <PopoverAtPoint />,
     Menu: <MenuFixture />,
     'Menu single select': <SingleSelectFixture />,

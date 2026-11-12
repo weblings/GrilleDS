@@ -1,4 +1,4 @@
-import type { IconData } from './icons';
+import { chevronDownIcon, type IconData } from './icons';
 
 export interface IconProps {
     icon: IconData;
@@ -12,6 +12,7 @@ export function Icon({ icon, label, size = 'md' }: IconProps) {
         <svg
             className="ui-icon"
             data-size={size}
+            {...(icon === chevronDownIcon ? { 'data-chevron': '' } : {})}
             {...(icon.tight ? { 'data-tight': '' } : {})}
             viewBox={icon.viewBox}
             fill="currentColor"

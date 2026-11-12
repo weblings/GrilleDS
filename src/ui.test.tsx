@@ -6,7 +6,7 @@ import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 import { useRef, useState } from 'react';
 import * as icons from './icons';
-import type { IconData } from './icons';
+import { chevronDownIcon, type IconData } from './icons';
 import { Icon, Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, Drawer, Menu, MenuItem, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField } from './index';
 
 afterEach(cleanup);
@@ -100,6 +100,13 @@ describe('Select', () => {
         const trigger = screen.getByRole('button');
         expect(trigger.querySelector('svg.ui-icon')).toBeTruthy();
         expect(trigger.textContent).toBe('Vocals');
+    });
+
+    it('marks the chevron so an open trigger flips it, on Select and on plain buttons', () => {
+        render(<Select label="Lyrics from" options={options} value="Vocals" onChange={() => {}} />);
+        expect(screen.getByRole('button').querySelector('svg.ui-icon[data-chevron]')).toBeTruthy();
+        const { container } = render(<Button aria-expanded="true">View <Icon icon={chevronDownIcon} size="sm" /></Button>);
+        expect(container.querySelector('[aria-expanded="true"] > svg[data-chevron]')).toBeTruthy();
     });
 
     it('has no axe violations', async () => {
