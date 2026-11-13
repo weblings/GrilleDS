@@ -32,3 +32,4 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | 2026-11-13 | [[2026-11-13-release-dev12]] — v0.1.0-dev.12 released with menu row tooltips and dotIcon | Grille-cou, Grille-ky2.6 |
 | 2026-11-13 | [[2026-11-13-section-title-node]] — MenuSection and Section title typed as ReactNode | Grille-ahg |
 | 2026-11-13 | [[2026-11-13-release-dev13]] — v0.1.0-dev.13 released with section title as ReactNode | Grille-ahg |
+| 2026-11-13 | [[2026-11-13-button-default-size]] — Button default is the Rocky Road 31px size; strong variant, action size | Grille-41p |
