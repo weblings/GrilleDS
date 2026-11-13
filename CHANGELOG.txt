@@ -1,4 +1,4 @@
-Unreleased:
+v0.1.0-dev.12:
 - Icon - New dotIcon (also dist/icons/dot.svg): a plain filled dot for status marks such as an unsaved-changes indicator; about 6px at size sm, and it follows currentColor so it stays visible in forced-colors
 - Menu item, submenu item - New tooltip and tooltipOnlyWhenTruncated: a Grille-skinned tooltip opens on hover (400 ms) and at once on keyboard focus of the row itself, with no nested focusable; with tooltipOnlyWhenTruncated it shows only when the label is cut off; a submenu row hides it while its flyout is open
 - Menu item, submenu item - description no longer sets a native title= tooltip: it is screen-reader text only, and a row shows a tooltip only when given tooltip
