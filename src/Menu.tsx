@@ -1,7 +1,8 @@
-import type { CSSProperties, KeyboardEventHandler, ReactNode } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import type { CSSProperties, KeyboardEventHandler, ReactNode, RefObject } from 'react';
 import { Icon } from './Icon';
 import { checkIcon, chevronRightIcon } from './icons';
-import { Header as AriaHeader, Menu as AriaMenu, MenuItem as AriaMenuItem, MenuSection as AriaMenuSection, Popover as AriaPopover, Separator, SubmenuTrigger, Text } from 'react-aria-components';
+import { Header as AriaHeader, Menu as AriaMenu, MenuItem as AriaMenuItem, MenuSection as AriaMenuSection, Popover as AriaPopover, Separator, SubmenuTrigger, Text, Tooltip as AriaTooltip, TooltipTriggerStateContext } from 'react-aria-components';
 
 export interface MenuProps {
     'aria-label': string;
@@ -30,44 +31,83 @@ export function Menu({ onAction, autoFocus = true, selectedKey, onSelectionChang
     );
 }
 
-export interface MenuItemProps {
+interface RowTooltipProps {
+    // Shown on Grille's Tooltip skin on hover (after a delay) and on keyboard focus of the row; adds no focusable element.
+    // Opt-in: a description alone never shows a tooltip.
+    tooltip?: ReactNode;
+    // Show the tooltip only when the label is actually cut off (ellipsis or clipped).
+    tooltipOnlyWhenTruncated?: boolean;
+}
+
+export interface MenuItemProps extends RowTooltipProps {
     id: string;
     // Fires for this item only, after the menu's onAction.
     onAction?: () => void;
     isDisabled?: boolean;
-    // Shown as a hover tooltip, and read as the item's description by screen readers.
+    // Screen-reader text, read as the item's description; not shown visually.
     description?: string;
     children: ReactNode;
 }
 
-// Description text is in the DOM for assistive tech and as the native tooltip, and hidden visually.
-function ItemBody({ description, children }: { description?: string; children: ReactNode }) {
-    if (!description) return <>{children}</>;
+// Matches TooltipTrigger's default delay.
+const HOVER_DELAY_MS = 400;
+
+function isTruncated(el: HTMLElement | null) {
+    if (!el) return false;
+    return [el, ...Array.from(el.querySelectorAll<HTMLElement>('*'))].some((e) => e.scrollWidth > e.clientWidth + 1);
+}
+
+// Opens at once on keyboard focus and after a delay on hover; the row stays the only focusable element.
+function RowTooltip({ content, onlyWhenTruncated, focused, hovered, suppressed, rowRef, bodyRef }: {
+    content: ReactNode; onlyWhenTruncated?: boolean; focused: boolean; hovered: boolean; suppressed?: boolean;
+    rowRef: RefObject<HTMLDivElement | null>; bodyRef: RefObject<HTMLElement | null>;
+}) {
+    const [open, setOpen] = useState(false);
+    useEffect(() => {
+        if (suppressed || !(focused || hovered)) { setOpen(false); return; }
+        const t = setTimeout(() => setOpen(!onlyWhenTruncated || isTruncated(bodyRef.current)), focused ? 0 : HOVER_DELAY_MS);
+        return () => clearTimeout(t);
+    }, [focused, hovered, suppressed, onlyWhenTruncated, bodyRef]);
+    // The row drives open/close itself, so the tooltip gets a minimal state instead of a TooltipTrigger.
+    const state = { isOpen: open, shouldSkipAnimation: false, open: () => setOpen(true), close: () => setOpen(false) };
     return (
-        <span className="ui-menu-item-body" title={description}>
+        <TooltipTriggerStateContext.Provider value={state}>
+            <AriaTooltip className="ui-tooltip" triggerRef={rowRef} placement="right" offset={6}>{content}</AriaTooltip>
+        </TooltipTriggerStateContext.Provider>
+    );
+}
+
+// Description text is in the DOM for assistive tech, hidden visually.
+function ItemBody({ description, bodyRef, children }: { description?: string; bodyRef: RefObject<HTMLSpanElement | null>; children: ReactNode }) {
+    return (
+        <span className="ui-menu-item-body" ref={bodyRef}>
             {children}
-            <Text slot="description" className="ui-visually-hidden">{description}</Text>
+            {description && <Text slot="description" className="ui-visually-hidden">{description}</Text>}
         </span>
     );
 }
 
-export function MenuItem({ description, children, ...rest }: MenuItemProps) {
+export function MenuItem({ description, tooltip, tooltipOnlyWhenTruncated, children, ...rest }: MenuItemProps) {
+    const rowRef = useRef<HTMLDivElement>(null);
+    const bodyRef = useRef<HTMLSpanElement>(null);
     return (
-        <AriaMenuItem {...rest} className="ui-menu-item">
-            {({ selectionMode, isSelected }) => (
+        <AriaMenuItem {...rest} ref={rowRef} className="ui-menu-item">
+            {({ selectionMode, isSelected, isFocusVisible, isHovered }) => (
                 <>
                     {/* The slot is reserved on every row of a selectable menu so labels stay aligned. */}
                     {selectionMode !== 'none' && <span className="ui-menu-check">{isSelected && <Icon icon={checkIcon} size="sm" />}</span>}
-                    <ItemBody description={description}>{children}</ItemBody>
+                    <ItemBody description={description} bodyRef={bodyRef}>{children}</ItemBody>
+                    {tooltip && <RowTooltip content={tooltip} onlyWhenTruncated={tooltipOnlyWhenTruncated} focused={isFocusVisible} hovered={isHovered} rowRef={rowRef} bodyRef={bodyRef} />}
                 </>
             )}
         </AriaMenuItem>
     );
 }
 
-export interface SubmenuItemProps {
+export interface SubmenuItemProps extends RowTooltipProps {
     id: string;
     isDisabled?: boolean;
+    // Screen-reader text, as on MenuItem.
     description?: string;
     // The row's label.
     label: ReactNode;
@@ -82,12 +122,20 @@ export interface SubmenuItemProps {
 }
 
 // A row that opens a flyout menu beside it: hover or ArrowRight opens, ArrowLeft or Escape closes one level.
-export function SubmenuItem({ id, isDisabled, description, label, onAction, maxHeight, children, 'aria-label': ariaLabel }: SubmenuItemProps) {
+// Its tooltip hides while the flyout is open.
+export function SubmenuItem({ id, isDisabled, description, tooltip, tooltipOnlyWhenTruncated, label, onAction, maxHeight, children, 'aria-label': ariaLabel }: SubmenuItemProps) {
+    const rowRef = useRef<HTMLDivElement>(null);
+    const bodyRef = useRef<HTMLSpanElement>(null);
     return (
         <SubmenuTrigger>
-            <AriaMenuItem id={id} isDisabled={isDisabled} textValue={ariaLabel} className="ui-menu-item ui-menu-item-submenu">
-                <ItemBody description={description}>{label}</ItemBody>
-                <span className="ui-menu-chevron"><Icon icon={chevronRightIcon} size="sm" /></span>
+            <AriaMenuItem id={id} ref={rowRef} isDisabled={isDisabled} textValue={ariaLabel} className="ui-menu-item ui-menu-item-submenu">
+                {({ isFocusVisible, isHovered, isOpen }) => (
+                    <>
+                        <ItemBody description={description} bodyRef={bodyRef}>{label}</ItemBody>
+                        <span className="ui-menu-chevron"><Icon icon={chevronRightIcon} size="sm" /></span>
+                        {tooltip && <RowTooltip content={tooltip} onlyWhenTruncated={tooltipOnlyWhenTruncated} focused={isFocusVisible} hovered={isHovered} suppressed={isOpen} rowRef={rowRef} bodyRef={bodyRef} />}
+                    </>
+                )}
             </AriaMenuItem>
             <AriaPopover className="ui-popover" data-submenu="">
                 <AriaMenu

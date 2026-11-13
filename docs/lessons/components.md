@@ -133,3 +133,19 @@ buttons on click, so it hides the bug.
 and ignore the close while it did. Tab out still closes. jsdom with `userEvent.click` reproduces it.
 
 Origin: Grille-uqg.1 — Aurora editor menus flashed back open when their trigger was clicked.
+
+---
+
+## A menu row can't host a `TooltipTrigger`; drive `Tooltip` through its state context
+Tags: react-aria, tooltip, menu, focus, testing
+Applies-when: a tooltip must show for an element that is not its own focusable trigger, such as a menu row
+
+Wrapping part of a menu row in `TooltipTrigger` + `Focusable` nests a tab stop inside the
+`menuitem`, React Aria warns, and the tooltip never opens on arrow-key focus. jsdom also reports
+`scrollWidth` 0, so a truncation check always says "fits" there.
+
+**Fix:** render `Tooltip` inside `TooltipTriggerStateContext.Provider` with a hand-made `{ isOpen,
+open, close }` state and `triggerRef` set to the row, opened from the row's `isFocusVisible` /
+`isHovered` render props. Stub `scrollWidth` in tests and check truncation in a real browser.
+
+Origin: Grille-cou — Aurora's long Open ▸ titles showed their full title only on hover.

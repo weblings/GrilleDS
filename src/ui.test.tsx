@@ -573,6 +573,79 @@ describe('SearchField', () => {
     });
 });
 
+describe('Menu row tooltip', () => {
+    it('opens on keyboard focus of the row, with no nested focusable and no warning', async () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+        const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+        render(
+            <Menu aria-label="Open" autoFocus={false}>
+                <MenuItem id="a">First</MenuItem>
+                <MenuItem id="b" tooltip="A very long effect title in full">Second</MenuItem>
+            </Menu>,
+        );
+        await userEvent.tab();
+        await userEvent.keyboard('{ArrowDown}');
+        const row = screen.getByRole('menuitem', { name: 'Second' });
+        expect(row.getAttribute('data-focus-visible')).toBe('true');
+        expect((await screen.findByRole('tooltip')).textContent).toBe('A very long effect title in full');
+        expect(row.querySelector('[tabindex], button, a, input')).toBeNull();
+        expect(row.querySelector('[title]')).toBeNull();
+        expect(warn).not.toHaveBeenCalled();
+        expect(error).not.toHaveBeenCalled();
+        warn.mockRestore();
+        error.mockRestore();
+    });
+
+    it('opens on hover, and with tooltipOnlyWhenTruncated only when the label is cut off', async () => {
+        const scrollWidth = vi.spyOn(HTMLElement.prototype, 'scrollWidth', 'get');
+        scrollWidth.mockReturnValue(0);
+        const { unmount } = render(
+            <Menu aria-label="Open" autoFocus={false}>
+                <MenuItem id="a" tooltip="Full title" tooltipOnlyWhenTruncated>Short</MenuItem>
+            </Menu>,
+        );
+        await userEvent.hover(screen.getByRole('menuitem'));
+        await new Promise((r) => setTimeout(r, 600));
+        expect(screen.queryByRole('tooltip')).toBeNull();
+        unmount();
+        scrollWidth.mockReturnValue(500);
+        render(
+            <Menu aria-label="Open" autoFocus={false}>
+                <MenuItem id="a" tooltip="Full title" tooltipOnlyWhenTruncated>Short</MenuItem>
+            </Menu>,
+        );
+        await userEvent.hover(screen.getByRole('menuitem'));
+        expect((await screen.findByRole('tooltip')).textContent).toBe('Full title');
+        scrollWidth.mockRestore();
+    });
+
+    it('is opt-in: a description alone shows no tooltip and stays the accessible description', async () => {
+        render(
+            <Menu aria-label="Open" autoFocus={false}>
+                <MenuItem id="a" description="Unsaved changes">Sunset</MenuItem>
+            </Menu>,
+        );
+        const row = screen.getByRole('menuitem');
+        await userEvent.hover(row);
+        await new Promise((r) => setTimeout(r, 600));
+        expect(screen.queryByRole('tooltip')).toBeNull();
+        expect(document.getElementById(row.getAttribute('aria-describedby')!)?.textContent).toBe('Unsaved changes');
+    });
+
+    it('hides on a submenu row while its flyout is open', async () => {
+        render(
+            <Menu aria-label="Root" autoFocus={false}>
+                <SubmenuItem id="open" aria-label="Open" label="Open" tooltip="Recent effects"><MenuItem id="a">Sunset</MenuItem></SubmenuItem>
+            </Menu>,
+        );
+        await userEvent.tab();
+        expect((await screen.findByRole('tooltip')).textContent).toBe('Recent effects');
+        await userEvent.keyboard('{ArrowRight}');
+        await screen.findByRole('menuitem', { name: 'Sunset' });
+        await waitFor(() => expect(screen.queryByRole('tooltip')).toBeNull());
+    });
+});
+
 describe('SubmenuItem', () => {
     function Cascade({ onAction }: { onAction: (id: string) => void }) {
         return (
@@ -617,11 +690,11 @@ describe('SubmenuItem', () => {
         expect(onAction).toHaveBeenCalledWith('add');
     });
 
-    it('exposes the description as a tooltip and an accessible description', async () => {
+    it('exposes the description as an accessible description, with no native title', async () => {
         render(<Cascade onAction={() => {}} />);
         await userEvent.hover(screen.getByRole('menuitem', { name: /Math/ }));
         const add = await screen.findByRole('menuitem', { name: /Add/ });
-        expect(add.querySelector('[title="Adds two numbers"]')).toBeTruthy();
+        expect(add.querySelector('[title]')).toBeNull();
         expect(add.getAttribute('aria-describedby')).toBeTruthy();
     });
 
@@ -804,7 +877,7 @@ describe('Icon', () => {
     const all = Object.entries(icons).filter((entry): entry is [string, IconData] => 'viewBox' in entry[1]);
 
     it('exports every vendored icon', () => {
-        expect(all.length).toBe(21);
+        expect(all.length).toBe(22);
     });
 
     it.each(all)('%s has a viewBox and renders decorative with currentColor', (_name, icon) => {

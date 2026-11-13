@@ -55,7 +55,12 @@ of the button.
 `<TooltipTrigger><Button>Save</Button><Tooltip>Saves <b>everything</b></Tooltip></TooltipTrigger>`. The
 first child must be focusable (a button, link or input); hover and keyboard focus show the tooltip
 and Esc hides it. `Tooltip` content is any ReactNode, so bold text and short lists work. Tooltips
-are not read for non-focusable elements, so put help for a menu row in its `description` instead.
+are not read for non-focusable elements, so don't wrap part of a menu row in a `TooltipTrigger`.
+
+A menu row takes `tooltip` instead: `<MenuItem id="x" tooltip={title} tooltipOnlyWhenTruncated>`. It
+opens on hover and when the row is reached with the arrow keys, adds no focusable element, and with
+`tooltipOnlyWhenTruncated` shows only when the label is cut off. A submenu row hides it while its
+flyout is open. `description` is screen-reader text only and never shows a tooltip by itself.
 
 ### Long submenus
 
