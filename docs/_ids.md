@@ -28,5 +28,6 @@ every run. Human lookup for `[[id]]` citations elsewhere in `docs/`.
 | `2026-11-13-menu-row-tooltip` | [log/2026-11-13-menu-row-tooltip.md](log/2026-11-13-menu-row-tooltip.md) | Menu row tooltip |
 | `2026-11-13-release-dev12` | [log/2026-11-13-release-dev12.md](log/2026-11-13-release-dev12.md) | Release v0.1.0-dev.12: menu row tooltip, dotIcon |
 | `2026-11-13-release-dev13` | [log/2026-11-13-release-dev13.md](log/2026-11-13-release-dev13.md) | Release v0.1.0-dev.13: section title as ReactNode |
+| `2026-11-13-release-dev14` | [log/2026-11-13-release-dev14.md](log/2026-11-13-release-dev14.md) | Release v0.1.0-dev.14: Button default size |
 | `2026-11-13-section-title-node` | [log/2026-11-13-section-title-node.md](log/2026-11-13-section-title-node.md) | Section titles as ReactNode |
 | `aurora-docs-migration` | [archive/AuroraDocsMigrationPlan.md](archive/AuroraDocsMigrationPlan.md) | Migrate docs infra to Aurora's system (docs/ tree, check scripts, AGENTS.md) |
