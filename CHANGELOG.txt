@@ -1,4 +1,4 @@
-Unreleased:
+v0.1.0-dev.13:
 - Menu section, list box section - title is now a ReactNode, so a heading can carry an icon (with visually hidden text for screen readers); string titles render unchanged
 
 v0.1.0-dev.12:
