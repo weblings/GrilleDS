@@ -704,6 +704,9 @@ describe('SubmenuItem', () => {
                 <SubmenuItem id="open" aria-label="Open" label="Open" maxHeight={maxHeight}>
                     <MenuSection title="Custom"><MenuItem id="a">Alpha</MenuItem></MenuSection>
                     <MenuSection title="Built-in"><MenuItem id="b">Beta</MenuItem></MenuSection>
+                    <MenuSection title={<>Not saved yet <Icon icon={icons.dotIcon} size="sm" /><span className="ui-visually-hidden">, unsaved changes</span></>}>
+                        <MenuItem id="c">Gamma</MenuItem>
+                    </MenuSection>
                 </SubmenuItem>
             </Menu>
         );
@@ -735,11 +738,17 @@ describe('SubmenuItem', () => {
         const menu = await openGrouped();
         expect(within(menu).getByRole('group', { name: 'Custom' })).toBeTruthy();
         expect(within(menu).getByRole('group', { name: 'Built-in' })).toBeTruthy();
-        expect(within(menu).getAllByRole('menuitem')).toHaveLength(2);
+        expect(within(menu).getAllByRole('menuitem')).toHaveLength(3);
         // Opening by key focuses the first item, not the Custom heading; the next arrow crosses to the next group's item.
         expect(document.activeElement?.textContent).toBe('Alpha');
         await userEvent.keyboard('{ArrowDown}');
         expect(document.activeElement?.textContent).toBe('Beta');
+    });
+
+    it('takes a node as a section heading and labels the group by its text', async () => {
+        const menu = await openGrouped();
+        const group = within(menu).getByRole('group', { name: /Not saved yet.*unsaved changes/ });
+        expect(group.querySelector('svg')).toBeTruthy();
     });
 });
 

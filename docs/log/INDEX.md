@@ -30,3 +30,4 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | 2026-11-13 | [[2026-11-13-dot-icon]] — dotIcon for status marks | Grille-ky2.6 |
 | 2026-11-13 | [[2026-11-13-menu-row-tooltip]] — MenuItem and SubmenuItem row tooltip, optionally only when cut off | Grille-cou |
 | 2026-11-13 | [[2026-11-13-release-dev12]] — v0.1.0-dev.12 released with menu row tooltips and dotIcon | Grille-cou, Grille-ky2.6 |
+| 2026-11-13 | [[2026-11-13-section-title-node]] — MenuSection and Section title typed as ReactNode | Grille-ahg |

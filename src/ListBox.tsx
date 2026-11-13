@@ -35,7 +35,8 @@ export function ListBoxItem({ id, textValue, children }: ListBoxItemProps) {
 }
 
 export interface SectionProps {
-    title: string;
+    // The group's heading and its accessible label (its text content).
+    title: ReactNode;
     children: ReactNode;
 }
 

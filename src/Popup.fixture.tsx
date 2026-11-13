@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { Button, Dialog, Icon, Menu, MenuItem, MenuSection, MenuSeparator, Popover, SubmenuItem } from './index';
-import { chevronDownIcon } from './icons';
+import { chevronDownIcon, dotIcon } from './icons';
 
 const noop = () => {};
 
@@ -59,6 +59,9 @@ function LongGroupedSubmenuFixture() {
                     </MenuSection>
                     <MenuSection title="Built-in">
                         {effects('Built-in', 30).map((e) => <MenuItem key={e} id={e}>{e}</MenuItem>)}
+                    </MenuSection>
+                    <MenuSection title={<>Not saved yet <Icon icon={dotIcon} size="sm" /><span className="ui-visually-hidden">, unsaved changes</span></>}>
+                        <MenuItem id="draft">Draft effect</MenuItem>
                     </MenuSection>
                 </SubmenuItem>
                 <SubmenuItem id="short" aria-label="Short" label="Short list" maxHeight={120}>
