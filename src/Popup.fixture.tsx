@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Button, Dialog, Icon, Menu, MenuItem, MenuSeparator, Popover, SubmenuItem } from './index';
+import { Button, Dialog, Icon, Menu, MenuItem, MenuSection, MenuSeparator, Popover, SubmenuItem } from './index';
 import { chevronDownIcon } from './icons';
 
 const noop = () => {};
@@ -24,6 +24,28 @@ function CascadeFixture() {
                     <MenuItem id="mul">Multiply</MenuItem>
                 </SubmenuItem>
                 <MenuItem id="out">Output</MenuItem>
+            </Menu>
+        </div>
+    );
+}
+
+const effects = (group: string, n: number) => Array.from({ length: n }, (_, i) => `${group} effect ${i + 1}`);
+
+function LongGroupedSubmenuFixture() {
+    return (
+        <div className="ui-popover" style={{ position: 'static', display: 'inline-block', minWidth: 160 }}>
+            <Menu aria-label="Graph" autoFocus={false}>
+                <SubmenuItem id="open" aria-label="Open" label="Open">
+                    <MenuSection title="Custom">
+                        {effects('Custom', 12).map((e) => <MenuItem key={e} id={e}>{e}</MenuItem>)}
+                    </MenuSection>
+                    <MenuSection title="Built-in">
+                        {effects('Built-in', 30).map((e) => <MenuItem key={e} id={e}>{e}</MenuItem>)}
+                    </MenuSection>
+                </SubmenuItem>
+                <SubmenuItem id="short" aria-label="Short" label="Short list" maxHeight={120}>
+                    {effects('Item', 8).map((e) => <MenuItem key={e} id={e}>{e}</MenuItem>)}
+                </SubmenuItem>
             </Menu>
         </div>
     );
@@ -96,6 +118,7 @@ export default {
     Menu: <MenuFixture />,
     'Menu single select': <SingleSelectFixture />,
     'Menu with submenu': <CascadeFixture />,
+    'Menu long grouped submenu': <LongGroupedSubmenuFixture />,
     Dialog: <DialogFixture />,
     'Trigger toggles open popover': <TriggerToggleFixture />,
 };

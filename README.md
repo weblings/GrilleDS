@@ -57,6 +57,13 @@ first child must be focusable (a button, link or input); hover and keyboard focu
 and Esc hides it. `Tooltip` content is any ReactNode, so bold text and short lists work. Tooltips
 are not read for non-focusable elements, so put help for a menu row in its `description` instead.
 
+### Long submenus
+
+A `SubmenuItem` flyout scrolls inside its popup once it is taller than `maxHeight` (px as a number, or
+any CSS length; default the `--ui-size-submenu-max-height` token, 480px) or the space left on screen.
+Group items with `<MenuSection title="Custom">`: the heading is sticky while the list scrolls, is
+skipped by the arrow keys, and labels the group for screen readers.
+
 ### Adding React to a non-React page
 
 `mountIsland(el, node)` renders React into one element and returns a function that removes it, so a

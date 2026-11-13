@@ -1,13 +1,13 @@
 // @vitest-environment jsdom
 import { act } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 import { useRef, useState } from 'react';
 import * as icons from './icons';
 import { chevronDownIcon, type IconData } from './icons';
-import { Icon, Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, Drawer, Menu, MenuItem, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField, Tooltip, TooltipTrigger } from './index';
+import { Icon, Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, Drawer, Menu, MenuItem, MenuSection, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField, Tooltip, TooltipTrigger } from './index';
 
 afterEach(cleanup);
 
@@ -623,6 +623,50 @@ describe('SubmenuItem', () => {
         const add = await screen.findByRole('menuitem', { name: /Add/ });
         expect(add.querySelector('[title="Adds two numbers"]')).toBeTruthy();
         expect(add.getAttribute('aria-describedby')).toBeTruthy();
+    });
+
+    function Grouped({ maxHeight }: { maxHeight?: number | string }) {
+        return (
+            <Menu aria-label="Title menu" autoFocus="first">
+                <SubmenuItem id="open" aria-label="Open" label="Open" maxHeight={maxHeight}>
+                    <MenuSection title="Custom"><MenuItem id="a">Alpha</MenuItem></MenuSection>
+                    <MenuSection title="Built-in"><MenuItem id="b">Beta</MenuItem></MenuSection>
+                </SubmenuItem>
+            </Menu>
+        );
+    }
+
+    async function openGrouped(maxHeight?: number | string) {
+        render(<Grouped maxHeight={maxHeight} />);
+        act(() => screen.getByRole('menuitem', { name: /Open/ }).focus());
+        await userEvent.keyboard('{ArrowRight}');
+        return screen.findByRole('menu', { name: 'Open' });
+    }
+
+    it('leaves the max height to the token by default', async () => {
+        const menu = await openGrouped();
+        expect(menu.style.getPropertyValue('--ui-submenu-max-height')).toBe('');
+    });
+
+    it('takes maxHeight as px for a number and as-is for a CSS length', async () => {
+        const menu = await openGrouped(200);
+        expect(menu.style.getPropertyValue('--ui-submenu-max-height')).toBe('200px');
+    });
+
+    it('passes a CSS length through', async () => {
+        const menu = await openGrouped('50vh');
+        expect(menu.style.getPropertyValue('--ui-submenu-max-height')).toBe('50vh');
+    });
+
+    it('labels each MenuSection by its heading and keeps headings out of the arrow-key order', async () => {
+        const menu = await openGrouped();
+        expect(within(menu).getByRole('group', { name: 'Custom' })).toBeTruthy();
+        expect(within(menu).getByRole('group', { name: 'Built-in' })).toBeTruthy();
+        expect(within(menu).getAllByRole('menuitem')).toHaveLength(2);
+        // Opening by key focuses the first item, not the Custom heading; the next arrow crosses to the next group's item.
+        expect(document.activeElement?.textContent).toBe('Alpha');
+        await userEvent.keyboard('{ArrowDown}');
+        expect(document.activeElement?.textContent).toBe('Beta');
     });
 });
 

@@ -24,3 +24,6 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | 2026-11-11 | [[2026-11-11-trigger-chevron-flip]] — open dropdown triggers flip their chevron | Grille-uqg.6 |
 | 2026-11-11 | [[2026-11-11-tooltip]] — Tooltip and TooltipTrigger with rich content | Grille-uqg.3 |
 | 2026-11-11 | [[2026-11-11-release-dev10]] — v0.1.0-dev.10 released with the Aurora editor fixes | Grille-uqg.5, Grille-uqg |
+| 2026-11-12 | [[2026-11-12-submenu-max-height]] — SubmenuItem maxHeight with scrolling flyout, MenuSection sticky headings | Grille-dyk |
+| 2026-11-12 | [[2026-11-12-inspector-visual-pass]] — Inspector restyled to the dark shell, with value previews | Grille-e5t.9 |
+| 2026-11-12 | [[2026-11-12-release-dev11]] — v0.1.0-dev.11 released with scrolling submenus | Grille-dyk |
