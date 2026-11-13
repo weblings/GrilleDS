@@ -35,8 +35,9 @@
   .ui-button[data-size="action"] {
     width: var(--ui-size-button-action-width); height: var(--ui-size-button-action-height); padding: 0; font-size: var(--ui-size-font-sm);
   }
-  .ui-button[data-icon] { padding: var(--ui-size-space-md); line-height: 1; }
-  .ui-button[data-icon][data-size="sm"] { padding: var(--ui-size-space-sm); }
+  /* Square, same height as a default text button (8 + 15 line + 8 = 31), so icon-only and text buttons share a row line. */
+  .ui-button[data-icon] { width: var(--ui-size-button-icon-size); height: var(--ui-size-button-icon-size); padding: 0; line-height: 1; }
+  .ui-button[data-icon][data-size="sm"] { width: auto; height: auto; padding: var(--ui-size-space-sm); }
   .ui-button[data-disabled] { background: var(--ui-color-control-bg); color: var(--ui-color-text-disabled); cursor: not-allowed; }
 
   /* The glyph is drawn larger than its layout box: the margin pulls the overhang back in, so Vidstack's 32 grid

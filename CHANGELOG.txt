@@ -1,3 +1,6 @@
+v0.1.0-dev.16:
+- Button - The default icon-only button (icon) is now a 31px square, the same height as a default text button, so the two align in a row; it was 32px tall. size="sm" icon buttons are unchanged. New token size.button.icon-size (--ui-size-button-icon-size)
+
 v0.1.0-dev.15:
 - Icon - New circledInfoIcon (also dist/icons/circled-info.svg): a circled "i" for notice marks; was left out of dev.14 by mistake
 

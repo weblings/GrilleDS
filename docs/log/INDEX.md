@@ -36,3 +36,4 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | 2026-11-13 | [[2026-11-13-release-dev14]] — v0.1.0-dev.14 released with the Button default size | Grille-41p |
 | 2026-11-13 | [[2026-11-13-circled-info-icon]] — circledInfoIcon | Grille-a0y |
 | 2026-11-13 | [[2026-11-13-release-dev15]] — v0.1.0-dev.15 released with circledInfoIcon | Grille-a0y |
+| 2026-11-13 | [[2026-11-13-button-icon-31]] — icon-only Button is a 31px square | Grille-kca |
