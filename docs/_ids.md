@@ -24,4 +24,5 @@ every run. Human lookup for `[[id]]` citations elsewhere in `docs/`.
 | `2026-11-12-release-dev11` | [log/2026-11-12-release-dev11.md](log/2026-11-12-release-dev11.md) | Release v0.1.0-dev.11: scrolling submenus |
 | `2026-11-12-submenu-max-height` | [log/2026-11-12-submenu-max-height.md](log/2026-11-12-submenu-max-height.md) | Submenu maxHeight and MenuSection |
 | `2026-11-13-dot-icon` | [log/2026-11-13-dot-icon.md](log/2026-11-13-dot-icon.md) | dotIcon for status marks |
+| `2026-11-13-menu-row-tooltip` | [log/2026-11-13-menu-row-tooltip.md](log/2026-11-13-menu-row-tooltip.md) | Menu row tooltip |
 | `aurora-docs-migration` | [archive/AuroraDocsMigrationPlan.md](archive/AuroraDocsMigrationPlan.md) | Migrate docs infra to Aurora's system (docs/ tree, check scripts, AGENTS.md) |
