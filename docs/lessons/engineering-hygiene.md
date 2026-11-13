@@ -61,3 +61,16 @@ the semantics).
 intent.
 
 Origin: RockyRoadImport upstream-dependencies.md — Same encoding, different intent: keep the guess in the consumer.
+
+## Run `git status` before tagging a release, not just before committing
+Tags: release, git, handoff
+Applies-when: cutting a `v*` tag, especially when a bead says work should ride that tag
+
+dev.14 was tagged with the info icon still uncommitted: the commit step skipped files that looked
+unrelated, and nothing compared the tree against the beads promised for the tag. The icon needed a
+dev.15 because a published tarball can't be replaced.
+
+**Fix:** before tagging, list open beads that mention the tag and reconcile `git status` against them;
+ask about any uncommitted file instead of leaving it out silently.
+
+Origin: Grille-a0y, dev.14 release.

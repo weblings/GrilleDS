@@ -6,6 +6,7 @@ export { arrowUpIcon } from './arrowUp';
 export { checkIcon } from './check';
 export { dotIcon } from './dot';
 export { circledExclamationIcon } from './circledExclamation';
+export { circledInfoIcon } from './circledInfo';
 export { chevronDownIcon } from './chevronDown';
 export { chevronRightIcon } from './chevronRight';
 export { chevronUpIcon } from './chevronUp';

@@ -1,3 +1,6 @@
+v0.1.0-dev.15:
+- Icon - New circledInfoIcon (also dist/icons/circled-info.svg): a circled "i" for notice marks; was left out of dev.14 by mistake
+
 v0.1.0-dev.14:
 - Button - The default size is now the compact 31px button (radius 5px, 8px padding, 6px gap, 12px regular text); the icon button is 32x32. Every default and primary button shifts about 4px taller than before
 - Button - variant="primary" is the same size as the default and differs only in colour; the old large form-button look (10px 24px, 16px semibold) is gone
