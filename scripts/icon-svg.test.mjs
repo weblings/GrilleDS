@@ -15,7 +15,7 @@ const ds = (svg) => [...svg.matchAll(/ d="([^"]+)"/g)].map((m) => m[1]);
 
 describe('icon svg export', () => {
     it('writes one file per icon', () => {
-        expect(names).toHaveLength(21);
+        expect(names).toHaveLength(22);
         expect(readdirSync(dir).sort()).toEqual(names.map((n) => `${n}.svg`).sort());
     });
 

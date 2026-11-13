@@ -39,8 +39,19 @@ function OnButtons() {
     );
 }
 
+// The dot beside a label, as Aurora marks unsaved items.
+function DotBesideLabel() {
+    return (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span>Unsaved effect</span>
+            <Icon icon={icons.dotIcon} size="sm" />
+        </div>
+    );
+}
+
 export default {
     all: <Catalog />,
     'on buttons': <OnButtons />,
+    'dot beside label': <DotBesideLabel />,
     labelled: <Icon icon={icons.warningIcon} label="Warning" />,
 };

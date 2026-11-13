@@ -27,3 +27,4 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | 2026-11-12 | [[2026-11-12-submenu-max-height]] — SubmenuItem maxHeight with scrolling flyout, MenuSection sticky headings | Grille-dyk |
 | 2026-11-12 | [[2026-11-12-inspector-visual-pass]] — Inspector restyled to the dark shell, with value previews | Grille-e5t.9 |
 | 2026-11-12 | [[2026-11-12-release-dev11]] — v0.1.0-dev.11 released with scrolling submenus | Grille-dyk |
+| 2026-11-13 | [[2026-11-13-dot-icon]] — dotIcon for status marks | Grille-ky2.6 |

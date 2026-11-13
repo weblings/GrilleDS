@@ -1,3 +1,6 @@
+Unreleased:
+- Icon - New dotIcon (also dist/icons/dot.svg): a plain filled dot for status marks such as an unsaved-changes indicator; about 6px at size sm, and it follows currentColor so it stays visible in forced-colors
+
 v0.1.0-dev.11:
 - Menu submenu - New maxHeight prop (default --ui-size-submenu-max-height, 480px, never taller than the screen space): a long flyout scrolls inside its popup
 - Menu - New MenuSection with a title: a sticky, non-focusable group heading that labels its items
