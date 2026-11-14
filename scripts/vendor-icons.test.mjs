@@ -17,7 +17,7 @@ describe('icon source', () => {
         expect(icons[key].viewBox).toBe('0 0 32 32');
     });
 
-    it('exports all 22 icons', () => {
-        expect(Object.keys(icons)).toHaveLength(22);
+    it('exports all 23 icons', () => {
+        expect(Object.keys(icons)).toHaveLength(23);
     });
 });

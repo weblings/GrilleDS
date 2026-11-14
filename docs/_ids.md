@@ -23,7 +23,15 @@ every run. Human lookup for `[[id]]` citations elsewhere in `docs/`.
 | `2026-11-12-inspector-visual-pass` | [log/2026-11-12-inspector-visual-pass.md](log/2026-11-12-inspector-visual-pass.md) | Inspector visual pass |
 | `2026-11-12-release-dev11` | [log/2026-11-12-release-dev11.md](log/2026-11-12-release-dev11.md) | Release v0.1.0-dev.11: scrolling submenus |
 | `2026-11-12-submenu-max-height` | [log/2026-11-12-submenu-max-height.md](log/2026-11-12-submenu-max-height.md) | Submenu maxHeight and MenuSection |
+| `2026-11-13-button-default-size` | [log/2026-11-13-button-default-size.md](log/2026-11-13-button-default-size.md) | Button: Rocky Road 31px default size |
+| `2026-11-13-button-icon-31` | [log/2026-11-13-button-icon-31.md](log/2026-11-13-button-icon-31.md) | Icon-only Button is 31px |
+| `2026-11-13-circled-info-icon` | [log/2026-11-13-circled-info-icon.md](log/2026-11-13-circled-info-icon.md) | circledInfoIcon |
 | `2026-11-13-dot-icon` | [log/2026-11-13-dot-icon.md](log/2026-11-13-dot-icon.md) | dotIcon for status marks |
 | `2026-11-13-menu-row-tooltip` | [log/2026-11-13-menu-row-tooltip.md](log/2026-11-13-menu-row-tooltip.md) | Menu row tooltip |
 | `2026-11-13-release-dev12` | [log/2026-11-13-release-dev12.md](log/2026-11-13-release-dev12.md) | Release v0.1.0-dev.12: menu row tooltip, dotIcon |
+| `2026-11-13-release-dev13` | [log/2026-11-13-release-dev13.md](log/2026-11-13-release-dev13.md) | Release v0.1.0-dev.13: section title as ReactNode |
+| `2026-11-13-release-dev14` | [log/2026-11-13-release-dev14.md](log/2026-11-13-release-dev14.md) | Release v0.1.0-dev.14: Button default size |
+| `2026-11-13-release-dev15` | [log/2026-11-13-release-dev15.md](log/2026-11-13-release-dev15.md) | Release v0.1.0-dev.15: circledInfoIcon |
+| `2026-11-13-release-dev16` | [log/2026-11-13-release-dev16.md](log/2026-11-13-release-dev16.md) | Release v0.1.0-dev.16: icon-only Button 31px |
+| `2026-11-13-section-title-node` | [log/2026-11-13-section-title-node.md](log/2026-11-13-section-title-node.md) | Section titles as ReactNode |
 | `aurora-docs-migration` | [archive/AuroraDocsMigrationPlan.md](archive/AuroraDocsMigrationPlan.md) | Migrate docs infra to Aurora's system (docs/ tree, check scripts, AGENTS.md) |

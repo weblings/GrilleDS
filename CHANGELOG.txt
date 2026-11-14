@@ -1,3 +1,18 @@
+v0.1.0-dev.16:
+- Button - The default icon-only button (icon) is now a 31px square, the same height as a default text button, so the two align in a row; it was 32px tall. size="sm" icon buttons are unchanged. New token size.button.icon-size (--ui-size-button-icon-size)
+
+v0.1.0-dev.15:
+- Icon - New circledInfoIcon (also dist/icons/circled-info.svg): a circled "i" for notice marks; was left out of dev.14 by mistake
+
+v0.1.0-dev.14:
+- Button - The default size is now the compact 31px button (radius 5px, 8px padding, 6px gap, 12px regular text); the icon button is 32x32. Every default and primary button shifts about 4px taller than before
+- Button - variant="primary" is the same size as the default and differs only in colour; the old large form-button look (10px 24px, 16px semibold) is gone
+- Button - New variant="strong" (grey #8b8b8b, bold) and size="action" (150x36 at 13px, for dialog actions); new tokens color.strong.*, size.radius.xs, size.button.action-width and action-height
+- Tokens - size.button.pad-x (--ui-size-button-pad-x) is removed
+
+v0.1.0-dev.13:
+- Menu section, list box section - title is now a ReactNode, so a heading can carry an icon (with visually hidden text for screen readers); string titles render unchanged
+
 v0.1.0-dev.12:
 - Icon - New dotIcon (also dist/icons/dot.svg): a plain filled dot for status marks such as an unsaved-changes indicator; about 6px at size sm, and it follows currentColor so it stays visible in forced-colors
 - Menu item, submenu item - New tooltip and tooltipOnlyWhenTruncated: a Grille-skinned tooltip opens on hover (400 ms) and at once on keyboard focus of the row itself, with no nested focusable; with tooltipOnlyWhenTruncated it shows only when the label is cut off; a submenu row hides it while its flyout is open

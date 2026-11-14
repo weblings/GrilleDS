@@ -13,7 +13,7 @@ LessonsLearned elsewhere; if unsure whether one already exists, `find . -iname "
 | [components.md](components.md) | Focus, ARIA, popups, events, test queries for React Aria components | 9 | a component misbehaves around focus, keys, popovers or option values |
 | [css-tokens.md](css-tokens.md) | Cascade, specificity, shared tokens, focus rings | 8 | a style is overridden, ignored or inconsistent across controls |
 | [packaging-release.md](packaging-release.md) | Licenses, fonts, consumer contract of the release tarball | 1 | changing what the build ships or what consumers must do |
-| [engineering-hygiene.md](engineering-hygiene.md) | Verification and workflow habits, library-vs-consumer boundaries | 4 | the lesson is about how to verify or hand off work, not one component |
+| [engineering-hygiene.md](engineering-hygiene.md) | Verification and workflow habits, library-vs-consumer boundaries | 5 | the lesson is about how to verify or hand off work, not one component |
 
 Counts as of 2026-11-13. Bump the count when adding entries (`grep -c '^## '` per file).
 

@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 import { Button } from './index';
 
-const variants = ['secondary', 'primary'] as const;
-const sizes = ['md', 'sm'] as const;
+const variants = ['secondary', 'primary', 'strong'] as const;
+const sizes = ['md', 'sm', 'action'] as const;
 
 function Row({ children }: { children: ReactNode }) {
     return <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8 }}>{children}</div>;

@@ -1,8 +1,8 @@
 import { Button as AriaButton, type ButtonProps as AriaButtonProps } from 'react-aria-components';
 
 interface BaseProps extends Omit<AriaButtonProps, 'className' | 'style'> {
-    variant?: 'primary' | 'secondary';
-    size?: 'sm' | 'md';
+    variant?: 'primary' | 'secondary' | 'strong';
+    size?: 'sm' | 'md' | 'action';
 }
 
 // An icon button has no text, so it must be named.

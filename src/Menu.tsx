@@ -149,8 +149,9 @@ export function SubmenuItem({ id, isDisabled, description, tooltip, tooltipOnlyW
 }
 
 export interface MenuSectionProps {
-    // The group's heading: sticky at the top of a scrolling menu, not focusable, and the group's accessible label.
-    title: string;
+    // The group's heading: sticky at the top of a scrolling menu, not focusable, and the group's accessible label
+    // (its text content, so an icon needs visually hidden text beside it).
+    title: ReactNode;
     children: ReactNode;
 }
 
