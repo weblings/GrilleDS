@@ -7,7 +7,7 @@ import { axe } from 'vitest-axe';
 import { useRef, useState } from 'react';
 import * as icons from './icons';
 import { chevronDownIcon, type IconData } from './icons';
-import { Icon, Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, Drawer, Menu, MenuItem, MenuSection, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, MessageRow, StatusMessage, Tabs, TextField, Tooltip, TooltipTrigger } from './index';
+import { Icon, Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, DialogActions, Drawer, Menu, MenuItem, MenuSection, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, MessageRow, StatusMessage, Tabs, TextField, Tooltip, TooltipTrigger } from './index';
 
 afterEach(cleanup);
 
@@ -563,6 +563,46 @@ describe('Modal', () => {
     it('has no axe violations', async () => {
         render(<NameEffect />);
         await open();
+        await expectNoViolations(document.body);
+    });
+});
+
+describe('Dialog title', () => {
+    function Titled() {
+        return (
+            <Modal isOpen onOpenChange={() => {}}>
+                <Dialog title="Name effect">
+                    <TextField aria-label="Name" value="" onChange={() => {}} />
+                    <DialogActions>
+                        <Button size="action">Cancel</Button>
+                        <Button size="action" variant="primary">Create</Button>
+                    </DialogActions>
+                </Dialog>
+            </Modal>
+        );
+    }
+
+    it('is a heading that names the dialog', () => {
+        render(<Titled />);
+        const dialog = screen.getByRole('dialog', { name: 'Name effect' });
+        expect(screen.getByRole('heading', { name: 'Name effect' }).id).toBe(dialog.getAttribute('aria-labelledby'));
+    });
+
+    it('lays the actions out in order with the primary last', () => {
+        render(<Titled />);
+        const buttons = within(screen.getByRole('dialog')).getAllByRole('button');
+        expect(buttons.map((b) => b.textContent)).toEqual(['Cancel', 'Create']);
+        expect(buttons[0].parentElement!.className).toBe('ui-dialog-actions');
+    });
+
+    it('still names a dialog by aria-label when there is no title', () => {
+        render(<Modal isOpen onOpenChange={() => {}}><Dialog aria-label="Plain"><p>x</p></Dialog></Modal>);
+        expect(screen.getByRole('dialog', { name: 'Plain' })).toBeTruthy();
+        expect(screen.queryByRole('heading')).toBeNull();
+    });
+
+    it('has no axe violations', async () => {
+        render(<Titled />);
         await expectNoViolations(document.body);
     });
 });

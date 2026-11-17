@@ -181,6 +181,10 @@
     padding: var(--ui-size-space-xs) var(--ui-size-space-2xl) var(--ui-size-space-xl);
   }
   .ui-menu, .ui-dialog { outline: none; display: flex; flex-direction: column; }
+  .ui-dialog-title {
+    margin: 0; font-size: var(--ui-size-font-sm); font-weight: var(--ui-font-weight-bold); color: var(--ui-color-text-default);
+  }
+  .ui-dialog-actions { display: flex; justify-content: center; gap: var(--ui-size-space-lg); }
   .ui-menu-item {
     padding: var(--ui-size-space-sm) var(--ui-size-control-pad-x); border-radius: var(--ui-size-radius-sm); cursor: pointer; outline: none;
     color: var(--ui-color-text-default); font-size: var(--ui-size-font-sm);
