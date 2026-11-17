@@ -44,3 +44,4 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | 2026-11-17 | [[2026-11-17-message-row]] — MessageRow: outlined error or notice row with a centred mark, plus radius-lg | Grille-83g.1 |
 | 2026-11-17 | [[2026-11-17-status-message-font-size]] — StatusMessage sets its own 13px font size | Grille-83g.15 |
 | 2026-11-17 | [[2026-11-17-textfield-form]] — TextField aria-label form, placeholder, autoFocus, isInvalid, fill, multiline | Grille-83g.2, Grille-83g.11 |
+| 2026-11-17 | [[2026-11-17-drawer-head]] — Drawer: head actions slot, muted count, hideControls, automatic divider | Grille-83g.6 |

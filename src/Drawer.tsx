@@ -8,6 +8,13 @@ export interface DrawerProps {
     onOpenChange: (open: boolean) => void;
     title: string;
     subtitle?: string;
+    // A number shown muted after the title. It stays out of the drawer's accessible name.
+    count?: number;
+    // Head content (a menu button) placed before the built-in controls, with a divider between when both show.
+    actions?: ReactNode;
+    // Omit the built-in close and full-height buttons, for a host that closes from a menu or an edge tab.
+    // Escape still closes.
+    hideControls?: boolean;
     // The edge it is fixed to.
     // 'bottom' spans the full width and opens at half the space below `top`, for narrow windows.
     side?: 'right' | 'left' | 'bottom';
@@ -26,7 +33,7 @@ const POPUP = '.ui-popover, .ui-modal-overlay, [role="menu"], [role="dialog"]';
 // a click outside does not close it. Escape closes it wherever focus is (unless a popup is open, which takes that
 // Escape first), and so does the close button. Focus moves in on open and back to where it was on close. Showing
 // one at a time is up to the owner.
-export function Drawer({ isOpen, onOpenChange, title, subtitle, side = 'right', top = 0, expanded, onExpandedChange, children }: DrawerProps) {
+export function Drawer({ isOpen, onOpenChange, title, subtitle, count, actions, hideControls = false, side = 'right', top = 0, expanded, onExpandedChange, children }: DrawerProps) {
     const [innerExpanded, setInnerExpanded] = useState(false);
     const isExpanded = expanded ?? innerExpanded;
     const toggle = () => { setInnerExpanded(!isExpanded); onExpandedChange?.(!isExpanded); };
@@ -86,13 +93,18 @@ export function Drawer({ isOpen, onOpenChange, title, subtitle, side = 'right', 
             onKeyDown={onKeyDown}
         >
             <div className="ui-drawer-head">
-                <h2 id={titleId} className="ui-drawer-title">{title}</h2>
-                {side === 'bottom' ? (
+                <div className="ui-drawer-heading">
+                    <h2 id={titleId} className="ui-drawer-title">{title}</h2>
+                    {count !== undefined ? <span className="ui-drawer-count">{count}</span> : null}
+                </div>
+                {actions ? <div className="ui-drawer-actions">{actions}</div> : null}
+                {actions && !hideControls ? <span className="ui-drawer-rule" aria-hidden="true" /> : null}
+                {!hideControls && side === 'bottom' ? (
                     <Button className="ui-button ui-drawer-toggle" aria-label={isExpanded ? 'Collapse' : 'Expand'} aria-expanded={isExpanded} onPress={toggle}>
                         <Icon icon={isExpanded ? fullscreenArrowExitIcon : fullscreenArrowIcon} />
                     </Button>
                 ) : null}
-                <Button className="ui-button ui-drawer-close" aria-label="Close" onPress={() => onOpenChange(false)}><Icon icon={xMarkIcon} /></Button>
+                {hideControls ? null : <Button className="ui-button ui-drawer-close" aria-label="Close" onPress={() => onOpenChange(false)}><Icon icon={xMarkIcon} /></Button>}
             </div>
             {subtitle ? <p id={subtitleId} className="ui-drawer-subtitle">{subtitle}</p> : null}
             <div className="ui-drawer-body">{children}</div>

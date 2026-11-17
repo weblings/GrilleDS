@@ -961,6 +961,41 @@ describe('Drawer', () => {
         expect(screen.queryByRole('button', { name: 'Expand' })).toBeNull();
     });
 
+    it('renders a count after the title without changing the region name', () => {
+        render(<Drawer isOpen onOpenChange={() => {}} title="Tuning" count={12}><input aria-label="Label" /></Drawer>);
+        expect(screen.getByText('12')).toBeTruthy();
+        expect(screen.getByRole('region', { name: 'Tuning' })).toBeTruthy();
+    });
+
+    it('renders actions in the head, before the built-in controls, with a divider between', () => {
+        const { container } = render(<Drawer isOpen onOpenChange={() => {}} title="Tuning" actions={<button>More</button>}><input aria-label="Label" /></Drawer>);
+        const head = container.querySelector('.ui-drawer-head')!;
+        const more = screen.getByRole('button', { name: 'More' });
+        expect(head.contains(more)).toBe(true);
+        expect(more.compareDocumentPosition(screen.getByRole('button', { name: 'Close' })) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+        expect(container.querySelector('.ui-drawer-rule')).toBeTruthy();
+    });
+
+    it('draws no divider with actions alone or controls alone', () => {
+        const { container, rerender } = render(<Drawer isOpen onOpenChange={() => {}} title="Tuning" actions={<button>More</button>} hideControls><input aria-label="Label" /></Drawer>);
+        expect(container.querySelector('.ui-drawer-rule')).toBeNull();
+        rerender(<Drawer isOpen onOpenChange={() => {}} title="Tuning"><input aria-label="Label" /></Drawer>);
+        expect(container.querySelector('.ui-drawer-rule')).toBeNull();
+    });
+
+    it('omits the close and full-height buttons with hideControls, and Escape still closes', async () => {
+        function Host() {
+            const [open, setOpen] = useState(true);
+            return <Drawer isOpen={open} onOpenChange={setOpen} title="Tuning" side="bottom" hideControls><input aria-label="Label" /></Drawer>;
+        }
+        render(<Host />);
+        expect(screen.queryByRole('button', { name: 'Close' })).toBeNull();
+        expect(screen.queryByRole('button', { name: 'Expand' })).toBeNull();
+        expect(screen.getByRole('region').contains(document.activeElement)).toBe(true);
+        await userEvent.keyboard('{Escape}');
+        expect(screen.queryByRole('region')).toBeNull();
+    });
+
     it('has no axe violations', async () => {
         const { container } = render(<DrawerHarness />);
         await userEvent.click(screen.getByRole('button', { name: 'Open' }));
