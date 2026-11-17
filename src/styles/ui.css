@@ -38,6 +38,14 @@
   /* Square, same height as a default text button (8 + 15 line + 8 = 31), so icon-only and text buttons share a row line. */
   .ui-button[data-icon] { width: var(--ui-size-button-icon-size); height: var(--ui-size-button-icon-size); padding: 0; line-height: 1; }
   .ui-button[data-icon][data-size="sm"] { width: auto; height: auto; padding: var(--ui-size-space-sm); }
+  /* Borderless icon button for row and head menus: fills on hover or while its menu is open. */
+  .ui-button[data-variant="ghost"] { background: transparent; color: var(--ui-color-text-muted); }
+  .ui-button[data-variant="ghost"][data-hovered],
+  .ui-button[data-variant="ghost"][aria-expanded="true"] { background: var(--ui-color-control-bg); color: var(--ui-color-text-default); }
+  .ui-button[data-variant="ghost"][data-pressed] { background: var(--ui-color-control-bg-hover); color: var(--ui-color-text-default); }
+  .ui-button[data-variant="ghost"][data-icon][data-size="sm"] {
+    width: var(--ui-size-button-icon-size-sm); height: var(--ui-size-button-icon-size-sm); padding: 0;
+  }
   /* Disabled keeps the variant's own colours, dimmed. React Aria sets no hover or pressed state while disabled. */
   .ui-button[data-disabled] { opacity: 0.4; cursor: not-allowed; }
 

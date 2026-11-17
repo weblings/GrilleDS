@@ -518,6 +518,16 @@ describe('Button disabled', () => {
     });
 });
 
+describe('Button ghost', () => {
+    it('marks the ghost variant on an icon button and keeps it named', () => {
+        render(<Button variant="ghost" size="sm" icon aria-label="More"><Icon icon={icons.menuHorizontalIcon} /></Button>);
+        const b = screen.getByRole('button', { name: 'More' });
+        expect(b.getAttribute('data-variant')).toBe('ghost');
+        expect(b.getAttribute('data-size')).toBe('sm');
+        expect(b.hasAttribute('data-icon')).toBe(true);
+    });
+});
+
 describe('Autocomplete', () => {
     function Browser() {
         const [q, setQ] = useState('');
