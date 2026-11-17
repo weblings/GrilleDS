@@ -38,7 +38,8 @@
   /* Square, same height as a default text button (8 + 15 line + 8 = 31), so icon-only and text buttons share a row line. */
   .ui-button[data-icon] { width: var(--ui-size-button-icon-size); height: var(--ui-size-button-icon-size); padding: 0; line-height: 1; }
   .ui-button[data-icon][data-size="sm"] { width: auto; height: auto; padding: var(--ui-size-space-sm); }
-  .ui-button[data-disabled] { background: var(--ui-color-control-bg); color: var(--ui-color-text-disabled); cursor: not-allowed; }
+  /* Disabled keeps the variant's own colours, dimmed. React Aria sets no hover or pressed state while disabled. */
+  .ui-button[data-disabled] { opacity: 0.4; cursor: not-allowed; }
 
   /* The glyph is drawn larger than its layout box: the margin pulls the overhang back in, so Vidstack's 32 grid
      and Zest's 24 grid (both padded) read at the same weight as text. Layout size is --ui-size-icon; glyph is that plus 2x overhang. */

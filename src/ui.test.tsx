@@ -509,6 +509,15 @@ describe('Button size and icon', () => {
     });
 });
 
+describe('Button disabled', () => {
+    it('keeps its variant marker and disabled state so CSS can dim it', () => {
+        render(<Button variant="primary" isDisabled>Rename</Button>);
+        const b = screen.getByRole('button', { name: 'Rename' });
+        expect(b.getAttribute('data-variant')).toBe('primary');
+        expect(b.hasAttribute('data-disabled')).toBe(true);
+    });
+});
+
 describe('Autocomplete', () => {
     function Browser() {
         const [q, setQ] = useState('');

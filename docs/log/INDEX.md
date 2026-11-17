@@ -39,3 +39,4 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | 2026-11-13 | [[2026-11-13-button-icon-31]] — icon-only Button is a 31px square | Grille-kca |
 | 2026-11-13 | [[2026-11-13-release-dev16]] — v0.1.0-dev.16 released with the 31px icon-only Button | Grille-kca |
 | 2026-11-17 | [[2026-11-17-grip-icon]] — gripIcon drag handle | Grille-83g.9 |
+| 2026-11-17 | [[2026-11-17-button-disabled-variants]] — a disabled Button keeps its variant colours, dimmed | Grille-83g.4 |

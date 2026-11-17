@@ -24,10 +24,25 @@ function Matrix() {
     );
 }
 
+// Each variant enabled beside disabled: a disabled primary must still read as primary.
+function DisabledVariants() {
+    return (
+        <>
+            {variants.map((variant) => (
+                <Row key={variant}>
+                    <Button variant={variant}>{variant}</Button>
+                    <Button variant={variant} isDisabled>{variant} disabled</Button>
+                </Row>
+            ))}
+        </>
+    );
+}
+
 export default {
     default: <Button>Default</Button>,
     primary: <Button variant="primary">Primary</Button>,
     disabled: <Button isDisabled>Disabled</Button>,
+    'disabled variants': <DisabledVariants />,
     'long label': <div style={{ maxWidth: 200 }}><Button>A button label long enough that it has to wrap</Button></div>,
     matrix: <Matrix />,
 };
