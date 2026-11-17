@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button, Dialog, Icon, Menu, MenuItem, MenuSection, MenuSeparator, Popover, SubmenuItem } from './index';
 import { chevronDownIcon, dotIcon } from './icons';
 
@@ -92,6 +92,55 @@ function PopoverAtPoint() {
     );
 }
 
+function DescribedMenuFixture() {
+    return (
+        <div className="ui-popover" style={{ position: 'static', display: 'inline-block' }}>
+            <Dialog aria-label="Node">
+                <p id="node-description" style={{ margin: 0, padding: '8px 12px' }}>Adds two numbers and outputs the sum.</p>
+                <Menu aria-label="Add node actions" aria-describedby="node-description" autoFocus={false}>
+                    <MenuItem id="add">Add to graph</MenuItem>
+                    <MenuItem id="docs">Show help</MenuItem>
+                </Menu>
+            </Dialog>
+        </div>
+    );
+}
+
+// One anchor, popovers at offset 0, 8 and 16 and with a crossOffset. The gap is measured and shown in each popover.
+function OffsetCase({ offset, crossOffset, label }: { offset?: number; crossOffset?: number; label: string }) {
+    const anchor = useRef<HTMLDivElement>(null);
+    const pop = useRef<HTMLDivElement>(null);
+    const [gap, setGap] = useState('');
+    useEffect(() => {
+        const t = setTimeout(() => {
+            const a = anchor.current?.getBoundingClientRect();
+            const p = pop.current?.getBoundingClientRect();
+            if (a && p) setGap(`gap ${Math.round(p.top - a.bottom)}px, shift ${Math.round(p.left - a.left)}px`);
+        }, 100);
+        return () => clearTimeout(t);
+    }, []);
+    return (
+        <div style={{ display: 'inline-block', margin: '0 120px 120px 0', verticalAlign: 'top' }}>
+            <div ref={anchor} style={{ padding: '6px 12px', border: '1px solid currentColor' }}>{label}</div>
+            <Popover isOpen onOpenChange={noop} triggerRef={anchor} isNonModal offset={offset} crossOffset={crossOffset} aria-label={label}>
+                <div ref={pop} style={{ padding: 8 }}>{gap || 'measuring'}</div>
+            </Popover>
+        </div>
+    );
+}
+
+function OffsetFixture() {
+    return (
+        <div style={{ padding: 24 }}>
+            <OffsetCase label="offset 0" offset={0} />
+            <OffsetCase label="offset 8" offset={8} />
+            <OffsetCase label="offset 16" offset={16} />
+            <OffsetCase label="offset 8, crossOffset 24" offset={8} crossOffset={24} />
+            <OffsetCase label="omitted (default)" />
+        </div>
+    );
+}
+
 function MenuFixture() {
     return <div className="ui-popover" style={{ position: 'static', display: 'inline-block' }}><ActionsMenu /></div>;
 }
@@ -137,6 +186,8 @@ export default {
     'Trigger chevron states': <ChevronStatesFixture />,
     'Popover at a point': <PopoverAtPoint />,
     Menu: <MenuFixture />,
+    'Popover offset': <OffsetFixture />,
+    'Menu with a description': <DescribedMenuFixture />,
     'Menu single select': <SingleSelectFixture />,
     'Menu with submenu': <CascadeFixture />,
     'Menu row tooltips': <RowTooltipFixture />,

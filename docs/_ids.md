@@ -34,4 +34,19 @@ every run. Human lookup for `[[id]]` citations elsewhere in `docs/`.
 | `2026-11-13-release-dev15` | [log/2026-11-13-release-dev15.md](log/2026-11-13-release-dev15.md) | Release v0.1.0-dev.15: circledInfoIcon |
 | `2026-11-13-release-dev16` | [log/2026-11-13-release-dev16.md](log/2026-11-13-release-dev16.md) | Release v0.1.0-dev.16: icon-only Button 31px |
 | `2026-11-13-section-title-node` | [log/2026-11-13-section-title-node.md](log/2026-11-13-section-title-node.md) | Section titles as ReactNode |
+| `2026-11-17-button-disabled-variants` | [log/2026-11-17-button-disabled-variants.md](log/2026-11-17-button-disabled-variants.md) | Disabled Button keeps its variant look |
+| `2026-11-17-button-ghost-variant` | [log/2026-11-17-button-ghost-variant.md](log/2026-11-17-button-ghost-variant.md) | Ghost Button variant |
+| `2026-11-17-dialog-title-actions` | [log/2026-11-17-dialog-title-actions.md](log/2026-11-17-dialog-title-actions.md) | Dialog title and actions bar |
+| `2026-11-17-drawer-head` | [log/2026-11-17-drawer-head.md](log/2026-11-17-drawer-head.md) | Drawer head: actions, count, optional controls |
+| `2026-11-17-grip-icon` | [log/2026-11-17-grip-icon.md](log/2026-11-17-grip-icon.md) | gripIcon, a drag handle |
+| `2026-11-17-menu-describedby` | [log/2026-11-17-menu-describedby.md](log/2026-11-17-menu-describedby.md) | Menu aria-describedby and aria-labelledby |
+| `2026-11-17-message-row` | [log/2026-11-17-message-row.md](log/2026-11-17-message-row.md) | MessageRow |
+| `2026-11-17-popover-offset` | [log/2026-11-17-popover-offset.md](log/2026-11-17-popover-offset.md) | Popover offset and crossOffset |
+| `2026-11-17-release-dev17` | [log/2026-11-17-release-dev17.md](log/2026-11-17-release-dev17.md) | Release v0.1.0-dev.17: Aurora controls panel components |
+| `2026-11-17-status-message-font-size` | [log/2026-11-17-status-message-font-size.md](log/2026-11-17-status-message-font-size.md) | StatusMessage font size |
+| `2026-11-17-textfield-form` | [log/2026-11-17-textfield-form.md](log/2026-11-17-textfield-form.md) | TextField: label-less form, multi-line form |
+| `2026-11-17-tooltip-standalone` | [log/2026-11-17-tooltip-standalone.md](log/2026-11-17-tooltip-standalone.md) | Tooltip opens without a trigger |
+| `2026-11-17-tree` | [log/2026-11-17-tree.md](log/2026-11-17-tree.md) | Tree: controlled expandedKeys, section rows, card rows |
+| `2026-11-17-tree-drag` | [log/2026-11-17-tree-drag.md](log/2026-11-17-tree-drag.md) | Tree: drag and drop with drop states and caller drop rules |
 | `aurora-docs-migration` | [archive/AuroraDocsMigrationPlan.md](archive/AuroraDocsMigrationPlan.md) | Migrate docs infra to Aurora's system (docs/ tree, check scripts, AGENTS.md) |
+| `lesson-agent-coordination` | [lessons/agent-coordination.md](lessons/agent-coordination.md) | Agent coordination lessons |

@@ -4,8 +4,7 @@ import { Icon } from './Icon';
 import { checkIcon, chevronRightIcon } from './icons';
 import { Header as AriaHeader, Menu as AriaMenu, MenuItem as AriaMenuItem, MenuSection as AriaMenuSection, Popover as AriaPopover, Separator, SubmenuTrigger, Text, Tooltip as AriaTooltip, TooltipTriggerStateContext } from 'react-aria-components';
 
-export interface MenuProps {
-    'aria-label': string;
+interface MenuBaseProps {
     onAction?: (id: string) => void;
     onClose?: () => void;
     // Runs on every key in the menu, before React Aria's own handling. Stop propagation here for keys the page must not see.
@@ -15,8 +14,16 @@ export interface MenuProps {
     selectionMode?: 'single';
     selectedKey?: string;
     onSelectionChange?: (id: string) => void;
+    // Id of an element that describes the menu, such as a line of text above it in a Dialog.
+    'aria-describedby'?: string;
     children: ReactNode;
 }
+
+// The menu needs a name: its own label or the id of a visible element.
+export type MenuProps = MenuBaseProps & (
+    | { 'aria-label': string; 'aria-labelledby'?: string }
+    | { 'aria-labelledby': string; 'aria-label'?: string }
+);
 
 export function Menu({ onAction, autoFocus = true, selectedKey, onSelectionChange, ...rest }: MenuProps) {
     return (

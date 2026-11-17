@@ -12,7 +12,12 @@ npm test             # vitest
 npm run typecheck
 npm run lint         # stylelint + UI-boundary check
 npm run dev          # Cosmos
+npm run dev:base -- <ref>          # Cosmos, Tokens page diffed against <ref> (default main)
+npm run review -- --base <ref>     # fixture screenshots, New/Changed/Unchanged/Removed vs <ref>
 ```
+
+Live Cosmos diffs only tokens. Component changes show on the `npm run review` page
+(`review-out/index.html`; needs `npx playwright install chromium` once).
 
 ## Where things go
 

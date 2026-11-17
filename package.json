@@ -1,6 +1,6 @@
 {
   "name": "@weblings/grille",
-  "version": "0.1.0-dev.16",
+  "version": "0.1.0-dev.17",
   "description": "Shared design tokens and React Aria components for the weblings projects",
   "license": "MIT",
   "type": "module",
@@ -30,6 +30,7 @@
   ],
   "scripts": {
     "dev": "npm run build:tokens && cosmos",
+    "dev:base": "node scripts/dev-base.mjs",
     "build": "npm run build:tokens && vite build && tsc -p tsconfig.build.json && node scripts/copy-assets.mjs && node scripts/build-icon-svgs.mjs",
     "build:tokens": "node scripts/build-tokens.mjs",
     "prepare": "npm run build",

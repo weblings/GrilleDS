@@ -11,6 +11,7 @@ Before verifying a change, handing off work, or deciding where a library/consume
 Lesson files this skill covers:
 
 - [`docs/lessons/engineering-hygiene.md`](../../../docs/lessons/engineering-hygiene.md) — verification, workflow, boundaries
+- [`docs/lessons/agent-coordination.md`](../../../docs/lessons/agent-coordination.md) — running several agents at once: worktrees, node_modules, verifying their work
 
 ## How to use this skill
 

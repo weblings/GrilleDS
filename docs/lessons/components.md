@@ -149,3 +149,13 @@ open, close }` state and `triggerRef` set to the row, opened from the row's `isF
 `isHovered` render props. Stub `scrollWidth` in tests and check truncation in a real browser.
 
 Origin: Grille-cou — Aurora's long Open ▸ titles showed their full title only on hover.
+
+---
+
+## A test that starts a React Aria keyboard drag must end it, or every later test in the file breaks
+Tags: react-aria, drag-and-drop, testing, jsdom
+Applies-when: a test starts a drag (click on a `slot="drag"` button) and finishes without dropping or cancelling
+
+React Aria's drag manager is module-global. A drag left open captured keys and focus, so 13 unrelated later tests (tabs, popovers, tooltips) failed. In jsdom, `focus()` on a drag handle inside a Tree row lands on the row, and a virtual `click()` starts the drag. Moving to a drop target and dropping did not work there (no layout).
+
+**Fix:** end the test with `userEvent.keyboard('{Escape}')` and wait for `[data-dragging]` to go.

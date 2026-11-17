@@ -1,3 +1,16 @@
+v0.1.0-dev.17:
+- MessageRow - New outlined error or notice row: the mark is centred on the message lines, a slot below holds buttons or a list, and an optional ghost dismiss sits at top right. Presentational, with no role or live region. New token size.radius.lg (12px)
+- TextField - Can be named by aria-label instead of a visible label (one of the two is required), and takes placeholder, autoFocus, isInvalid and aria-describedby. It now fills its container by default; inside a FieldList it lays out as before. New multiline form (rows, default 3) that resizes vertically only
+- Dialog - New title prop: a heading that names the dialog (aria-label becomes optional when given). New DialogActions: a centred row of size="action" buttons, primary last
+- Button - A disabled button keeps its variant colours at 40% opacity; it used to turn grey whatever the variant. New variant="ghost": a borderless icon button for row and head menus, a 24px square at size="sm" and 31px at the default size. New token size.button.icon-size-sm
+- Drawer - New actions slot in the head, a muted count after the title, and hideControls to drop the close and full-height buttons (Escape still closes). A divider separates actions from the built-in controls when both show
+- Tree - New Tree, TreeSection and TreeCard: sections expand from controlled expandedKeys and carry a count, a menu and a drag-handle slot; cards are outlined rows beneath them. Drag and drop through dragAndDropHooks, with TreeDragHandle and TreeDropIndicator; the caller's getDropOperation sets the drop rules
+- Tooltip - New triggerRef, isOpen and onOpenChange: open a tooltip on an element that is not its own trigger, such as a Tree card
+- Menu - Takes aria-labelledby as an alternative to aria-label (one is required), and aria-describedby
+- Popover - New offset and crossOffset props; omitted, the gap stays 8px
+- StatusMessage - Sets its own 13px font size; inside a Modal it was 16px
+- Icon - New gripIcon (also dist/icons/grip.svg): a drag handle of two columns of four dots
+
 v0.1.0-dev.16:
 - Button - The default icon-only button (icon) is now a 31px square, the same height as a default text button, so the two align in a row; it was 32px tall. size="sm" icon buttons are unchanged. New token size.button.icon-size (--ui-size-button-icon-size)
 

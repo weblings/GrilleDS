@@ -38,3 +38,17 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | 2026-11-13 | [[2026-11-13-release-dev15]] — v0.1.0-dev.15 released with circledInfoIcon | Grille-a0y |
 | 2026-11-13 | [[2026-11-13-button-icon-31]] — icon-only Button is a 31px square | Grille-kca |
 | 2026-11-13 | [[2026-11-13-release-dev16]] — v0.1.0-dev.16 released with the 31px icon-only Button | Grille-kca |
+| 2026-11-17 | [[2026-11-17-grip-icon]] — gripIcon drag handle | Grille-83g.9 |
+| 2026-11-17 | [[2026-11-17-button-disabled-variants]] — a disabled Button keeps its variant colours, dimmed | Grille-83g.4 |
+| 2026-11-17 | [[2026-11-17-button-ghost-variant]] — Button variant="ghost", a borderless icon button | Grille-83g.5 |
+| 2026-11-17 | [[2026-11-17-message-row]] — MessageRow: outlined error or notice row with a centred mark, plus radius-lg | Grille-83g.1 |
+| 2026-11-17 | [[2026-11-17-status-message-font-size]] — StatusMessage sets its own 13px font size | Grille-83g.15 |
+| 2026-11-17 | [[2026-11-17-textfield-form]] — TextField aria-label form, placeholder, autoFocus, isInvalid, fill, multiline | Grille-83g.2, Grille-83g.11 |
+| 2026-11-17 | [[2026-11-17-drawer-head]] — Drawer: head actions slot, muted count, hideControls, automatic divider | Grille-83g.6 |
+| 2026-11-17 | [[2026-11-17-dialog-title-actions]] — Dialog title heading and DialogActions centred action-button bar | Grille-83g.3 |
+| 2026-11-17 | [[2026-11-17-tooltip-standalone]] — Tooltip triggerRef, isOpen and onOpenChange for use outside a TooltipTrigger | Grille-83g.7 |
+| 2026-11-17 | [[2026-11-17-menu-describedby]] — Menu takes aria-label or aria-labelledby, plus aria-describedby | Grille-83g.12 |
+| 2026-11-17 | [[2026-11-17-popover-offset]] — Popover offset and crossOffset props | Grille-83g.13 |
+| 2026-11-17 | [[2026-11-17-tree]] — Tree, TreeSection, TreeCard with controlled expandedKeys | Grille-83g.8 |
+| 2026-11-17 | [[2026-11-17-tree-drag]] — Tree dragAndDropHooks, TreeDragHandle, TreeDropIndicator, drag and drop states | Grille-83g.14 |
+| 2026-11-17 | [[2026-11-17-release-dev17]] — v0.1.0-dev.17 released with the Aurora controls panel components | Grille-83g.10 |

@@ -1,7 +1,8 @@
 import { Button as AriaButton, type ButtonProps as AriaButtonProps } from 'react-aria-components';
 
 interface BaseProps extends Omit<AriaButtonProps, 'className' | 'style'> {
-    variant?: 'primary' | 'secondary' | 'strong';
+    /** 'ghost' is a borderless icon button for row and head menus: with `icon`, size sm is a 24px square and md the 31px square. */
+    variant?: 'primary' | 'secondary' | 'strong' | 'ghost';
     size?: 'sm' | 'md' | 'action';
 }
 
