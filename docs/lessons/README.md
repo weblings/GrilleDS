@@ -14,8 +14,9 @@ LessonsLearned elsewhere; if unsure whether one already exists, `find . -iname "
 | [css-tokens.md](css-tokens.md) | Cascade, specificity, shared tokens, focus rings | 8 | a style is overridden, ignored or inconsistent across controls |
 | [packaging-release.md](packaging-release.md) | Licenses, fonts, consumer contract of the release tarball | 1 | changing what the build ships or what consumers must do |
 | [engineering-hygiene.md](engineering-hygiene.md) | Verification and workflow habits, library-vs-consumer boundaries | 5 | the lesson is about how to verify or hand off work, not one component |
+| [agent-coordination.md](agent-coordination.md) | Running several agents at once: worktrees, node_modules, verifying their work | 2 | fanning out agents or verifying their work in the main checkout |
 
-Counts as of 2026-11-13. Bump the count when adding entries (`grep -c '^## '` per file).
+Counts as of 2026-11-17. Bump the count when adding entries (`grep -c '^## '` per file).
 
 ## Where a new lesson goes
 
