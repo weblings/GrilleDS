@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Button, Drawer, Icon, Menu, MenuItem, Popover, TextField } from './index';
+import { Button, Drawer, FieldList, Icon, Menu, MenuItem, Popover, TextField } from './index';
 import { menuHorizontalIcon } from './icons';
 
 function BottomDetails() {
@@ -10,7 +10,7 @@ function BottomDetails() {
             <Button onPress={() => setClicks(clicks + 1)}>Canvas clicks: {clicks}</Button>
             <Button onPress={() => setOpen(true)}>Details</Button>
             <Drawer isOpen={open} onOpenChange={setOpen} title="Sample zones" side="bottom" top={48}>
-                <TextField label="Label" value="Sample zones" onChange={() => {}} />
+                <FieldList><TextField label="Label" value="Sample zones" onChange={() => {}} /></FieldList>
             </Drawer>
         </>
     );
@@ -23,7 +23,7 @@ function NodeDetails() {
         <>
             <Button onPress={() => setOpen(true)}>Details</Button>
             <Drawer isOpen={open} onOpenChange={setOpen} title="Sample zones" subtitle="What this node does to the image." top={48}>
-                <TextField label="Label" value={label} onChange={setLabel} />
+                <FieldList><TextField label="Label" value={label} onChange={setLabel} /></FieldList>
             </Drawer>
         </>
     );
@@ -51,7 +51,7 @@ function HeadMenu({ side }: { side: 'right' | 'bottom' }) {
                     </span>
                 }
             >
-                <TextField label="Label" value="Sample zones" onChange={() => {}} />
+                <FieldList><TextField label="Label" value="Sample zones" onChange={() => {}} /></FieldList>
             </Drawer>
             <Popover isOpen={menu} onOpenChange={setMenu} triggerRef={ref} isNonModal>
                 <Menu aria-label="Tuning" autoFocus="first" onAction={(key) => { setMenu(false); if (key === 'hide') setOpen(false); }}>
@@ -75,7 +75,7 @@ function ActionsWithControls() {
             top={48}
             actions={<Button variant="ghost" icon aria-label="Tuning menu"><Icon icon={menuHorizontalIcon} /></Button>}
         >
-            <TextField label="Label" value="Sample zones" onChange={() => {}} />
+            <FieldList><TextField label="Label" value="Sample zones" onChange={() => {}} /></FieldList>
         </Drawer>
     );
 }

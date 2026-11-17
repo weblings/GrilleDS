@@ -74,3 +74,19 @@ dev.15 because a published tarball can't be replaced.
 ask about any uncommitted file instead of leaving it out silently.
 
 Origin: Grille-a0y, dev.14 release.
+
+---
+
+## A new layout default changes every placement outside its usual container, so check each one
+Tags: defaults, layout, fixtures, review, consumers, subagents
+Applies-when: changing how a component sizes or lays out by default, or copying an existing fixture body into a new fixture
+
+Grille-83g.2 (2026-11-17): TextField began filling its container by default, for a dialog's single field.
+Inside a FieldList nothing changed, so its tests and the Fields fixture stayed green. But the Drawer
+fixtures placed a bare TextField with no FieldList (already on `dev`), and the input now spanned the drawer
+under a stacked label. The drawer agent copied that body into its new cases. Only the branch review page
+showed it (883px changed on "Actions with built-in controls").
+
+**Fix:** when a default changes, grep every use outside the expected container (fixtures and consumers,
+e.g. `rg "<TextField" src ../Aurora`) and decide each one. New fixtures follow the house layout (fields in
+a FieldList), not whatever a neighbouring fixture does. Run `npm run review -- --base <ref>` before release.
