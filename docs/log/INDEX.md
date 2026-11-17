@@ -50,3 +50,4 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | 2026-11-17 | [[2026-11-17-menu-describedby]] — Menu takes aria-label or aria-labelledby, plus aria-describedby | Grille-83g.12 |
 | 2026-11-17 | [[2026-11-17-popover-offset]] — Popover offset and crossOffset props | Grille-83g.13 |
 | 2026-11-17 | [[2026-11-17-tree]] — Tree, TreeSection, TreeCard with controlled expandedKeys | Grille-83g.8 |
+| 2026-11-17 | [[2026-11-17-tree-drag]] — Tree dragAndDropHooks, TreeDragHandle, TreeDropIndicator, drag and drop states | Grille-83g.14 |

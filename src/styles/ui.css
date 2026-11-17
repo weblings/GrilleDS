@@ -287,6 +287,21 @@
     border: 1px solid var(--ui-color-border-default); border-radius: var(--ui-size-radius-sm);
     font-size: var(--ui-size-font-sm); color: var(--ui-color-text-default);
   }
+  .ui-tree-grip {
+    flex: none; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 24px; padding: 0;
+    border: 0; border-radius: var(--ui-size-radius-sm); background: none; color: var(--ui-color-text-disabled); cursor: grab;
+  }
+  .ui-tree-section:hover .ui-tree-grip, .ui-tree-card:hover .ui-tree-grip { color: var(--ui-color-text-muted); }
+  .ui-tree-grip[data-focus-visible] { outline: var(--ui-size-focus-ring-width) solid var(--ui-color-focus-ring); }
+  .ui-tree-section-item[data-dragging], .ui-tree-card-item[data-dragging] { opacity: 0.5; }
+  .ui-tree-section-item[data-drop-target] > .ui-tree-section {
+    background: var(--ui-color-control-bg-hover); outline: 1px solid var(--ui-color-control-accent);
+  }
+  .ui-tree-drop, .ui-tree .react-aria-DropIndicator { height: 0; outline: none; }
+  .ui-tree-drop-child { margin-left: var(--ui-size-space-lg); }
+  .ui-tree-drop[data-drop-target], .ui-tree .react-aria-DropIndicator[data-drop-target] {
+    position: relative; z-index: 3; height: 2px; margin-block: -1px; border-radius: 1px; background: var(--ui-color-control-accent);
+  }
 
   .ui-callout {
     background: var(--ui-color-surface-raised); border: 1px solid var(--ui-color-border-default);

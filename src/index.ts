@@ -16,7 +16,7 @@ export { Icon, type IconProps } from './Icon';
 export * from './icons';
 export { Slider, type SliderProps } from './Slider';
 export { Disclosure, type DisclosureProps } from './Disclosure';
-export { Tree, TreeSection, TreeCard, type TreeProps, type TreeSectionProps, type TreeCardProps } from './Tree';
+export { Tree, TreeSection, TreeCard, TreeDragHandle, TreeDropIndicator, type TreeProps, type TreeSectionProps, type TreeCardProps, type TreeDragHandleProps, type TreeDropIndicatorProps } from './Tree';
 export { Tabs, type TabsProps, type TabItem } from './Tabs';
 export { Callout, type CalloutProps } from './Callout';
 export { MessageRow, type MessageRowProps } from './MessageRow';

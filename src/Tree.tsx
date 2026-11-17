@@ -1,23 +1,26 @@
 import type { ReactNode } from 'react';
-import { Tree as AriaTree, TreeItem, TreeItemContent } from 'react-aria-components';
+import { Button as AriaButton, DropIndicator, Tree as AriaTree, TreeItem, TreeItemContent, type DragAndDropHooks, type DropIndicatorProps } from 'react-aria-components';
 import { Button } from './Button';
 import { Icon } from './Icon';
-import { chevronDownIcon } from './icons';
+import { chevronDownIcon, gripIcon } from './icons';
 
 export interface TreeProps {
     'aria-label': string;
     /** Ids of the expanded sections. The caller owns it: update it from `onExpandedChange`. */
     expandedKeys: Iterable<string>;
     onExpandedChange: (keys: Set<string>) => void;
+    /** From React Aria's useDragAndDrop. Its getDropOperation holds the drop rules, and renderDropIndicator can return a TreeDropIndicator. */
+    dragAndDropHooks?: DragAndDropHooks;
     /** TreeSection elements, each holding TreeCard elements. */
     children: ReactNode;
 }
 
-export function Tree({ 'aria-label': label, expandedKeys, onExpandedChange, children }: TreeProps) {
+export function Tree({ 'aria-label': label, expandedKeys, onExpandedChange, dragAndDropHooks, children }: TreeProps) {
     return (
         <AriaTree
             className="ui-tree"
             aria-label={label}
+            dragAndDropHooks={dragAndDropHooks}
             expandedKeys={expandedKeys}
             onExpandedChange={(keys) => onExpandedChange(new Set(Array.from(keys, String)))}
         >
@@ -77,4 +80,28 @@ export function TreeCard({ id, textValue, children }: TreeCardProps) {
             </TreeItemContent>
         </TreeItem>
     );
+}
+
+export interface TreeDragHandleProps {
+    /** The handle's accessible name, such as "Drag Threshold". */
+    'aria-label': string;
+}
+
+/** The grip button for TreeSection's `drag` slot or a TreeCard's content. Needs dragAndDropHooks on the Tree. */
+export function TreeDragHandle({ 'aria-label': label }: TreeDragHandleProps) {
+    return (
+        <AriaButton slot="drag" className="ui-tree-grip" aria-label={label}>
+            <Icon icon={gripIcon} size="sm" />
+        </AriaButton>
+    );
+}
+
+export interface TreeDropIndicatorProps extends DropIndicatorProps {
+    /** Indent the line to the card level, for a target between cards. */
+    child?: boolean;
+}
+
+/** The 2px drop line, for the `renderDropIndicator` of useDragAndDrop. */
+export function TreeDropIndicator({ child, ...rest }: TreeDropIndicatorProps) {
+    return <DropIndicator {...rest} className={child ? 'ui-tree-drop ui-tree-drop-child' : 'ui-tree-drop'} />;
 }

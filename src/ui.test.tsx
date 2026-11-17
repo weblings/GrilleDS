@@ -7,7 +7,8 @@ import { axe } from 'vitest-axe';
 import { useRef, useState } from 'react';
 import * as icons from './icons';
 import { chevronDownIcon, type IconData } from './icons';
-import { Icon, Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, DialogActions, Drawer, Menu, MenuItem, MenuSection, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, MessageRow, StatusMessage, Tabs, TextField, Tooltip, TooltipTrigger, Tree, TreeCard, TreeSection } from './index';
+import { useDragAndDrop } from 'react-aria-components';
+import { Icon, Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, DialogActions, Drawer, Menu, MenuItem, MenuSection, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, MessageRow, StatusMessage, Tabs, TextField, Tooltip, TooltipTrigger, Tree, TreeCard, TreeDragHandle, TreeDropIndicator, TreeSection } from './index';
 
 afterEach(cleanup);
 
@@ -248,6 +249,53 @@ describe('Tree', () => {
         const { container } = render(<Harness />);
         expect(screen.getByText('grip')).toBeTruthy();
         await expectNoViolations(container);
+    });
+});
+
+describe('Tree drag and drop', () => {
+    function DndTree() {
+        const [keys, setKeys] = useState<Set<string>>(new Set(['a', 'b']));
+        const { dragAndDropHooks } = useDragAndDrop({
+            getItems: (ks) => [...ks].map((k) => ({ 'text/plain': String(k) })),
+            getDropOperation: (t) => (t.type === 'item' && t.dropPosition !== 'on' ? 'move' : 'cancel'),
+            onMove: () => {},
+            renderDropIndicator: (t) => <TreeDropIndicator target={t} child />,
+        });
+        return (
+            <Tree aria-label="Controls" expandedKeys={keys} onExpandedChange={setKeys} dragAndDropHooks={dragAndDropHooks}>
+                <TreeSection id="a" title="Alpha" drag={<TreeDragHandle aria-label="Drag the Alpha section" />}>
+                    <TreeCard id="a1" textValue="Card one"><TreeDragHandle aria-label="Drag Card one" />Card one</TreeCard>
+                    <TreeCard id="a2" textValue="Card two"><TreeDragHandle aria-label="Drag Card two" />Card two</TreeCard>
+                </TreeSection>
+                <TreeSection id="b" title="Beta" drag={<TreeDragHandle aria-label="Drag the Beta section" />} />
+            </Tree>
+        );
+    }
+
+    it('names each drag handle by its label and passes axe', async () => {
+        const { container } = render(<DndTree />);
+        expect(screen.getByRole('button', { name: 'Drag the Alpha section' })).toBeTruthy();
+        expect(screen.getByRole('button', { name: 'Drag Card two' })).toBeTruthy();
+        await expectNoViolations(container);
+    });
+
+    it('renders a handle on a Tree without dragAndDropHooks', () => {
+        render(
+            <Tree aria-label="Plain" expandedKeys={[]} onExpandedChange={() => {}}>
+                <TreeSection id="a" title="Alpha" drag={<TreeDragHandle aria-label="Drag Alpha" />} />
+            </Tree>,
+        );
+        expect(screen.getByRole('button', { name: 'Drag Alpha' })).toBeTruthy();
+    });
+
+    it('starts a keyboard drag from the handle and renders the drop indicators', async () => {
+        render(<DndTree />);
+        act(() => screen.getByRole('button', { name: 'Drag Card one' }).click());
+        await waitFor(() => expect(document.querySelectorAll('.ui-tree-drop-child').length).toBeGreaterThan(0));
+        expect(document.querySelector('[data-dragging]')).toBeTruthy();
+        await userEvent.keyboard('{Escape}');
+        await waitFor(() => expect(document.querySelector('[data-dragging]')).toBeNull());
+        // Moving to a target and dropping is not reproduced here: jsdom has no layout for React Aria's drop target focus.
     });
 });
 

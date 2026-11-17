@@ -45,5 +45,7 @@ every run. Human lookup for `[[id]]` citations elsewhere in `docs/`.
 | `2026-11-17-status-message-font-size` | [log/2026-11-17-status-message-font-size.md](log/2026-11-17-status-message-font-size.md) | StatusMessage font size |
 | `2026-11-17-textfield-form` | [log/2026-11-17-textfield-form.md](log/2026-11-17-textfield-form.md) | TextField: label-less form, multi-line form |
 | `2026-11-17-tooltip-standalone` | [log/2026-11-17-tooltip-standalone.md](log/2026-11-17-tooltip-standalone.md) | Tooltip opens without a trigger |
+| `2026-11-17-tree` | [log/2026-11-17-tree.md](log/2026-11-17-tree.md) | Tree: controlled expandedKeys, section rows, card rows |
+| `2026-11-17-tree-drag` | [log/2026-11-17-tree-drag.md](log/2026-11-17-tree-drag.md) | Tree: drag and drop with drop states and caller drop rules |
 | `aurora-docs-migration` | [archive/AuroraDocsMigrationPlan.md](archive/AuroraDocsMigrationPlan.md) | Migrate docs infra to Aurora's system (docs/ tree, check scripts, AGENTS.md) |
 | `lesson-agent-coordination` | [lessons/agent-coordination.md](lessons/agent-coordination.md) | Agent coordination lessons |
