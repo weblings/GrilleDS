@@ -12,6 +12,7 @@ export { chevronRightIcon } from './chevronRight';
 export { chevronUpIcon } from './chevronUp';
 export { fullscreenArrowIcon } from './fullscreenArrow';
 export { fullscreenArrowExitIcon } from './fullscreenArrowExit';
+export { gripIcon } from './grip';
 export { menuHorizontalIcon } from './menuHorizontal';
 export { minusIcon } from './minus';
 export { pauseIcon } from './pause';

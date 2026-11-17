@@ -49,9 +49,24 @@ function DotBesideLabel() {
     );
 }
 
+// The grip on a draggable row, at both sizes, as Aurora's controls panel uses it.
+function GripOnRow() {
+    return (
+        <>
+            {sizes.map((size) => (
+                <div key={size} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <Icon icon={icons.gripIcon} size={size} />
+                    <span>Drag this row ({size})</span>
+                </div>
+            ))}
+        </>
+    );
+}
+
 export default {
     all: <Catalog />,
     'on buttons': <OnButtons />,
     'dot beside label': <DotBesideLabel />,
+    'grip on a row': <GripOnRow />,
     labelled: <Icon icon={icons.warningIcon} label="Warning" />,
 };
