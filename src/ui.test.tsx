@@ -46,6 +46,34 @@ describe('TextField', () => {
         const { container } = render(<FieldList><TextField label="Artist" value="x" onChange={() => {}} /></FieldList>);
         await expectNoViolations(container);
     });
+
+    it('takes an aria-label instead of a visible label, with placeholder, autofocus, invalid and description', () => {
+        render(<>
+            <TextField aria-label="Name" value="" onChange={() => {}} placeholder="Untitled" autoFocus isInvalid aria-describedby="err" />
+            <div id="err">Required</div>
+        </>);
+        const input = screen.getByRole('textbox', { name: 'Name' });
+        expect(input.getAttribute('placeholder')).toBe('Untitled');
+        expect(input.getAttribute('aria-invalid')).toBe('true');
+        expect(input.getAttribute('aria-describedby')).toContain('err');
+        expect(document.activeElement).toBe(input);
+    });
+
+    it('renders a textarea with rows when multiline and reports typed values', async () => {
+        const onChange = vi.fn();
+        render(<TextField label="Tooltip" multiline value="" onChange={onChange} placeholder="Tip" isInvalid />);
+        const area = screen.getByRole('textbox', { name: 'Tooltip' });
+        expect(area.tagName).toBe('TEXTAREA');
+        expect(area.getAttribute('rows')).toBe('3');
+        expect(area.getAttribute('aria-invalid')).toBe('true');
+        await userEvent.type(area, 'A');
+        expect(onChange).toHaveBeenLastCalledWith('A');
+    });
+
+    it('has no axe violations without a visible label', async () => {
+        const { container } = render(<TextField aria-label="Name" value="" onChange={() => {}} multiline />);
+        await expectNoViolations(container);
+    });
 });
 
 describe('FileTrigger', () => {

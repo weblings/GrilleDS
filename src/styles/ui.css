@@ -93,6 +93,13 @@
     font-size: var(--ui-size-font-sm); font-family: inherit;
   }
   .ui-text-input[data-hovered] { background: var(--ui-color-control-bg-hover); }
+  .ui-text-input[data-invalid] { box-shadow: inset 0 0 0 1px var(--ui-color-text-error); }
+  /* A TextField fills its container. In a FieldList the input reverts to its own sized width in the control column. */
+  .ui-text-field > .ui-text-input { justify-self: stretch; width: 100%; min-width: 0; box-sizing: border-box; }
+  .ui-field-list .ui-text-field > input.ui-text-input { justify-self: start; width: revert-layer; min-width: revert-layer; box-sizing: revert-layer; }
+  .ui-textarea { display: block; resize: vertical; line-height: 1.4; }
+  .ui-text-field[data-multiline] { align-items: start; }
+  .ui-text-field[data-multiline] > .ui-field-label { padding-top: var(--ui-size-control-pad-y); }
 
   .ui-file-trigger-control { display: flex; align-items: center; gap: var(--ui-size-space-lg); }
   .ui-file-name { color: var(--ui-color-text-secondary); font-size: var(--ui-size-font-sm); }
