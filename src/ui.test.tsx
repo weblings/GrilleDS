@@ -351,6 +351,32 @@ function Harness({ point, nonModal, onAction, onRestore, onKeyDown }: {
     );
 }
 
+describe('Popover offset', () => {
+    // jsdom has no layout, so rects are stubbed: the anchor sits at (50,100)-(150,120) and the popover is 100x40.
+    function place(props: { offset?: number; crossOffset?: number }) {
+        const rect = (l: number, t: number, w: number, h: number) => ({ left: l, top: t, width: w, height: h, right: l + w, bottom: t + h, x: l, y: t, toJSON() {} }) as DOMRect;
+        vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
+            return this.id === 'anchor' ? rect(50, 100, 100, 20) : this.classList.contains('ui-popover') ? rect(0, 0, 100, 40) : rect(0, 0, 1000, 1000);
+        });
+        function Example() {
+            const ref = useRef<HTMLDivElement>(null);
+            return <><div id="anchor" ref={ref}>Anchor</div><Popover isOpen onOpenChange={() => {}} triggerRef={ref} isNonModal aria-label="Pop" {...props}><p>Body</p></Popover></>;
+        }
+        render(<Example />);
+        const pop = document.querySelector<HTMLElement>('.ui-popover')!;
+        return { top: parseFloat(pop.style.top), left: parseFloat(pop.style.left) };
+    }
+    afterEach(() => vi.restoreAllMocks());
+
+    it('keeps the default gap of 8 when omitted', () => {
+        expect(place({}).top).toBe(128);
+    });
+
+    it('moves the popover by offset and crossOffset', () => {
+        expect(place({ offset: 16, crossOffset: 24 })).toEqual({ top: 136, left: 74 });
+    });
+});
+
 describe('Menu description', () => {
     it('carries aria-describedby pointing at the paragraph above it, and aria-labelledby names it', () => {
         render(

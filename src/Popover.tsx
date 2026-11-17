@@ -15,6 +15,9 @@ export interface PopoverProps {
     // Called once when the popover closes, with the element focused when it opened. Focus does not return on its own
     // for a point anchor or a non-modal popover, so the owner decides where it goes.
     onRestoreFocus?: (previous: HTMLElement | null) => void;
+    // Gap in px between anchor and popover along the placement axis (default 8), and a shift along the other axis (default 0).
+    offset?: number;
+    crossOffset?: number;
     'aria-label'?: string;
     children: ReactNode;
 }
