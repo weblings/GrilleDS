@@ -351,6 +351,21 @@ function Harness({ point, nonModal, onAction, onRestore, onKeyDown }: {
     );
 }
 
+describe('Menu description', () => {
+    it('carries aria-describedby pointing at the paragraph above it, and aria-labelledby names it', () => {
+        render(
+            <Dialog aria-label="Node">
+                <p id="desc">Adds two numbers.</p>
+                <h2 id="ttl">Actions</h2>
+                <Menu aria-labelledby="ttl" aria-describedby="desc" autoFocus={false}><MenuItem id="a">Add</MenuItem></Menu>
+            </Dialog>,
+        );
+        const menu = screen.getByRole('menu');
+        expect(menu.getAttribute('aria-describedby')).toBe('desc');
+        expect(menu.getAttribute('aria-labelledby')).toBe('ttl');
+    });
+});
+
 describe('Menu single selection', () => {
     function Picker({ onChange }: { onChange?: (id: string) => void }) {
         const [mode, setMode] = useState('once');

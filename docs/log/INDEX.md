@@ -47,3 +47,4 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | 2026-11-17 | [[2026-11-17-drawer-head]] — Drawer: head actions slot, muted count, hideControls, automatic divider | Grille-83g.6 |
 | 2026-11-17 | [[2026-11-17-dialog-title-actions]] — Dialog title heading and DialogActions centred action-button bar | Grille-83g.3 |
 | 2026-11-17 | [[2026-11-17-tooltip-standalone]] — Tooltip triggerRef, isOpen and onOpenChange for use outside a TooltipTrigger | Grille-83g.7 |
+| 2026-11-17 | [[2026-11-17-menu-describedby]] — Menu takes aria-label or aria-labelledby, plus aria-describedby | Grille-83g.12 |

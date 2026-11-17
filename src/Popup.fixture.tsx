@@ -92,6 +92,20 @@ function PopoverAtPoint() {
     );
 }
 
+function DescribedMenuFixture() {
+    return (
+        <div className="ui-popover" style={{ position: 'static', display: 'inline-block' }}>
+            <Dialog aria-label="Node">
+                <p id="node-description" style={{ margin: 0, padding: '8px 12px' }}>Adds two numbers and outputs the sum.</p>
+                <Menu aria-label="Add node actions" aria-describedby="node-description" autoFocus={false}>
+                    <MenuItem id="add">Add to graph</MenuItem>
+                    <MenuItem id="docs">Show help</MenuItem>
+                </Menu>
+            </Dialog>
+        </div>
+    );
+}
+
 function MenuFixture() {
     return <div className="ui-popover" style={{ position: 'static', display: 'inline-block' }}><ActionsMenu /></div>;
 }
@@ -137,6 +151,7 @@ export default {
     'Trigger chevron states': <ChevronStatesFixture />,
     'Popover at a point': <PopoverAtPoint />,
     Menu: <MenuFixture />,
+    'Menu with a description': <DescribedMenuFixture />,
     'Menu single select': <SingleSelectFixture />,
     'Menu with submenu': <CascadeFixture />,
     'Menu row tooltips': <RowTooltipFixture />,
