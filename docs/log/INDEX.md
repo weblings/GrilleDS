@@ -41,3 +41,4 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | 2026-11-17 | [[2026-11-17-grip-icon]] — gripIcon drag handle | Grille-83g.9 |
 | 2026-11-17 | [[2026-11-17-button-disabled-variants]] — a disabled Button keeps its variant colours, dimmed | Grille-83g.4 |
 | 2026-11-17 | [[2026-11-17-button-ghost-variant]] — Button variant="ghost", a borderless icon button | Grille-83g.5 |
+| 2026-11-17 | [[2026-11-17-message-row]] — MessageRow: outlined error or notice row with a centred mark, plus radius-lg | Grille-83g.1 |

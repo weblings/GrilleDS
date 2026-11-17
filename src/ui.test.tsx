@@ -7,7 +7,7 @@ import { axe } from 'vitest-axe';
 import { useRef, useState } from 'react';
 import * as icons from './icons';
 import { chevronDownIcon, type IconData } from './icons';
-import { Icon, Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, Drawer, Menu, MenuItem, MenuSection, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField, Tooltip, TooltipTrigger } from './index';
+import { Icon, Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, Drawer, Menu, MenuItem, MenuSection, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, MessageRow, StatusMessage, Tabs, TextField, Tooltip, TooltipTrigger } from './index';
 
 afterEach(cleanup);
 
@@ -196,6 +196,45 @@ describe('Callout', () => {
 
     it('has no axe violations', async () => {
         const { container } = render(<Callout title="Heads up"><p>details</p></Callout>);
+        await expectNoViolations(container);
+    });
+});
+
+describe('MessageRow', () => {
+    it('is presentational: no role or live region, and passes id through', () => {
+        const { container } = render(<MessageRow id="msg" message="Saved elsewhere" />);
+        const row = container.querySelector('.ui-message-row')!;
+        expect(row.id).toBe('msg');
+        expect(row.getAttribute('role')).toBeNull();
+        expect(container.querySelector('[aria-live]')).toBeNull();
+        expect(container.querySelector('[role]')).toBeNull();
+    });
+
+    it('draws a different mark per tone and defaults to notice', () => {
+        const { container: error } = render(<MessageRow tone="error" message="x" />);
+        const { container: notice } = render(<MessageRow message="x" />);
+        const errorPath = error.querySelector('.ui-message-row-mark path')!.getAttribute('d');
+        const noticePath = notice.querySelector('.ui-message-row-mark path')!.getAttribute('d');
+        expect(errorPath).toBeTruthy();
+        expect(noticePath).not.toBe(errorPath);
+        expect(notice.querySelector('.ui-message-row')!.getAttribute('data-tone')).toBe('notice');
+    });
+
+    it('shows slot content and calls onDismiss from a named dismiss button', async () => {
+        const onDismiss = vi.fn();
+        render(<MessageRow message="Failed" onDismiss={onDismiss} dismissLabel="Close message"><button>Retry</button></MessageRow>);
+        expect(screen.getByRole('button', { name: 'Retry' })).toBeTruthy();
+        await userEvent.click(screen.getByRole('button', { name: 'Close message' }));
+        expect(onDismiss).toHaveBeenCalledTimes(1);
+    });
+
+    it('has no dismiss button without onDismiss', () => {
+        render(<MessageRow message="Failed" />);
+        expect(screen.queryByRole('button')).toBeNull();
+    });
+
+    it('has no axe violations', async () => {
+        const { container } = render(<MessageRow tone="error" message="Failed" onDismiss={() => {}} />);
         await expectNoViolations(container);
     });
 });

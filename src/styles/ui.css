@@ -264,6 +264,21 @@
   .ui-status-message[data-tone="warning"] { color: var(--ui-color-text-warning); }
   .ui-status-message[data-tone="error"] { color: var(--ui-color-text-error); }
 
+  /* Mark, message and dismiss share grid row 1 and the mark centres on that row, which holds only the message lines.
+     The slot sits in row 2 under the text column, so it never moves the mark. */
+  .ui-message-row {
+    display: grid; grid-template-columns: auto minmax(0, 1fr) auto; column-gap: var(--ui-size-space-lg); align-items: start;
+    border: 2px solid var(--ui-color-border-default); border-radius: var(--ui-size-radius-lg);
+    padding: var(--ui-size-space-lg) var(--ui-size-space-xl);
+    font-size: var(--ui-size-font-sm); line-height: 1.5; color: var(--ui-color-text-default);
+  }
+  .ui-message-row-mark { grid-column: 1; grid-row: 1; align-self: center; display: flex; }
+  .ui-message-row[data-tone="error"] .ui-message-row-mark { color: var(--ui-color-text-error); }
+  .ui-message-row-text { grid-column: 2; grid-row: 1; min-width: 0; text-wrap: pretty; }
+  .ui-message-row-slot { grid-column: 2; grid-row: 2; margin-top: var(--ui-size-space-lg); }
+  /* Centres the 24px ghost button on the first message line, so it never makes row 1 taller. */
+  .ui-message-row-dismiss { grid-column: 3; grid-row: 1; display: flex; margin-block: calc((1lh - var(--ui-size-button-icon-size-sm)) / 2); }
+
   .ui-tab-list { display: flex; justify-content: center; gap: var(--ui-size-space-md); margin-bottom: var(--ui-size-space-2xl); }
   .ui-tab {
     padding: var(--ui-size-space-md) var(--ui-size-tab-pad-x); border: none; border-radius: var(--ui-size-radius-pill); outline: none;

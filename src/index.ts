@@ -18,6 +18,7 @@ export { Slider, type SliderProps } from './Slider';
 export { Disclosure, type DisclosureProps } from './Disclosure';
 export { Tabs, type TabsProps, type TabItem } from './Tabs';
 export { Callout, type CalloutProps } from './Callout';
+export { MessageRow, type MessageRowProps } from './MessageRow';
 export { StatusMessage, type StatusMessageProps } from './StatusMessage';
 export { FieldList, FieldNote } from './FieldList';
 export { mountIsland } from './mountIsland';
