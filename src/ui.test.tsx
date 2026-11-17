@@ -1104,4 +1104,15 @@ describe('Tooltip', () => {
         await userEvent.hover(screen.getByRole('button', { name: 'Effect' }));
         expect(await screen.findByRole('tooltip')).toBeTruthy();
     });
+
+    it('opens on a non-focusable element through triggerRef and isOpen, and closes when isOpen is false', async () => {
+        function Standalone({ open }: { open: boolean }) {
+            const ref = useRef<HTMLDivElement>(null);
+            return <><div ref={ref}>Box</div><Tooltip triggerRef={ref} isOpen={open}>Opened by its owner</Tooltip></>;
+        }
+        const { rerender } = render(<Standalone open />);
+        expect((await screen.findByRole('tooltip')).textContent).toBe('Opened by its owner');
+        rerender(<Standalone open={false} />);
+        await waitFor(() => expect(screen.queryByRole('tooltip')).toBeNull());
+    });
 });
