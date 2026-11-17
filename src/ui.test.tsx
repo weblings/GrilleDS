@@ -7,7 +7,7 @@ import { axe } from 'vitest-axe';
 import { useRef, useState } from 'react';
 import * as icons from './icons';
 import { chevronDownIcon, type IconData } from './icons';
-import { Icon, Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, DialogActions, Drawer, Menu, MenuItem, MenuSection, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, MessageRow, StatusMessage, Tabs, TextField, Tooltip, TooltipTrigger } from './index';
+import { Icon, Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, DialogActions, Drawer, Menu, MenuItem, MenuSection, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, MessageRow, StatusMessage, Tabs, TextField, Tooltip, TooltipTrigger, Tree, TreeCard, TreeSection } from './index';
 
 afterEach(cleanup);
 
@@ -183,6 +183,70 @@ describe('Disclosure', () => {
 
     it('has no axe violations', async () => {
         const { container } = render(<Disclosure title="Show log"><p>log text</p></Disclosure>);
+        await expectNoViolations(container);
+    });
+});
+
+describe('Tree', () => {
+    function Harness({ initial = ['a'] }: { initial?: string[] }) {
+        const [keys, setKeys] = useState<Set<string>>(new Set(initial));
+        return (
+            <>
+                <Button onPress={() => setKeys(new Set())}>Collapse all</Button>
+                <Button onPress={() => setKeys(new Set(['a', 'b']))}>Expand all</Button>
+                <Tree aria-label="Controls" expandedKeys={keys} onExpandedChange={setKeys}>
+                    <TreeSection id="a" title="Alpha" count={2} drag={<span>grip</span>}>
+                        <TreeCard id="a1" textValue="Card one">Card one</TreeCard>
+                        <TreeCard id="a2" textValue="Card two">Card two</TreeCard>
+                    </TreeSection>
+                    <TreeSection id="b" title="Beta" count={1}>
+                        <TreeCard id="b1" textValue="Card three">Card three</TreeCard>
+                    </TreeSection>
+                </Tree>
+            </>
+        );
+    }
+
+    it('exposes a treegrid of rows, with cards only under an expanded section', () => {
+        render(<Harness />);
+        expect(screen.getByRole('treegrid', { name: 'Controls' })).toBeTruthy();
+        const rows = screen.getAllByRole('row');
+        expect(rows.map((r) => r.getAttribute('aria-expanded'))).toEqual(['true', null, null, 'false']);
+        expect(screen.queryByText('Card three')).toBeNull();
+    });
+
+    it('lets expandedKeys drive aria-expanded, Collapse all and Expand all', async () => {
+        render(<Harness />);
+        const row = (name: string) => screen.getByRole('row', { name: new RegExp(name) });
+        await userEvent.click(screen.getByRole('button', { name: 'Collapse all' }));
+        expect(row('Alpha').getAttribute('aria-expanded')).toBe('false');
+        await userEvent.click(screen.getByRole('button', { name: 'Expand all' }));
+        expect(row('Alpha').getAttribute('aria-expanded')).toBe('true');
+        expect(row('Beta').getAttribute('aria-expanded')).toBe('true');
+    });
+
+    it('toggles a section from its chevron', async () => {
+        render(<Harness />);
+        await userEvent.click(screen.getByRole('button', { name: /^Expand Beta/ }));
+        expect(screen.getByRole('row', { name: /Beta/ }).getAttribute('aria-expanded')).toBe('true');
+        expect(screen.getByText('Card three')).toBeTruthy();
+    });
+
+    it('moves between rows with arrows and expands and collapses with Right and Left', async () => {
+        render(<Harness />);
+        const alpha = screen.getByRole('row', { name: /Alpha/ });
+        act(() => alpha.focus());
+        await userEvent.keyboard('{ArrowDown}');
+        expect(screen.getAllByRole('row')[1].contains(document.activeElement)).toBe(true);
+        await userEvent.keyboard('{ArrowUp}{ArrowLeft}');
+        expect(alpha.getAttribute('aria-expanded')).toBe('false');
+        await userEvent.keyboard('{ArrowRight}');
+        expect(alpha.getAttribute('aria-expanded')).toBe('true');
+    });
+
+    it('renders the drag slot and has no axe violations', async () => {
+        const { container } = render(<Harness />);
+        expect(screen.getByText('grip')).toBeTruthy();
         await expectNoViolations(container);
     });
 });

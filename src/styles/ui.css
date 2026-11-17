@@ -8,6 +8,8 @@
   .ui-select-trigger[data-focus-visible],
   .ui-slider-thumb[data-focus-visible],
   .ui-disclosure-trigger[data-focus-visible],
+  .ui-tree-section-item[data-focus-visible] > .ui-tree-section,
+  .ui-tree-card-item[data-focus-visible] > .ui-tree-card,
   .ui-tab[data-focus-visible] {
     outline: var(--ui-size-focus-ring-width) solid var(--ui-color-focus-ring);
     outline-offset: var(--ui-size-focus-ring-offset);
@@ -262,6 +264,29 @@
   }
   .ui-disclosure-trigger .ui-icon { transition: rotate 0.1s; }
   .ui-disclosure-trigger[aria-expanded="true"] .ui-icon { rotate: 90deg; }
+
+  .ui-tree { display: flex; flex-direction: column; outline: none; }
+  .ui-tree-section-item, .ui-tree-card-item { outline: none; }
+  .ui-tree-section-item { margin-top: var(--ui-size-space-lg); }
+  .ui-tree-section-item:first-child { margin-top: 0; }
+  .ui-tree-card-item { margin-top: var(--ui-size-space-xs); padding-left: var(--ui-size-space-lg); }
+  .ui-tree-section {
+    display: flex; align-items: center; gap: var(--ui-size-space-sm); min-height: 36px; box-sizing: border-box;
+    padding: var(--ui-size-space-xs) var(--ui-size-space-xs) var(--ui-size-space-xs) var(--ui-size-space-md);
+    border-radius: var(--ui-size-radius-md); background: var(--ui-color-popup-bg-hover);
+    font-size: var(--ui-size-font-md); color: var(--ui-color-text-default); cursor: pointer;
+  }
+  .ui-tree-section-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ui-tree-count { flex: 1; font-size: var(--ui-size-font-sm); color: var(--ui-color-text-muted); }
+  .ui-tree-section .ui-button[slot="chevron"] { margin-left: auto; }
+  .ui-tree-section .ui-button[slot="chevron"] .ui-icon { transition: rotate 0.1s; }
+  .ui-tree-section-item[data-expanded] .ui-button[slot="chevron"] .ui-icon { rotate: 180deg; }
+  .ui-tree-card {
+    display: flex; align-items: center; gap: var(--ui-size-space-sm); min-height: 32px; box-sizing: border-box;
+    padding: 3px var(--ui-size-space-xs) 3px var(--ui-size-space-md);
+    border: 1px solid var(--ui-color-border-default); border-radius: var(--ui-size-radius-sm);
+    font-size: var(--ui-size-font-sm); color: var(--ui-color-text-default);
+  }
 
   .ui-callout {
     background: var(--ui-color-surface-raised); border: 1px solid var(--ui-color-border-default);
