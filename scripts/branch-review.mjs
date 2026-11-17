@@ -12,7 +12,7 @@
 // Output is a static page: open <out>/index.html. Needs Playwright's chromium
 // (npx playwright install chromium).
 import { execFileSync, spawnSync } from 'node:child_process';
-import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmdirSync, rmSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { tmpdir } from 'node:os';
 import { dirname, extname, join, relative, resolve } from 'node:path';
@@ -48,8 +48,10 @@ const headSha = git('rev-parse', '--short', 'HEAD');
 const dirty = git('status', '--porcelain', '--untracked-files=no') !== '';
 
 // ---- helpers ---------------------------------------------------------------------------
+// On Windows, npm and node_modules/.bin entries are .cmd shims that only launch through a shell.
+const win = process.platform === 'win32';
 const run = (cmd, args, cwd, env = {}) =>
-    spawnSync(cmd, args, { cwd, env: { ...process.env, ...env }, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
+    spawnSync(win && /[\\/]/.test(cmd) ? `"${cmd}"` : cmd, args, { cwd, env: { ...process.env, ...env }, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, shell: win });
 
 const fixtureFiles = (root) => {
     const files = [];
@@ -164,7 +166,8 @@ const viewerRuntime = (src) => {
 };
 
 function buildBase(worktree, headFixtures) {
-    symlinkSync(join(repo, 'node_modules'), join(worktree, 'node_modules'));
+    // A junction needs no admin rights on Windows.
+    symlinkSync(join(repo, 'node_modules'), join(worktree, 'node_modules'), 'junction');
     for (const f of harness) cpSync(join(repo, f), join(worktree, f));
     cpSync(join(repo, 'viewer'), join(worktree, 'viewer'), { recursive: true, filter: viewerRuntime });
     const copied = headFixtures.filter((f) => !f.startsWith('viewer/'));
@@ -182,8 +185,9 @@ function buildBase(worktree, headFixtures) {
     for (let attempt = 0; attempt <= copied.length; attempt++) {
         const result = run(join(repo, 'node_modules/.bin/cosmos-export'), [], worktree);
         if (result.status === 0) return cannotBuild;
-        const output = `${result.stdout}\n${result.stderr}`;
-        const named = copied.filter((f) => !cannotBuild.has(f) && output.includes(f));
+        // Strip ANSI colors, which split file names character by character on Windows.
+        const output = `${result.stdout}\n${result.stderr}`.replace(/\x1b\[[0-9;]*m/g, '');
+        const named = copied.filter((f) => !cannotBuild.has(f) && output.includes(f.replaceAll('\\', '/')));
         if (!named.length) throw new Error(`cosmos-export failed at ${baseRef} and no fixture file is named:\n${output}`);
         for (const f of named) {
             cannotBuild.add(f);
@@ -272,6 +276,10 @@ try {
 } finally {
     await browser?.close();
     for (const s of servers) s.close();
+    // Unlink first: git and rmSync would otherwise delete through the junction into the real node_modules.
+    try {
+        rmdirSync(join(worktree, 'node_modules'));
+    } catch {}
     try {
         git('worktree', 'remove', '--force', worktree);
     } catch {
