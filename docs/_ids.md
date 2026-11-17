@@ -42,6 +42,7 @@ every run. Human lookup for `[[id]]` citations elsewhere in `docs/`.
 | `2026-11-17-menu-describedby` | [log/2026-11-17-menu-describedby.md](log/2026-11-17-menu-describedby.md) | Menu aria-describedby and aria-labelledby |
 | `2026-11-17-message-row` | [log/2026-11-17-message-row.md](log/2026-11-17-message-row.md) | MessageRow |
 | `2026-11-17-popover-offset` | [log/2026-11-17-popover-offset.md](log/2026-11-17-popover-offset.md) | Popover offset and crossOffset |
+| `2026-11-17-release-dev17` | [log/2026-11-17-release-dev17.md](log/2026-11-17-release-dev17.md) | Release v0.1.0-dev.17: Aurora controls panel components |
 | `2026-11-17-status-message-font-size` | [log/2026-11-17-status-message-font-size.md](log/2026-11-17-status-message-font-size.md) | StatusMessage font size |
 | `2026-11-17-textfield-form` | [log/2026-11-17-textfield-form.md](log/2026-11-17-textfield-form.md) | TextField: label-less form, multi-line form |
 | `2026-11-17-tooltip-standalone` | [log/2026-11-17-tooltip-standalone.md](log/2026-11-17-tooltip-standalone.md) | Tooltip opens without a trigger |

@@ -51,3 +51,4 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | 2026-11-17 | [[2026-11-17-popover-offset]] — Popover offset and crossOffset props | Grille-83g.13 |
 | 2026-11-17 | [[2026-11-17-tree]] — Tree, TreeSection, TreeCard with controlled expandedKeys | Grille-83g.8 |
 | 2026-11-17 | [[2026-11-17-tree-drag]] — Tree dragAndDropHooks, TreeDragHandle, TreeDropIndicator, drag and drop states | Grille-83g.14 |
+| 2026-11-17 | [[2026-11-17-release-dev17]] — v0.1.0-dev.17 released with the Aurora controls panel components | Grille-83g.10 |
