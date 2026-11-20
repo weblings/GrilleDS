@@ -1,3 +1,7 @@
+v0.2.0:
+- First stable release: the same code as v0.1.0-dev.17, with the dev.1 to dev.17 entries below as history. No changes for consumers moving from dev.17
+- Dev - The Tree drag test now waits a frame before sending Escape, so it no longer fails on a fast machine
+
 v0.1.0-dev.17:
 - MessageRow - New outlined error or notice row: the mark is centred on the message lines, a slot below holds buttons or a list, and an optional ghost dismiss sits at top right. Presentational, with no role or live region. New token size.radius.lg (12px)
 - TextField - Can be named by aria-label instead of a visible label (one of the two is required), and takes placeholder, autoFocus, isInvalid and aria-describedby. It now fills its container by default; inside a FieldList it lays out as before. New multiline form (rows, default 3) that resizes vertically only
