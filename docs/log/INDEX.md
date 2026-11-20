@@ -52,3 +52,4 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | 2026-11-17 | [[2026-11-17-tree]] — Tree, TreeSection, TreeCard with controlled expandedKeys | Grille-83g.8 |
 | 2026-11-17 | [[2026-11-17-tree-drag]] — Tree dragAndDropHooks, TreeDragHandle, TreeDropIndicator, drag and drop states | Grille-83g.14 |
 | 2026-11-17 | [[2026-11-17-release-dev17]] — v0.1.0-dev.17 released with the Aurora controls panel components | Grille-83g.10 |
+| 2026-11-19 | [[2026-11-19-release-0-2-0]] — v0.2.0 released, the first stable version | Grille-0up, Grille-uoq, Grille-e5t, Grille-ky2 |
