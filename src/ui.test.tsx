@@ -1,11 +1,14 @@
 // @vitest-environment jsdom
 import { act } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 import { useRef, useState } from 'react';
-import { Button, Callout, Dialog, Menu, MenuItem, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, StatusMessage, Tabs, TextField } from './index';
+import * as icons from './icons';
+import { chevronDownIcon, type IconData } from './icons';
+import { useDragAndDrop } from 'react-aria-components';
+import { Icon, Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, DialogActions, Drawer, Menu, MenuItem, MenuSection, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, MessageRow, StatusMessage, Tabs, TextField, Tooltip, TooltipTrigger, Tree, TreeCard, TreeDragHandle, TreeDropIndicator, TreeSection } from './index';
 
 afterEach(cleanup);
 
@@ -42,6 +45,34 @@ describe('TextField', () => {
 
     it('has no axe violations', async () => {
         const { container } = render(<FieldList><TextField label="Artist" value="x" onChange={() => {}} /></FieldList>);
+        await expectNoViolations(container);
+    });
+
+    it('takes an aria-label instead of a visible label, with placeholder, autofocus, invalid and description', () => {
+        render(<>
+            <TextField aria-label="Name" value="" onChange={() => {}} placeholder="Untitled" autoFocus isInvalid aria-describedby="err" />
+            <div id="err">Required</div>
+        </>);
+        const input = screen.getByRole('textbox', { name: 'Name' });
+        expect(input.getAttribute('placeholder')).toBe('Untitled');
+        expect(input.getAttribute('aria-invalid')).toBe('true');
+        expect(input.getAttribute('aria-describedby')).toContain('err');
+        expect(document.activeElement).toBe(input);
+    });
+
+    it('renders a textarea with rows when multiline and reports typed values', async () => {
+        const onChange = vi.fn();
+        render(<TextField label="Tooltip" multiline value="" onChange={onChange} placeholder="Tip" isInvalid />);
+        const area = screen.getByRole('textbox', { name: 'Tooltip' });
+        expect(area.tagName).toBe('TEXTAREA');
+        expect(area.getAttribute('rows')).toBe('3');
+        expect(area.getAttribute('aria-invalid')).toBe('true');
+        await userEvent.type(area, 'A');
+        expect(onChange).toHaveBeenLastCalledWith('A');
+    });
+
+    it('has no axe violations without a visible label', async () => {
+        const { container } = render(<TextField aria-label="Name" value="" onChange={() => {}} multiline />);
         await expectNoViolations(container);
     });
 });
@@ -93,6 +124,20 @@ describe('Select', () => {
         expect(onChange).not.toHaveBeenCalled();
     });
 
+    it('draws the chevron as an icon, not a text glyph', () => {
+        render(<Select label="Lyrics from" options={options} value="Vocals" onChange={() => {}} />);
+        const trigger = screen.getByRole('button');
+        expect(trigger.querySelector('svg.ui-icon')).toBeTruthy();
+        expect(trigger.textContent).toBe('Vocals');
+    });
+
+    it('marks the chevron so an open trigger flips it, on Select and on plain buttons', () => {
+        render(<Select label="Lyrics from" options={options} value="Vocals" onChange={() => {}} />);
+        expect(screen.getByRole('button').querySelector('svg.ui-icon[data-chevron]')).toBeTruthy();
+        const { container } = render(<Button aria-expanded="true">View <Icon icon={chevronDownIcon} size="sm" /></Button>);
+        expect(container.querySelector('[aria-expanded="true"] > svg[data-chevron]')).toBeTruthy();
+    });
+
     it('has no axe violations', async () => {
         const { container } = render(<FieldList><Select label="Lyrics from" options={options} value="Vocals" onChange={() => {}} /></FieldList>);
         await expectNoViolations(container);
@@ -106,6 +151,12 @@ describe('Slider', () => {
         screen.getByRole('slider').focus();
         await userEvent.keyboard('{ArrowRight}');
         expect(onChange).toHaveBeenCalledWith(1.5);
+    });
+
+    it('fills the track up to the thumb', () => {
+        const { container } = render(<Slider label="Difficulty" min={0} max={5} step={0.5} value={1.5} onChange={() => {}} />);
+        const fill = container.querySelector<HTMLElement>('.ui-slider-fill');
+        expect(fill?.style.width).toBe('30%');
     });
 
     it('has no axe violations', async () => {
@@ -124,9 +175,129 @@ describe('Disclosure', () => {
         expect(screen.getByText('log text')).toBeTruthy();
     });
 
+    it('draws its chevron as an icon, not a text glyph', () => {
+        render(<Disclosure title="Show log"><p>log text</p></Disclosure>);
+        const trigger = screen.getByRole('button', { name: 'Show log' });
+        expect(trigger.querySelector('svg.ui-icon')).toBeTruthy();
+        expect(trigger.textContent).toBe('Show log');
+    });
+
     it('has no axe violations', async () => {
         const { container } = render(<Disclosure title="Show log"><p>log text</p></Disclosure>);
         await expectNoViolations(container);
+    });
+});
+
+describe('Tree', () => {
+    function Harness({ initial = ['a'] }: { initial?: string[] }) {
+        const [keys, setKeys] = useState<Set<string>>(new Set(initial));
+        return (
+            <>
+                <Button onPress={() => setKeys(new Set())}>Collapse all</Button>
+                <Button onPress={() => setKeys(new Set(['a', 'b']))}>Expand all</Button>
+                <Tree aria-label="Controls" expandedKeys={keys} onExpandedChange={setKeys}>
+                    <TreeSection id="a" title="Alpha" count={2} drag={<span>grip</span>}>
+                        <TreeCard id="a1" textValue="Card one">Card one</TreeCard>
+                        <TreeCard id="a2" textValue="Card two">Card two</TreeCard>
+                    </TreeSection>
+                    <TreeSection id="b" title="Beta" count={1}>
+                        <TreeCard id="b1" textValue="Card three">Card three</TreeCard>
+                    </TreeSection>
+                </Tree>
+            </>
+        );
+    }
+
+    it('exposes a treegrid of rows, with cards only under an expanded section', () => {
+        render(<Harness />);
+        expect(screen.getByRole('treegrid', { name: 'Controls' })).toBeTruthy();
+        const rows = screen.getAllByRole('row');
+        expect(rows.map((r) => r.getAttribute('aria-expanded'))).toEqual(['true', null, null, 'false']);
+        expect(screen.queryByText('Card three')).toBeNull();
+    });
+
+    it('lets expandedKeys drive aria-expanded, Collapse all and Expand all', async () => {
+        render(<Harness />);
+        const row = (name: string) => screen.getByRole('row', { name: new RegExp(name) });
+        await userEvent.click(screen.getByRole('button', { name: 'Collapse all' }));
+        expect(row('Alpha').getAttribute('aria-expanded')).toBe('false');
+        await userEvent.click(screen.getByRole('button', { name: 'Expand all' }));
+        expect(row('Alpha').getAttribute('aria-expanded')).toBe('true');
+        expect(row('Beta').getAttribute('aria-expanded')).toBe('true');
+    });
+
+    it('toggles a section from its chevron', async () => {
+        render(<Harness />);
+        await userEvent.click(screen.getByRole('button', { name: /^Expand Beta/ }));
+        expect(screen.getByRole('row', { name: /Beta/ }).getAttribute('aria-expanded')).toBe('true');
+        expect(screen.getByText('Card three')).toBeTruthy();
+    });
+
+    it('moves between rows with arrows and expands and collapses with Right and Left', async () => {
+        render(<Harness />);
+        const alpha = screen.getByRole('row', { name: /Alpha/ });
+        act(() => alpha.focus());
+        await userEvent.keyboard('{ArrowDown}');
+        expect(screen.getAllByRole('row')[1].contains(document.activeElement)).toBe(true);
+        await userEvent.keyboard('{ArrowUp}{ArrowLeft}');
+        expect(alpha.getAttribute('aria-expanded')).toBe('false');
+        await userEvent.keyboard('{ArrowRight}');
+        expect(alpha.getAttribute('aria-expanded')).toBe('true');
+    });
+
+    it('renders the drag slot and has no axe violations', async () => {
+        const { container } = render(<Harness />);
+        expect(screen.getByText('grip')).toBeTruthy();
+        await expectNoViolations(container);
+    });
+});
+
+describe('Tree drag and drop', () => {
+    function DndTree() {
+        const [keys, setKeys] = useState<Set<string>>(new Set(['a', 'b']));
+        const { dragAndDropHooks } = useDragAndDrop({
+            getItems: (ks) => [...ks].map((k) => ({ 'text/plain': String(k) })),
+            getDropOperation: (t) => (t.type === 'item' && t.dropPosition !== 'on' ? 'move' : 'cancel'),
+            onMove: () => {},
+            renderDropIndicator: (t) => <TreeDropIndicator target={t} child />,
+        });
+        return (
+            <Tree aria-label="Controls" expandedKeys={keys} onExpandedChange={setKeys} dragAndDropHooks={dragAndDropHooks}>
+                <TreeSection id="a" title="Alpha" drag={<TreeDragHandle aria-label="Drag the Alpha section" />}>
+                    <TreeCard id="a1" textValue="Card one"><TreeDragHandle aria-label="Drag Card one" />Card one</TreeCard>
+                    <TreeCard id="a2" textValue="Card two"><TreeDragHandle aria-label="Drag Card two" />Card two</TreeCard>
+                </TreeSection>
+                <TreeSection id="b" title="Beta" drag={<TreeDragHandle aria-label="Drag the Beta section" />} />
+            </Tree>
+        );
+    }
+
+    it('names each drag handle by its label and passes axe', async () => {
+        const { container } = render(<DndTree />);
+        expect(screen.getByRole('button', { name: 'Drag the Alpha section' })).toBeTruthy();
+        expect(screen.getByRole('button', { name: 'Drag Card two' })).toBeTruthy();
+        await expectNoViolations(container);
+    });
+
+    it('renders a handle on a Tree without dragAndDropHooks', () => {
+        render(
+            <Tree aria-label="Plain" expandedKeys={[]} onExpandedChange={() => {}}>
+                <TreeSection id="a" title="Alpha" drag={<TreeDragHandle aria-label="Drag Alpha" />} />
+            </Tree>,
+        );
+        expect(screen.getByRole('button', { name: 'Drag Alpha' })).toBeTruthy();
+    });
+
+    it('starts a keyboard drag from the handle and renders the drop indicators', async () => {
+        render(<DndTree />);
+        act(() => screen.getByRole('button', { name: 'Drag Card one' }).click());
+        await waitFor(() => expect(document.querySelectorAll('.ui-tree-drop-child').length).toBeGreaterThan(0));
+        expect(document.querySelector('[data-dragging]')).toBeTruthy();
+        // React Aria attaches the drag session's key listeners in a requestAnimationFrame; an Escape sent before that frame is lost.
+        await act(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())));
+        await userEvent.keyboard('{Escape}');
+        await waitFor(() => expect(document.querySelector('[data-dragging]')).toBeNull());
+        // Moving to a target and dropping is not reproduced here: jsdom has no layout for React Aria's drop target focus.
     });
 });
 
@@ -152,6 +323,13 @@ describe('Tabs', () => {
 });
 
 describe('Callout', () => {
+    it('draws the warning mark as an icon, not a text glyph', () => {
+        render(<Callout title="Heads up"><p>details</p></Callout>);
+        const title = screen.getByText('Heads up');
+        expect(title.querySelector('svg.ui-icon')).toBeTruthy();
+        expect(title.textContent).toBe('Heads up');
+    });
+
     it('renders as a note with its title and body', () => {
         render(<Callout title="Heads up"><p>details</p></Callout>);
         expect(screen.getByRole('note').textContent).toContain('Heads up');
@@ -160,6 +338,45 @@ describe('Callout', () => {
 
     it('has no axe violations', async () => {
         const { container } = render(<Callout title="Heads up"><p>details</p></Callout>);
+        await expectNoViolations(container);
+    });
+});
+
+describe('MessageRow', () => {
+    it('is presentational: no role or live region, and passes id through', () => {
+        const { container } = render(<MessageRow id="msg" message="Saved elsewhere" />);
+        const row = container.querySelector('.ui-message-row')!;
+        expect(row.id).toBe('msg');
+        expect(row.getAttribute('role')).toBeNull();
+        expect(container.querySelector('[aria-live]')).toBeNull();
+        expect(container.querySelector('[role]')).toBeNull();
+    });
+
+    it('draws a different mark per tone and defaults to notice', () => {
+        const { container: error } = render(<MessageRow tone="error" message="x" />);
+        const { container: notice } = render(<MessageRow message="x" />);
+        const errorPath = error.querySelector('.ui-message-row-mark path')!.getAttribute('d');
+        const noticePath = notice.querySelector('.ui-message-row-mark path')!.getAttribute('d');
+        expect(errorPath).toBeTruthy();
+        expect(noticePath).not.toBe(errorPath);
+        expect(notice.querySelector('.ui-message-row')!.getAttribute('data-tone')).toBe('notice');
+    });
+
+    it('shows slot content and calls onDismiss from a named dismiss button', async () => {
+        const onDismiss = vi.fn();
+        render(<MessageRow message="Failed" onDismiss={onDismiss} dismissLabel="Close message"><button>Retry</button></MessageRow>);
+        expect(screen.getByRole('button', { name: 'Retry' })).toBeTruthy();
+        await userEvent.click(screen.getByRole('button', { name: 'Close message' }));
+        expect(onDismiss).toHaveBeenCalledTimes(1);
+    });
+
+    it('has no dismiss button without onDismiss', () => {
+        render(<MessageRow message="Failed" />);
+        expect(screen.queryByRole('button')).toBeNull();
+    });
+
+    it('has no axe violations', async () => {
+        const { container } = render(<MessageRow tone="error" message="Failed" onDismiss={() => {}} />);
         await expectNoViolations(container);
     });
 });
@@ -176,14 +393,16 @@ describe('StatusMessage', () => {
         render(<StatusMessage tone="error" urgent>Failed</StatusMessage>);
         const region = screen.getByRole('alert');
         expect(region.getAttribute('data-tone')).toBe('error');
-        expect(region.textContent).toBe('✖ Failed');
+        expect(region.textContent).toBe('Failed');
+        expect(region.querySelector('svg.ui-icon')).toBeTruthy();
     });
 
     it('prefixes the warning tone with a warning icon', () => {
         render(<StatusMessage tone="warning">Partly done</StatusMessage>);
         const region = screen.getByRole('status');
         expect(region.getAttribute('data-tone')).toBe('warning');
-        expect(region.textContent).toBe('⚠ Partly done');
+        expect(region.textContent).toBe('Partly done');
+        expect(region.querySelector('svg.ui-icon')).toBeTruthy();
     });
 
     it('has no axe violations', async () => {
@@ -246,6 +465,79 @@ function Harness({ point, nonModal, onAction, onRestore, onKeyDown }: {
     );
 }
 
+describe('Popover offset', () => {
+    // jsdom has no layout, so rects are stubbed: the anchor sits at (50,100)-(150,120) and the popover is 100x40.
+    function place(props: { offset?: number; crossOffset?: number }) {
+        const rect = (l: number, t: number, w: number, h: number) => ({ left: l, top: t, width: w, height: h, right: l + w, bottom: t + h, x: l, y: t, toJSON() {} }) as DOMRect;
+        vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
+            return this.id === 'anchor' ? rect(50, 100, 100, 20) : this.classList.contains('ui-popover') ? rect(0, 0, 100, 40) : rect(0, 0, 1000, 1000);
+        });
+        function Example() {
+            const ref = useRef<HTMLDivElement>(null);
+            return <><div id="anchor" ref={ref}>Anchor</div><Popover isOpen onOpenChange={() => {}} triggerRef={ref} isNonModal aria-label="Pop" {...props}><p>Body</p></Popover></>;
+        }
+        render(<Example />);
+        const pop = document.querySelector<HTMLElement>('.ui-popover')!;
+        return { top: parseFloat(pop.style.top), left: parseFloat(pop.style.left) };
+    }
+    afterEach(() => vi.restoreAllMocks());
+
+    it('keeps the default gap of 8 when omitted', () => {
+        expect(place({}).top).toBe(128);
+    });
+
+    it('moves the popover by offset and crossOffset', () => {
+        expect(place({ offset: 16, crossOffset: 24 })).toEqual({ top: 136, left: 74 });
+    });
+});
+
+describe('Menu description', () => {
+    it('carries aria-describedby pointing at the paragraph above it, and aria-labelledby names it', () => {
+        render(
+            <Dialog aria-label="Node">
+                <p id="desc">Adds two numbers.</p>
+                <h2 id="ttl">Actions</h2>
+                <Menu aria-labelledby="ttl" aria-describedby="desc" autoFocus={false}><MenuItem id="a">Add</MenuItem></Menu>
+            </Dialog>,
+        );
+        const menu = screen.getByRole('menu');
+        expect(menu.getAttribute('aria-describedby')).toBe('desc');
+        expect(menu.getAttribute('aria-labelledby')).toBe('ttl');
+    });
+});
+
+describe('Menu single selection', () => {
+    function Picker({ onChange }: { onChange?: (id: string) => void }) {
+        const [mode, setMode] = useState('once');
+        return (
+            <Menu aria-label="Mode" autoFocus={false} selectionMode="single" selectedKey={mode} onSelectionChange={(id) => { setMode(id); onChange?.(id); }}>
+                <MenuItem id="once">Once</MenuItem>
+                <MenuItem id="live">Live</MenuItem>
+            </Menu>
+        );
+    }
+
+    it('marks the chosen item as a checked menuitemradio and moves the check on pick', async () => {
+        const onChange = vi.fn();
+        render(<Picker onChange={onChange} />);
+        const once = screen.getByRole('menuitemradio', { name: 'Once' });
+        const live = screen.getByRole('menuitemradio', { name: 'Live' });
+        expect(once.getAttribute('aria-checked')).toBe('true');
+        expect(live.getAttribute('aria-checked')).toBe('false');
+        expect(once.querySelector('.ui-menu-check svg')).not.toBeNull();
+        expect(live.querySelector('.ui-menu-check')).not.toBeNull();
+        expect(live.querySelector('.ui-menu-check svg')).toBeNull();
+        await userEvent.click(live);
+        expect(onChange).toHaveBeenCalledWith('live');
+        expect(screen.getByRole('menuitemradio', { name: 'Live' }).getAttribute('aria-checked')).toBe('true');
+    });
+
+    it('leaves plain menus without a check slot', () => {
+        render(<Menu aria-label="Plain" autoFocus={false}><MenuItem id="a">A</MenuItem></Menu>);
+        expect(screen.getByRole('menuitem', { name: 'A' }).querySelector('.ui-menu-check')).toBeNull();
+    });
+});
+
 describe('Popover and Menu', () => {
     it('anchors to a point and repositions when the point changes', async () => {
         const { rerender } = render(<Harness point={{ x: 40, y: 50 }} />);
@@ -279,6 +571,33 @@ describe('Popover and Menu', () => {
         expect(screen.queryByRole('menu')).toBeNull();
         expect(onRestore).toHaveBeenCalledTimes(1);
         expect(onRestore).toHaveBeenCalledWith(open);
+    });
+
+    it('leaves a non-modal popover closed when its trigger is clicked while open, and still closes on Tab out', async () => {
+        function Toggle() {
+            const [open, setOpen] = useState(false);
+            const ref = useRef<HTMLButtonElement>(null);
+            return (
+                <>
+                    <button ref={ref} onClick={() => setOpen((o) => !o)}>Toggle</button>
+                    <button>Elsewhere</button>
+                    <Popover isOpen={open} onOpenChange={setOpen} triggerRef={ref} isNonModal aria-label="Pop">
+                        <Menu aria-label="Actions"><MenuItem id="a">A</MenuItem></Menu>
+                    </Popover>
+                </>
+            );
+        }
+        render(<Toggle />);
+        const toggle = screen.getByRole('button', { name: 'Toggle' });
+        await userEvent.click(toggle);
+        expect(screen.getByRole('menu')).toBeTruthy();
+        await userEvent.click(toggle);
+        expect(screen.queryByRole('menu')).toBeNull();
+        await userEvent.click(toggle);
+        expect(screen.getByRole('menu')).toBeTruthy();
+        await userEvent.tab();
+        await userEvent.tab();
+        expect(screen.queryByRole('menu')).toBeNull();
     });
 
     it('has no axe violations', async () => {
@@ -325,11 +644,630 @@ describe('Dialog in a Popover', () => {
     });
 });
 
+describe('Modal', () => {
+    function NameEffect({ dismissable, onRename }: { dismissable?: boolean; onRename?: (name: string) => void }) {
+        const [open, setOpen] = useState(false);
+        const [name, setName] = useState('Effect');
+        return (
+            <>
+                <button onClick={() => setOpen(true)}>Name</button>
+                <button>Behind</button>
+                <Modal isOpen={open} onOpenChange={setOpen} isDismissable={dismissable}>
+                    <Dialog aria-label="Name effect">
+                        <TextField label="Name" value={name} onChange={setName} />
+                        <Button onPress={() => { onRename?.(name); setOpen(false); }}>Create</Button>
+                    </Dialog>
+                </Modal>
+            </>
+        );
+    }
+
+    async function open() {
+        const trigger = screen.getByRole('button', { name: 'Name' });
+        await userEvent.click(trigger);
+        return trigger;
+    }
+
+    it('opens a named dialog over a scrim and hides the page behind', async () => {
+        render(<NameEffect />);
+        await open();
+        const dialog = screen.getByRole('dialog', { name: 'Name effect' });
+        expect(dialog.closest('.ui-modal')).toBeTruthy();
+        expect(dialog.closest('.ui-modal-overlay')).toBeTruthy();
+        expect(screen.queryByRole('button', { name: 'Behind' })).toBeNull();
+    });
+
+    it('traps focus and takes typing in a TextField', async () => {
+        const onRename = vi.fn();
+        render(<NameEffect onRename={onRename} />);
+        await open();
+        const dialog = screen.getByRole('dialog');
+        const field = screen.getByRole('textbox', { name: 'Name' });
+        await userEvent.click(field);
+        await userEvent.clear(field);
+        await userEvent.type(field, 'Glow');
+        for (let i = 0; i < 4; i++) {
+            await userEvent.tab();
+            expect(dialog.contains(document.activeElement)).toBe(true);
+        }
+        await userEvent.click(screen.getByRole('button', { name: 'Create' }));
+        expect(onRename).toHaveBeenCalledWith('Glow');
+        expect(screen.queryByRole('dialog')).toBeNull();
+    });
+
+    it('closes on Escape and returns focus to the trigger', async () => {
+        render(<NameEffect />);
+        const trigger = await open();
+        await userEvent.keyboard('{Escape}');
+        expect(screen.queryByRole('dialog')).toBeNull();
+        // React Aria restores focus asynchronously, so a slow runner can get here first.
+        await waitFor(() => expect(document.activeElement).toBe(trigger));
+    });
+
+    it('closes on a scrim click unless dismissal is off', async () => {
+        const { rerender } = render(<NameEffect />);
+        await open();
+        await userEvent.click(document.querySelector('.ui-modal-overlay')!);
+        expect(screen.queryByRole('dialog')).toBeNull();
+        rerender(<NameEffect dismissable={false} />);
+        await open();
+        await userEvent.click(document.querySelector('.ui-modal-overlay')!);
+        expect(screen.getByRole('dialog')).toBeTruthy();
+    });
+
+    it('has no axe violations', async () => {
+        render(<NameEffect />);
+        await open();
+        await expectNoViolations(document.body);
+    });
+});
+
+describe('Dialog title', () => {
+    function Titled() {
+        return (
+            <Modal isOpen onOpenChange={() => {}}>
+                <Dialog title="Name effect">
+                    <TextField aria-label="Name" value="" onChange={() => {}} />
+                    <DialogActions>
+                        <Button size="action">Cancel</Button>
+                        <Button size="action" variant="primary">Create</Button>
+                    </DialogActions>
+                </Dialog>
+            </Modal>
+        );
+    }
+
+    it('is a heading that names the dialog', () => {
+        render(<Titled />);
+        const dialog = screen.getByRole('dialog', { name: 'Name effect' });
+        expect(screen.getByRole('heading', { name: 'Name effect' }).id).toBe(dialog.getAttribute('aria-labelledby'));
+    });
+
+    it('lays the actions out in order with the primary last', () => {
+        render(<Titled />);
+        const buttons = within(screen.getByRole('dialog')).getAllByRole('button');
+        expect(buttons.map((b) => b.textContent)).toEqual(['Cancel', 'Create']);
+        expect(buttons[0].parentElement!.className).toBe('ui-dialog-actions');
+    });
+
+    it('still names a dialog by aria-label when there is no title', () => {
+        render(<Modal isOpen onOpenChange={() => {}}><Dialog aria-label="Plain"><p>x</p></Dialog></Modal>);
+        expect(screen.getByRole('dialog', { name: 'Plain' })).toBeTruthy();
+        expect(screen.queryByRole('heading')).toBeNull();
+    });
+
+    it('has no axe violations', async () => {
+        render(<Titled />);
+        await expectNoViolations(document.body);
+    });
+});
+
 describe('Button size and icon', () => {
     it('sets size and icon markers and names an icon button', () => {
         render(<Button icon size="sm" aria-label="More">⋯</Button>);
         const b = screen.getByRole('button', { name: 'More' });
         expect(b.getAttribute('data-size')).toBe('sm');
         expect(b.hasAttribute('data-icon')).toBe(true);
+    });
+});
+
+describe('Button disabled', () => {
+    it('keeps its variant marker and disabled state so CSS can dim it', () => {
+        render(<Button variant="primary" isDisabled>Rename</Button>);
+        const b = screen.getByRole('button', { name: 'Rename' });
+        expect(b.getAttribute('data-variant')).toBe('primary');
+        expect(b.hasAttribute('data-disabled')).toBe(true);
+    });
+});
+
+describe('Button ghost', () => {
+    it('marks the ghost variant on an icon button and keeps it named', () => {
+        render(<Button variant="ghost" size="sm" icon aria-label="More"><Icon icon={icons.menuHorizontalIcon} /></Button>);
+        const b = screen.getByRole('button', { name: 'More' });
+        expect(b.getAttribute('data-variant')).toBe('ghost');
+        expect(b.getAttribute('data-size')).toBe('sm');
+        expect(b.hasAttribute('data-icon')).toBe(true);
+    });
+});
+
+describe('Autocomplete', () => {
+    function Browser() {
+        const [q, setQ] = useState('');
+        return (
+            <Autocomplete label="Add node" value={q} onChange={setQ}>
+                <ListBox aria-label="Nodes" emptyMessage="No matches">
+                    <Section title="Audio"><ListBoxItem id="gain">Gain</ListBoxItem><ListBoxItem id="mixer">Mixer</ListBoxItem></Section>
+                    <Section title="Effects"><ListBoxItem id="delay">Delay</ListBoxItem><ListBoxItem id="reverb">Reverb</ListBoxItem></Section>
+                </ListBox>
+            </Autocomplete>
+        );
+    }
+
+    it('filters in list order and drops empty sections', async () => {
+        render(<Browser />);
+        expect(screen.getAllByRole('option').map((o) => o.textContent)).toEqual(['Gain', 'Mixer', 'Delay', 'Reverb']);
+        await userEvent.type(screen.getByRole('searchbox', { name: 'Add node' }), 'e');
+        expect(screen.getAllByRole('option').map((o) => o.textContent)).toEqual(['Mixer', 'Delay', 'Reverb']);
+        await userEvent.type(screen.getByRole('searchbox', { name: 'Add node' }), 'v');
+        expect(screen.getAllByRole('option').map((o) => o.textContent)).toEqual(['Reverb']);
+        expect(screen.queryByText('Audio')).toBeNull();
+        expect(screen.getByText('Effects')).toBeTruthy();
+    });
+
+    it('shows the empty message when nothing matches', async () => {
+        render(<Browser />);
+        await userEvent.type(screen.getByRole('searchbox', { name: 'Add node' }), 'zzz');
+        expect(screen.getByText('No matches')).toBeTruthy();
+    });
+
+    it('focuses the search field on mount only when autoFocus is set', () => {
+        const { unmount } = render(<Autocomplete label="Add node" value="" onChange={() => {}}><ListBox aria-label="Nodes"><ListBoxItem id="a">A</ListBoxItem></ListBox></Autocomplete>);
+        expect(document.activeElement).not.toBe(screen.getByRole('searchbox', { name: 'Add node' }));
+        unmount();
+        render(<Autocomplete label="Add node" value="" onChange={() => {}} autoFocus><ListBox aria-label="Nodes"><ListBoxItem id="a">A</ListBoxItem></ListBox></Autocomplete>);
+        expect(document.activeElement).toBe(screen.getByRole('searchbox', { name: 'Add node' }));
+    });
+
+    it('focuses the search field when mounted inside a Popover', async () => {
+        render(
+            <Popover isOpen onOpenChange={() => {}} point={{ x: 10, y: 10 }} aria-label="Add node">
+                <Autocomplete label="Add node" value="" onChange={() => {}} autoFocus>
+                    <ListBox aria-label="Nodes"><ListBoxItem id="a">A</ListBoxItem></ListBox>
+                </Autocomplete>
+            </Popover>,
+        );
+        await waitFor(() => expect(document.activeElement).toBe(screen.getByRole('searchbox', { name: 'Add node' })));
+    });
+
+    it('has no axe violations', async () => {
+        const { container } = render(<Browser />);
+        await expectNoViolations(container);
+    });
+});
+
+describe('SearchField', () => {
+    it('is named by its label and reports typed values', async () => {
+        const onChange = vi.fn();
+        render(<SearchField label="Search" value="" onChange={onChange} />);
+        await userEvent.type(screen.getByRole('searchbox', { name: 'Search' }), 'a');
+        expect(onChange).toHaveBeenLastCalledWith('a');
+    });
+});
+
+describe('Menu row tooltip', () => {
+    it('opens on keyboard focus of the row, with no nested focusable and no warning', async () => {
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+        const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+        render(
+            <Menu aria-label="Open" autoFocus={false}>
+                <MenuItem id="a">First</MenuItem>
+                <MenuItem id="b" tooltip="A very long effect title in full">Second</MenuItem>
+            </Menu>,
+        );
+        await userEvent.tab();
+        await userEvent.keyboard('{ArrowDown}');
+        const row = screen.getByRole('menuitem', { name: 'Second' });
+        expect(row.getAttribute('data-focus-visible')).toBe('true');
+        expect((await screen.findByRole('tooltip')).textContent).toBe('A very long effect title in full');
+        expect(row.querySelector('[tabindex], button, a, input')).toBeNull();
+        expect(row.querySelector('[title]')).toBeNull();
+        expect(warn).not.toHaveBeenCalled();
+        expect(error).not.toHaveBeenCalled();
+        warn.mockRestore();
+        error.mockRestore();
+    });
+
+    it('opens on hover, and with tooltipOnlyWhenTruncated only when the label is cut off', async () => {
+        const scrollWidth = vi.spyOn(HTMLElement.prototype, 'scrollWidth', 'get');
+        scrollWidth.mockReturnValue(0);
+        const { unmount } = render(
+            <Menu aria-label="Open" autoFocus={false}>
+                <MenuItem id="a" tooltip="Full title" tooltipOnlyWhenTruncated>Short</MenuItem>
+            </Menu>,
+        );
+        await userEvent.hover(screen.getByRole('menuitem'));
+        await new Promise((r) => setTimeout(r, 600));
+        expect(screen.queryByRole('tooltip')).toBeNull();
+        unmount();
+        scrollWidth.mockReturnValue(500);
+        render(
+            <Menu aria-label="Open" autoFocus={false}>
+                <MenuItem id="a" tooltip="Full title" tooltipOnlyWhenTruncated>Short</MenuItem>
+            </Menu>,
+        );
+        await userEvent.hover(screen.getByRole('menuitem'));
+        expect((await screen.findByRole('tooltip')).textContent).toBe('Full title');
+        scrollWidth.mockRestore();
+    });
+
+    it('is opt-in: a description alone shows no tooltip and stays the accessible description', async () => {
+        render(
+            <Menu aria-label="Open" autoFocus={false}>
+                <MenuItem id="a" description="Unsaved changes">Sunset</MenuItem>
+            </Menu>,
+        );
+        const row = screen.getByRole('menuitem');
+        await userEvent.hover(row);
+        await new Promise((r) => setTimeout(r, 600));
+        expect(screen.queryByRole('tooltip')).toBeNull();
+        expect(document.getElementById(row.getAttribute('aria-describedby')!)?.textContent).toBe('Unsaved changes');
+    });
+
+    it('hides on a submenu row while its flyout is open', async () => {
+        render(
+            <Menu aria-label="Root" autoFocus={false}>
+                <SubmenuItem id="open" aria-label="Open" label="Open" tooltip="Recent effects"><MenuItem id="a">Sunset</MenuItem></SubmenuItem>
+            </Menu>,
+        );
+        await userEvent.tab();
+        expect((await screen.findByRole('tooltip')).textContent).toBe('Recent effects');
+        await userEvent.keyboard('{ArrowRight}');
+        await screen.findByRole('menuitem', { name: 'Sunset' });
+        await waitFor(() => expect(screen.queryByRole('tooltip')).toBeNull());
+    });
+});
+
+describe('SubmenuItem', () => {
+    function Cascade({ onAction }: { onAction: (id: string) => void }) {
+        return (
+            <Menu aria-label="Add node" autoFocus="first" onAction={onAction}>
+                <SubmenuItem id="math" aria-label="Math" label="Math" description="Numeric nodes" onAction={onAction}>
+                    <MenuItem id="add" description="Adds two numbers">Add</MenuItem>
+                    <MenuItem id="mul">Multiply</MenuItem>
+                </SubmenuItem>
+                <MenuItem id="out">Output</MenuItem>
+            </Menu>
+        );
+    }
+
+    it('opens the flyout on ArrowRight, closes one level on ArrowLeft', async () => {
+        render(<Cascade onAction={() => {}} />);
+        const row = screen.getByRole('menuitem', { name: /Math/ });
+        expect(row.getAttribute('aria-haspopup')).toBe('menu');
+        act(() => row.focus());
+        await userEvent.keyboard('{ArrowRight}');
+        expect(await screen.findByRole('menu', { name: /Math/ })).toBeTruthy();
+        await userEvent.keyboard('{ArrowLeft}');
+        await waitFor(() => expect(screen.queryByRole('menu', { name: /Math/ })).toBeNull());
+        expect(screen.getByRole('menu', { name: 'Add node' })).toBeTruthy();
+    });
+
+    it('closes only the flyout on Escape', async () => {
+        render(<Cascade onAction={() => {}} />);
+        act(() => screen.getByRole('menuitem', { name: /Math/ }).focus());
+        await userEvent.keyboard('{ArrowRight}');
+        await screen.findByRole('menu', { name: /Math/ });
+        await userEvent.keyboard('{Escape}');
+        await waitFor(() => expect(screen.queryByRole('menu', { name: /Math/ })).toBeNull());
+        expect(screen.getByRole('menu', { name: 'Add node' })).toBeTruthy();
+    });
+
+    it('opens on hover and runs an action from the flyout', async () => {
+        const onAction = vi.fn();
+        render(<Cascade onAction={onAction} />);
+        await userEvent.hover(screen.getByRole('menuitem', { name: /Math/ }));
+        const add = await screen.findByRole('menuitem', { name: /Add/ });
+        await userEvent.click(add);
+        expect(onAction).toHaveBeenCalledWith('add');
+    });
+
+    it('exposes the description as an accessible description, with no native title', async () => {
+        render(<Cascade onAction={() => {}} />);
+        await userEvent.hover(screen.getByRole('menuitem', { name: /Math/ }));
+        const add = await screen.findByRole('menuitem', { name: /Add/ });
+        expect(add.querySelector('[title]')).toBeNull();
+        expect(add.getAttribute('aria-describedby')).toBeTruthy();
+    });
+
+    function Grouped({ maxHeight }: { maxHeight?: number | string }) {
+        return (
+            <Menu aria-label="Title menu" autoFocus="first">
+                <SubmenuItem id="open" aria-label="Open" label="Open" maxHeight={maxHeight}>
+                    <MenuSection title="Custom"><MenuItem id="a">Alpha</MenuItem></MenuSection>
+                    <MenuSection title="Built-in"><MenuItem id="b">Beta</MenuItem></MenuSection>
+                    <MenuSection title={<>Not saved yet <Icon icon={icons.dotIcon} size="sm" /><span className="ui-visually-hidden">, unsaved changes</span></>}>
+                        <MenuItem id="c">Gamma</MenuItem>
+                    </MenuSection>
+                </SubmenuItem>
+            </Menu>
+        );
+    }
+
+    async function openGrouped(maxHeight?: number | string) {
+        render(<Grouped maxHeight={maxHeight} />);
+        act(() => screen.getByRole('menuitem', { name: /Open/ }).focus());
+        await userEvent.keyboard('{ArrowRight}');
+        return screen.findByRole('menu', { name: 'Open' });
+    }
+
+    it('leaves the max height to the token by default', async () => {
+        const menu = await openGrouped();
+        expect(menu.style.getPropertyValue('--ui-submenu-max-height')).toBe('');
+    });
+
+    it('takes maxHeight as px for a number and as-is for a CSS length', async () => {
+        const menu = await openGrouped(200);
+        expect(menu.style.getPropertyValue('--ui-submenu-max-height')).toBe('200px');
+    });
+
+    it('passes a CSS length through', async () => {
+        const menu = await openGrouped('50vh');
+        expect(menu.style.getPropertyValue('--ui-submenu-max-height')).toBe('50vh');
+    });
+
+    it('labels each MenuSection by its heading and keeps headings out of the arrow-key order', async () => {
+        const menu = await openGrouped();
+        expect(within(menu).getByRole('group', { name: 'Custom' })).toBeTruthy();
+        expect(within(menu).getByRole('group', { name: 'Built-in' })).toBeTruthy();
+        expect(within(menu).getAllByRole('menuitem')).toHaveLength(3);
+        // Opening by key focuses the first item, not the Custom heading; the next arrow crosses to the next group's item.
+        expect(document.activeElement?.textContent).toBe('Alpha');
+        await userEvent.keyboard('{ArrowDown}');
+        expect(document.activeElement?.textContent).toBe('Beta');
+    });
+
+    it('takes a node as a section heading and labels the group by its text', async () => {
+        const menu = await openGrouped();
+        const group = within(menu).getByRole('group', { name: /Not saved yet.*unsaved changes/ });
+        expect(group.querySelector('svg')).toBeTruthy();
+    });
+});
+
+describe('Drawer', () => {
+    function DrawerHarness({ onChange }: { onChange?: (open: boolean) => void }) {
+        const [open, setOpen] = useState(false);
+        const [clicks, setClicks] = useState(0);
+        return (
+            <>
+                <button onClick={() => setOpen(true)}>Open</button>
+                <button onClick={() => setClicks(clicks + 1)}>Page {clicks}</button>
+                <Drawer isOpen={open} onOpenChange={(o) => { onChange?.(o); setOpen(o); }} title="Details" subtitle="About this node.">
+                    <input aria-label="Label" />
+                </Drawer>
+            </>
+        );
+    }
+
+    it('is a labelled region, not a dialog, and renders nothing when closed', async () => {
+        render(<DrawerHarness />);
+        expect(screen.queryByRole('region')).toBeNull();
+        await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+        expect(screen.getByRole('region', { name: 'Details' })).toBeTruthy();
+        expect(screen.queryByRole('dialog')).toBeNull();
+        expect(screen.getByRole('heading', { name: 'Details' })).toBeTruthy();
+    });
+
+    it('moves focus in on open and back to the opener on close', async () => {
+        render(<DrawerHarness />);
+        const open = screen.getByRole('button', { name: 'Open' });
+        await userEvent.click(open);
+        expect(screen.getByRole('region').contains(document.activeElement)).toBe(true);
+        await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+        expect(screen.queryByRole('region')).toBeNull();
+        expect(document.activeElement).toBe(open);
+    });
+
+    it('draws the close button as an icon, not a text glyph', async () => {
+        render(<DrawerHarness />);
+        await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+        const close = screen.getByRole('button', { name: 'Close' });
+        expect(close.querySelector('svg.ui-icon')).toBeTruthy();
+        expect(close.textContent).toBe('');
+    });
+
+    it('closes on Escape while focus is inside', async () => {
+        const onChange = vi.fn();
+        render(<DrawerHarness onChange={onChange} />);
+        const open = screen.getByRole('button', { name: 'Open' });
+        await userEvent.click(open);
+        await userEvent.click(screen.getByRole('textbox', { name: 'Label' }));
+        await userEvent.keyboard('{Escape}');
+        expect(onChange).toHaveBeenLastCalledWith(false);
+        expect(screen.queryByRole('region')).toBeNull();
+        expect(document.activeElement).toBe(open);
+    });
+
+    it('stays open on an outside click, and the page behind stays interactive', async () => {
+        render(<DrawerHarness />);
+        await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+        await userEvent.click(screen.getByRole('button', { name: 'Page 0' }));
+        expect(screen.getByRole('button', { name: 'Page 1' })).toBeTruthy();
+        expect(screen.getByRole('region')).toBeTruthy();
+        expect(screen.getByRole('button', { name: 'Page 1' }).closest('[aria-hidden="true"]')).toBeNull();
+    });
+
+    it('closes on Escape when focus is outside it', async () => {
+        render(<DrawerHarness />);
+        await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+        await userEvent.click(screen.getByRole('button', { name: 'Page 0' }));
+        await userEvent.keyboard('{Escape}');
+        expect(screen.queryByRole('region')).toBeNull();
+    });
+
+    it('leaves Escape to a menu open over it, then closes on the next one', async () => {
+        function Host() {
+            const [open, setOpen] = useState(true);
+            const [menu, setMenu] = useState(false);
+            const ref = useRef<HTMLButtonElement>(null);
+            return (
+                <>
+                    <button ref={ref} onClick={() => setMenu(true)}>Menu trigger</button>
+                    <Drawer isOpen={open} onOpenChange={setOpen} title="Details"><input aria-label="Label" /></Drawer>
+                    <Popover isOpen={menu} onOpenChange={setMenu} triggerRef={ref}>
+                        <Menu aria-label="Actions" autoFocus="first"><MenuItem id="a">Add</MenuItem></Menu>
+                    </Popover>
+                </>
+            );
+        }
+        render(<Host />);
+        await userEvent.click(screen.getByRole('button', { name: 'Menu trigger' }));
+        await screen.findByRole('menu');
+        await userEvent.keyboard('{Escape}');
+        await waitFor(() => expect(screen.queryByRole('menu')).toBeNull());
+        expect(screen.getByRole('region')).toBeTruthy();
+        await userEvent.keyboard('{Escape}');
+        expect(screen.queryByRole('region')).toBeNull();
+    });
+
+    it('bottom side toggles half and full with aria-expanded, and still closes on Escape', async () => {
+        function Bottom() {
+            const [open, setOpen] = useState(true);
+            return <Drawer isOpen={open} onOpenChange={setOpen} title="Details" side="bottom"><input aria-label="Label" /></Drawer>;
+        }
+        render(<Bottom />);
+        const region = screen.getByRole('region', { name: 'Details' });
+        const toggle = screen.getByRole('button', { name: 'Expand' });
+        expect(toggle.querySelector('svg.ui-icon')).toBeTruthy();
+        expect(toggle.textContent).toBe('');
+        expect(region.dataset.side).toBe('bottom');
+        expect(toggle.getAttribute('aria-expanded')).toBe('false');
+        await userEvent.click(toggle);
+        const collapse = screen.getByRole('button', { name: 'Collapse' });
+        expect(collapse.getAttribute('aria-expanded')).toBe('true');
+        expect(region.hasAttribute('data-expanded')).toBe(true);
+        await userEvent.click(collapse);
+        expect(region.hasAttribute('data-expanded')).toBe(false);
+        await userEvent.keyboard('{Escape}');
+        expect(screen.queryByRole('region')).toBeNull();
+    });
+
+    it('side drawers have no toggle', () => {
+        render(<Drawer isOpen onOpenChange={() => {}} title="Details"><input aria-label="Label" /></Drawer>);
+        expect(screen.queryByRole('button', { name: 'Expand' })).toBeNull();
+    });
+
+    it('renders a count after the title without changing the region name', () => {
+        render(<Drawer isOpen onOpenChange={() => {}} title="Tuning" count={12}><input aria-label="Label" /></Drawer>);
+        expect(screen.getByText('12')).toBeTruthy();
+        expect(screen.getByRole('region', { name: 'Tuning' })).toBeTruthy();
+    });
+
+    it('renders actions in the head, before the built-in controls, with a divider between', () => {
+        const { container } = render(<Drawer isOpen onOpenChange={() => {}} title="Tuning" actions={<button>More</button>}><input aria-label="Label" /></Drawer>);
+        const head = container.querySelector('.ui-drawer-head')!;
+        const more = screen.getByRole('button', { name: 'More' });
+        expect(head.contains(more)).toBe(true);
+        expect(more.compareDocumentPosition(screen.getByRole('button', { name: 'Close' })) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+        expect(container.querySelector('.ui-drawer-rule')).toBeTruthy();
+    });
+
+    it('draws no divider with actions alone or controls alone', () => {
+        const { container, rerender } = render(<Drawer isOpen onOpenChange={() => {}} title="Tuning" actions={<button>More</button>} hideControls><input aria-label="Label" /></Drawer>);
+        expect(container.querySelector('.ui-drawer-rule')).toBeNull();
+        rerender(<Drawer isOpen onOpenChange={() => {}} title="Tuning"><input aria-label="Label" /></Drawer>);
+        expect(container.querySelector('.ui-drawer-rule')).toBeNull();
+    });
+
+    it('omits the close and full-height buttons with hideControls, and Escape still closes', async () => {
+        function Host() {
+            const [open, setOpen] = useState(true);
+            return <Drawer isOpen={open} onOpenChange={setOpen} title="Tuning" side="bottom" hideControls><input aria-label="Label" /></Drawer>;
+        }
+        render(<Host />);
+        expect(screen.queryByRole('button', { name: 'Close' })).toBeNull();
+        expect(screen.queryByRole('button', { name: 'Expand' })).toBeNull();
+        expect(screen.getByRole('region').contains(document.activeElement)).toBe(true);
+        await userEvent.keyboard('{Escape}');
+        expect(screen.queryByRole('region')).toBeNull();
+    });
+
+    it('has no axe violations', async () => {
+        const { container } = render(<DrawerHarness />);
+        await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+        await expectNoViolations(container);
+    });
+});
+
+describe('Icon', () => {
+    const all = Object.entries(icons).filter((entry): entry is [string, IconData] => 'viewBox' in entry[1]);
+
+    it('exports every vendored icon', () => {
+        expect(all.length).toBe(24);
+    });
+
+    it.each(all)('%s has a viewBox and renders decorative with currentColor', (_name, icon) => {
+        expect(icon.viewBox).toMatch(/^0 0 \d+ \d+$/);
+        const { container } = render(<Icon icon={icon} />);
+        const svg = container.querySelector('svg')!;
+        expect(svg.getAttribute('viewBox')).toBe(icon.viewBox);
+        expect(svg.getAttribute('aria-hidden')).toBe('true');
+        expect(svg.getAttribute('fill')).toBe('currentColor');
+        for (const path of container.querySelectorAll('path')) {
+            expect([null, 'currentColor', 'none']).toContain(path.getAttribute('fill'));
+            if (path.getAttribute('fill') === 'none') expect(path.getAttribute('stroke')).toBe('currentColor');
+        }
+    });
+
+    it('is named only when given a label', () => {
+        render(<Icon icon={icons.playIcon} label="Play" />);
+        expect(screen.getByRole('img', { name: 'Play' })).toBeTruthy();
+    });
+
+    it('names an icon button and has no axe violations', async () => {
+        const { container } = render(<Button icon aria-label="Play"><Icon icon={icons.playIcon} /></Button>);
+        await expectNoViolations(container);
+    });
+});
+
+describe('Tooltip', () => {
+    function Example() {
+        return (
+            <TooltipTrigger delay={0} closeDelay={0}>
+                <Button>Effect</Button>
+                <Tooltip><b>Reverb</b><ul><li>Mix</li></ul></Tooltip>
+            </TooltipTrigger>
+        );
+    }
+
+    it('shows rich content on keyboard focus, describes the trigger, and hides on Esc', async () => {
+        render(<Example />);
+        expect(screen.queryByRole('tooltip')).toBeNull();
+        await userEvent.tab();
+        const tip = await screen.findByRole('tooltip');
+        expect(tip.textContent).toContain('Reverb');
+        expect(tip.querySelector('b')).not.toBeNull();
+        expect(tip.querySelectorAll('li')).toHaveLength(1);
+        expect(screen.getByRole('button', { name: 'Effect' }).getAttribute('aria-describedby')).toBe(tip.id);
+        await userEvent.keyboard('{Escape}');
+        await waitFor(() => expect(screen.queryByRole('tooltip')).toBeNull());
+    });
+
+    it('shows on hover', async () => {
+        render(<Example />);
+        // React Aria ignores hover while its last input was the keyboard, which the test above leaves behind.
+        await userEvent.click(document.body);
+        await userEvent.hover(screen.getByRole('button', { name: 'Effect' }));
+        expect(await screen.findByRole('tooltip')).toBeTruthy();
+    });
+
+    it('opens on a non-focusable element through triggerRef and isOpen, and closes when isOpen is false', async () => {
+        function Standalone({ open }: { open: boolean }) {
+            const ref = useRef<HTMLDivElement>(null);
+            return <><div ref={ref}>Box</div><Tooltip triggerRef={ref} isOpen={open}>Opened by its owner</Tooltip></>;
+        }
+        const { rerender } = render(<Standalone open />);
+        expect((await screen.findByRole('tooltip')).textContent).toBe('Opened by its owner');
+        rerender(<Standalone open={false} />);
+        await waitFor(() => expect(screen.queryByRole('tooltip')).toBeNull());
     });
 });

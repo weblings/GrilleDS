@@ -1,0 +1,81 @@
+v0.2.0:
+- First stable release: the same code as v0.1.0-dev.17, with the dev.1 to dev.17 entries below as history. No changes for consumers moving from dev.17
+- Dev - The Tree drag test now waits a frame before sending Escape, so it no longer fails on a fast machine
+
+v0.1.0-dev.17:
+- MessageRow - New outlined error or notice row: the mark is centred on the message lines, a slot below holds buttons or a list, and an optional ghost dismiss sits at top right. Presentational, with no role or live region. New token size.radius.lg (12px)
+- TextField - Can be named by aria-label instead of a visible label (one of the two is required), and takes placeholder, autoFocus, isInvalid and aria-describedby. It now fills its container by default; inside a FieldList it lays out as before. New multiline form (rows, default 3) that resizes vertically only
+- Dialog - New title prop: a heading that names the dialog (aria-label becomes optional when given). New DialogActions: a centred row of size="action" buttons, primary last
+- Button - A disabled button keeps its variant colours at 40% opacity; it used to turn grey whatever the variant. New variant="ghost": a borderless icon button for row and head menus, a 24px square at size="sm" and 31px at the default size. New token size.button.icon-size-sm
+- Drawer - New actions slot in the head, a muted count after the title, and hideControls to drop the close and full-height buttons (Escape still closes). A divider separates actions from the built-in controls when both show
+- Tree - New Tree, TreeSection and TreeCard: sections expand from controlled expandedKeys and carry a count, a menu and a drag-handle slot; cards are outlined rows beneath them. Drag and drop through dragAndDropHooks, with TreeDragHandle and TreeDropIndicator; the caller's getDropOperation sets the drop rules
+- Tooltip - New triggerRef, isOpen and onOpenChange: open a tooltip on an element that is not its own trigger, such as a Tree card
+- Menu - Takes aria-labelledby as an alternative to aria-label (one is required), and aria-describedby
+- Popover - New offset and crossOffset props; omitted, the gap stays 8px
+- StatusMessage - Sets its own 13px font size; inside a Modal it was 16px
+- Icon - New gripIcon (also dist/icons/grip.svg): a drag handle of two columns of four dots
+
+v0.1.0-dev.16:
+- Button - The default icon-only button (icon) is now a 31px square, the same height as a default text button, so the two align in a row; it was 32px tall. size="sm" icon buttons are unchanged. New token size.button.icon-size (--ui-size-button-icon-size)
+
+v0.1.0-dev.15:
+- Icon - New circledInfoIcon (also dist/icons/circled-info.svg): a circled "i" for notice marks; was left out of dev.14 by mistake
+
+v0.1.0-dev.14:
+- Button - The default size is now the compact 31px button (radius 5px, 8px padding, 6px gap, 12px regular text); the icon button is 32x32. Every default and primary button shifts about 4px taller than before
+- Button - variant="primary" is the same size as the default and differs only in colour; the old large form-button look (10px 24px, 16px semibold) is gone
+- Button - New variant="strong" (grey #8b8b8b, bold) and size="action" (150x36 at 13px, for dialog actions); new tokens color.strong.*, size.radius.xs, size.button.action-width and action-height
+- Tokens - size.button.pad-x (--ui-size-button-pad-x) is removed
+
+v0.1.0-dev.13:
+- Menu section, list box section - title is now a ReactNode, so a heading can carry an icon (with visually hidden text for screen readers); string titles render unchanged
+
+v0.1.0-dev.12:
+- Icon - New dotIcon (also dist/icons/dot.svg): a plain filled dot for status marks such as an unsaved-changes indicator; about 6px at size sm, and it follows currentColor so it stays visible in forced-colors
+- Menu item, submenu item - New tooltip and tooltipOnlyWhenTruncated: a Grille-skinned tooltip opens on hover (400 ms) and at once on keyboard focus of the row itself, with no nested focusable; with tooltipOnlyWhenTruncated it shows only when the label is cut off; a submenu row hides it while its flyout is open
+- Menu item, submenu item - description no longer sets a native title= tooltip: it is screen-reader text only, and a row shows a tooltip only when given tooltip
+
+v0.1.0-dev.11:
+- Menu submenu - New maxHeight prop (default --ui-size-submenu-max-height, 480px, never taller than the screen space): a long flyout scrolls inside its popup
+- Menu - New MenuSection with a title: a sticky, non-focusable group heading that labels its items
+
+v0.1.0-dev.10:
+- Popover - Pressing the trigger of an open non-modal Popover closes it instead of closing then reopening it
+- Autocomplete - The search field fills its container, so it fits a fixed-width popover
+- Tooltip - New Tooltip and TooltipTrigger (React Aria), skinned like a popup, with rich content; hover and focus show it, Esc hides it
+- Menu - New selectionMode, selectedKey and onSelectionChange: a single-select Menu marks the chosen item with a check
+- Select, dropdown triggers - The chevron flips while the popup is open (any button with aria-expanded and a direct-child chevron icon)
+
+v0.1.0-dev.9:
+- Icon - New Icon component and size tokens, with a vendored set of 20 icons and THIRD_PARTY_NOTICES for their licenses
+- Icon - Plain-SVG export (@weblings/grille/icons/*.svg) for pages without React
+- Drawer, Select, Disclosure, Menu submenu, Callout, StatusMessage - Render Grille icons instead of text glyphs
+- Button - .ui-button is now an inline flex row so icons sit beside labels
+- Slider - Track fill
+
+v0.1.0-dev.8:
+- Drawer - New side="bottom": full width, half height by default, with an Expand/Collapse toggle and optional controlled expanded props
+- Drawer - Escape closes an open Drawer even when focus is outside it, unless a menu, popover or dialog is open and takes that Escape first
+
+v0.1.0-dev.7:
+- Drawer - New non-modal side panel: no scrim, outside click leaves it open, Escape and the close button close it, focus moves in on open and back to the opener on close
+
+v0.1.0-dev.6:
+- Autocomplete - New autoFocus prop, so one in a popup takes typing on open
+
+v0.1.0-dev.5:
+- Menu - Submenus: SubmenuItem opens a flyout beside its row (hover or ArrowRight to open, ArrowLeft or Esc to close one level)
+- Menu - MenuItem and SubmenuItem take a description, shown as a tooltip and exposed to screen readers
+
+v0.1.0-dev.4:
+- Modal - New scrim overlay with focus trap and dismiss
+- Autocomplete, SearchField, sectioned ListBox, Section and Header added
+- Dev - Cosmos fixtures for every component export, guarded by a test. Branch review page, token diff and inspector overlay run on each PR
+- Dev - dev.3 was never published; its changes ship here
+
+v0.1.0-dev.2:
+- Popup skin, Popover anchored at a point, Menu and Dialog added
+- Button - New size and icon props
+
+v0.1.0-dev.1:
+- First release: design tokens and React Aria components, published as a GitHub release tarball for Aurora to install

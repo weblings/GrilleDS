@@ -1,0 +1,72 @@
+import './styles/ui.css';
+import { Button, Icon } from './index';
+import * as icons from './icons';
+import type { IconData } from './icons';
+
+const all = Object.entries(icons).filter((entry): entry is [string, IconData] => 'viewBox' in entry[1]);
+const sizes = ['md', 'sm'] as const;
+
+// Every icon at each size, then on each button variant and size.
+function Catalog() {
+    return (
+        <>
+            {sizes.map((size) => (
+                <div key={size} style={{ display: 'flex', flexWrap: 'wrap', gap: 16, marginBottom: 16 }}>
+                    {all.map(([name, icon]) => (
+                        <div key={name} title={name} style={{ outline: '1px dashed #8886' }}>
+                            <Icon icon={icon} size={size} />
+                        </div>
+                    ))}
+                </div>
+            ))}
+        </>
+    );
+}
+
+function OnButtons() {
+    return (
+        <>
+            {(['secondary', 'primary'] as const).flatMap((variant) => sizes.map((size) => (
+                <div key={`${variant}-${size}`} style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 8 }}>
+                    {all.map(([name, icon]) => (
+                        <Button key={name} icon variant={variant} size={size} aria-label={name}>
+                            <Icon icon={icon} size={size} />
+                        </Button>
+                    ))}
+                </div>
+            )))}
+        </>
+    );
+}
+
+// The dot beside a label, as Aurora marks unsaved items.
+function DotBesideLabel() {
+    return (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span>Unsaved effect</span>
+            <Icon icon={icons.dotIcon} size="sm" />
+        </div>
+    );
+}
+
+// The grip on a draggable row, at both sizes, as Aurora's controls panel uses it.
+function GripOnRow() {
+    return (
+        <>
+            {sizes.map((size) => (
+                <div key={size} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                    <Icon icon={icons.gripIcon} size={size} />
+                    <span>Drag this row ({size})</span>
+                </div>
+            ))}
+        </>
+    );
+}
+
+export default {
+    all: <Catalog />,
+    'on buttons': <OnButtons />,
+    'dot beside label': <DotBesideLabel />,
+    'grip on a row': <GripOnRow />,
+    labelled: <Icon icon={icons.warningIcon} label="Warning" />,
+};

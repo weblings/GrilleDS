@@ -1,4 +1,6 @@
 import { useRef } from 'react';
+import { Icon } from './Icon';
+import { chevronDownIcon } from './icons';
 import { Button, ListBox, ListBoxItem, Popover, Select as AriaSelect, SelectValue, Label } from 'react-aria-components';
 
 export interface SelectProps {
@@ -22,7 +24,7 @@ export function Select({ label, options, value, onChange, defaultOpen }: SelectP
             onSelectionChange={(key) => { if (open.current && key !== null) onChange(String(key)); }}
         >
             <Label className="ui-field-label">{label}</Label>
-            <Button className="ui-select-trigger"><SelectValue /><span aria-hidden="true">▾</span></Button>
+            <Button className="ui-select-trigger"><SelectValue /><Icon icon={chevronDownIcon} size="sm" /></Button>
             <Popover className="ui-popover">
                 <ListBox className="ui-listbox">
                     {options.map((o) => <ListBoxItem key={o} id={o} className="ui-option">{o}</ListBoxItem>)}

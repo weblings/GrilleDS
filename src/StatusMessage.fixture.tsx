@@ -1,4 +1,4 @@
-import { StatusMessage } from './index';
+import { Dialog, Modal, StatusMessage } from './index';
 
 export default {
     default: <StatusMessage>Status message.</StatusMessage>,
@@ -10,4 +10,13 @@ export default {
         </div>
     ),
     empty: <StatusMessage />,
+    // Modal text is 16px by default, so this must match the sizes above.
+    'in a modal': (
+        <Modal isOpen onOpenChange={() => {}}>
+            <Dialog aria-label="Status in a modal">
+                <StatusMessage tone="error">Error message.</StatusMessage>
+                <StatusMessage>Status message.</StatusMessage>
+            </Dialog>
+        </Modal>
+    ),
 };

@@ -34,6 +34,7 @@ stable API.
 | `./tokens.json` | DTCG source, for other generators |
 | `./ui.css` | Component skin |
 | `./fonts.css` | Inter 400, 600 and 700 |
+| `./icons/<name>.svg` | Each icon as a plain SVG, for pages without React |
 
 ### CSS layers
 
@@ -43,10 +44,60 @@ part of the API:
 - Put your CSS reset in `@layer reset`. An unlayered reset overrides the skin.
 - `@layer app` rules can't override `ui`. Only unlayered rules can.
 
+### Dropdown triggers
+
+A trigger with `aria-expanded="true"` shows its chevron flipped. `Select` does this on its own. For
+your own trigger, set `aria-expanded` and render `<Icon icon={chevronDownIcon} />` as a direct child
+of the button.
+
+### Tooltips
+
+`<TooltipTrigger><Button>Save</Button><Tooltip>Saves <b>everything</b></Tooltip></TooltipTrigger>`. The
+first child must be focusable (a button, link or input); hover and keyboard focus show the tooltip
+and Esc hides it. `Tooltip` content is any ReactNode, so bold text and short lists work. Tooltips
+are not read for non-focusable elements, so don't wrap part of a menu row in a `TooltipTrigger`.
+
+A menu row takes `tooltip` instead: `<MenuItem id="x" tooltip={title} tooltipOnlyWhenTruncated>`. It
+opens on hover and when the row is reached with the arrow keys, adds no focusable element, and with
+`tooltipOnlyWhenTruncated` shows only when the label is cut off. A submenu row hides it while its
+flyout is open. `description` is screen-reader text only and never shows a tooltip by itself.
+
+### Long submenus
+
+A `SubmenuItem` flyout scrolls inside its popup once it is taller than `maxHeight` (px as a number, or
+any CSS length; default the `--ui-size-submenu-max-height` token, 480px) or the space left on screen.
+Group items with `<MenuSection title="Custom">`: the heading is sticky while the list scrolls, is
+skipped by the arrow keys, and labels the group for screen readers.
+
 ### Adding React to a non-React page
 
 `mountIsland(el, node)` renders React into one element and returns a function that removes it, so a
 page can convert one piece at a time.
+
+### Icons without React
+
+Each icon also ships as `dist/icons/<name>.svg` (kebab-case: `chevron-down.svg`, `x-mark.svg`),
+with the same paths as `Icon`. Copy the files you need into the page's folder:
+
+```html
+<img src="icons/chevron-down.svg" width="16" height="16" alt="">
+```
+
+The files have no width or height, so size them with CSS or attributes. They use `currentColor`,
+but an `<img>` can't inherit it and draws black. To color an icon, use it as a CSS mask, or paste
+the `<svg>` inline:
+
+```css
+.chevron {
+    width: 16px;
+    height: 16px;
+    background: currentColor;
+    mask: url(icons/chevron-down.svg) center / contain no-repeat;
+}
+```
+
+The files draw at the glyph's own box. `Icon` draws 4px past the layout box on each side
+(`--ui-size-icon-overhang`); a page that wants the same optical size should do likewise.
 
 ## Develop
 
