@@ -293,6 +293,8 @@ describe('Tree drag and drop', () => {
         act(() => screen.getByRole('button', { name: 'Drag Card one' }).click());
         await waitFor(() => expect(document.querySelectorAll('.ui-tree-drop-child').length).toBeGreaterThan(0));
         expect(document.querySelector('[data-dragging]')).toBeTruthy();
+        // React Aria attaches the drag session's key listeners in a requestAnimationFrame; an Escape sent before that frame is lost.
+        await act(() => new Promise<void>((resolve) => requestAnimationFrame(() => resolve())));
         await userEvent.keyboard('{Escape}');
         await waitFor(() => expect(document.querySelector('[data-dragging]')).toBeNull());
         // Moving to a target and dropping is not reproduced here: jsdom has no layout for React Aria's drop target focus.

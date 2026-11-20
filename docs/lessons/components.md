@@ -159,3 +159,5 @@ Applies-when: a test starts a drag (click on a `slot="drag"` button) and finishe
 React Aria's drag manager is module-global. A drag left open captured keys and focus, so 13 unrelated later tests (tabs, popovers, tooltips) failed. In jsdom, `focus()` on a drag handle inside a Tree row lands on the row, and a virtual `click()` starts the drag. Moving to a drop target and dropping did not work there (no layout).
 
 **Fix:** end the test with `userEvent.keyboard('{Escape}')` and wait for `[data-dragging]` to go.
+
+Wait one `requestAnimationFrame` (inside `act`) before the Escape: the drag session attaches its key listeners in a rAF, so an Escape sent as soon as the drop indicators render can be lost. That raced on a fast machine and passed on CI by timing luck, with the same 13-test cascade.
