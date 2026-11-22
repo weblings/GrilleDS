@@ -54,3 +54,4 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | 2026-11-17 | [[2026-11-17-release-dev17]] — v0.1.0-dev.17 released with the Aurora controls panel components | Grille-83g.10 |
 | 2026-11-19 | [[2026-11-19-release-0-2-0]] — v0.2.0 released, the first stable version | Grille-0up, Grille-uoq, Grille-e5t, Grille-ky2 |
 | 2026-11-22 | [[2026-11-22-npm-publish-prep]] — npm publish prep, rename to @weblings_things/grille, 0.2.1 | Grille-4ve |
+| 2026-11-22 | [[2026-11-22-npm-published]] — @weblings_things/grille 0.2.1 live on npm; release docs updated | Grille-4ve |

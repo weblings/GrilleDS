@@ -1,7 +1,9 @@
 name: Release
 
 # A v* tag builds the package and publishes the npm pack tarball as a release
-# asset. Grille commits no dist, so consumers install from that asset's URL:
+# asset. Grille commits no dist. Consumers install from npm (@weblings_things/grille),
+# which the owner publishes by hand from this asset until Grille-4kh; the asset URL
+# also works:
 #   https://github.com/weblings/GrilleDS/releases/download/vX.Y.Z/weblings_things-grille-X.Y.Z.tgz
 # Never re-upload or replace an asset: consumers' lockfiles record its integrity
 # hash, and a changed hash fails their npm ci. To fix a bad release, cut a new tag.
