@@ -1,7 +1,8 @@
 # Grille — agent instructions
 
 Grille is the React design-system library (React Aria components, design tokens, Cosmos fixtures)
-that Aurora installs from a GitHub release tarball. `CLAUDE.md` is only a pointer to this file.
+that Aurora installs from npm as `@weblings_things/grille` (every release is also a GitHub release tarball).
+`CLAUDE.md` is only a pointer to this file.
 
 ## Build & test
 
@@ -123,13 +124,13 @@ The managed Beads block is task-tracking guidance, not permission to override re
 
 ## Releasing
 
-A "Version X.Y.Z" commit does **not** publish anything. Consumers (Aurora) install from a GitHub release tarball, which exists only after the `vX.Y.Z` tag is pushed and the Release workflow (`.github/workflows/release.yml`) has run.
+A "Version X.Y.Z" commit does **not** publish anything. The `vX.Y.Z` tag makes the Release workflow (`.github/workflows/release.yml`) build the GitHub release tarball. Publishing to npm is a separate, manual step for now (Grille-4kh moves it into the workflow): the owner runs `npm publish ./weblings_things-grille-X.Y.Z.tgz` on that release asset, after `npm login` with 2FA. Agents never run `npm publish`.
 
 - Tag the version commit (`git tag vX.Y.Z <commit>`), then push the branch and the tag. The tag must match `package.json`'s version.
 - Tagging and pushing is outward-facing: ask first unless the user said to release.
 - Never re-tag or replace a release asset; consumers' lockfiles record its integrity hash. To fix a bad release, cut a new version.
-- Verify with `gh release view vX.Y.Z`.
-- In handoffs, say "committed, not yet tagged or released" until that is true. Don't call work shipped or published, and don't close beads as shipped, before the release exists.
+- Verify with `gh release view vX.Y.Z`, then `npm view @weblings_things/grille version --prefer-online` once published. A published npm version can never be reused, so a bad one is fixed by a new version.
+- In handoffs, say "committed, not yet tagged or released" until that is true. Don't call work shipped or published, and don't close beads as shipped, before the release exists (and, for a consumer-facing change, before it is on npm).
 
 ## Session Completion
 
