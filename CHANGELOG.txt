@@ -1,3 +1,8 @@
+v0.2.1:
+- Packaging - Now published to npm as @weblings_things/grille (0.2.0 stays GitHub-release-only). Consumers rename the dependency and every import from @weblings/grille to @weblings_things/grille. Same code as v0.2.0
+- Fonts - Inter ships as woff2 only; fonts.css no longer lists woff fallbacks and dist/files has no .woff
+- Types - Test file types are no longer emitted into dist
+
 v0.2.0:
 - First stable release: the same code as v0.1.0-dev.17, with the dev.1 to dev.17 entries below as history. No changes for consumers moving from dev.17
 - Dev - The Tree drag test now waits a frame before sending Escape, so it no longer fails on a fast machine
