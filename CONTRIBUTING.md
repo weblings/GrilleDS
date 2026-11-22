@@ -27,7 +27,7 @@ notes are clone-local), and don't use `bd dolt push/pull`.
 
 ## Version + changelog
 
-The version's single truth is `version` in `package.json` (currently `0.2.0`).
+The version's single truth is `version` in `package.json` (currently `0.2.1`).
 `CHANGELOG.txt` is hand-written, newest first, one `vX.Y.Z:` header per release with `- `
 bullets in consumer terms (what Aurora sees, not how it was built; prefix internal items
 with `Dev -`). Bump both together in a "Version X.Y.Z; ..." commit, only when asked.

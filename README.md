@@ -6,21 +6,23 @@ comes built in.
 
 ## Install
 
-Grille installs from git. Pin an exact commit:
-
 ```sh
-npm install github:weblings/GrilleDS#<commit>
+npm install @weblings_things/grille
 ```
+
+Importing `fonts.css` ships Inter. Its SIL OFL text is in `dist/files/LICENSE-Inter.txt`; add it to your own third-party notices, because bundlers list JS modules only.
+
+Each release is also a tarball on [GitHub Releases](https://github.com/weblings/GrilleDS/releases). 0.2.0 is available only there.
 
 React 19 is a peer dependency. It's optional, so projects that only use tokens don't need it.
 
 ## Use
 
 ```ts
-import '@weblings/grille/fonts.css';
-import '@weblings/grille/tokens.css';
-import '@weblings/grille/ui.css';
-import { Button, Select } from '@weblings/grille';
+import '@weblings_things/grille/fonts.css';
+import '@weblings_things/grille/tokens.css';
+import '@weblings_things/grille/ui.css';
+import { Button, Select } from '@weblings_things/grille';
 ```
 
 Import components from Grille, never from `react-aria-components` directly. The wrappers are the

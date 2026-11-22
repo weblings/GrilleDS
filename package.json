@@ -1,6 +1,6 @@
 {
-  "name": "@weblings/grille",
-  "version": "0.2.0",
+  "name": "@weblings_things/grille",
+  "version": "0.2.1",
   "description": "Shared design tokens and React Aria components for the weblings projects",
   "license": "MIT",
   "type": "module",
@@ -22,6 +22,9 @@
     "./ui.css": "./dist/ui.css",
     "./fonts.css": "./dist/fonts.css",
     "./icons/*.svg": "./dist/icons/*.svg"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "files": [
     "dist",
