@@ -6,7 +6,7 @@ import * as icons from '../src/icons/index';
 const vidstack = {
     arrowLeftIcon: 'arrow-left', addIcon: 'add', chevronDownIcon: 'chevron-down', chevronUpIcon: 'chevron-up', xMarkIcon: 'x-mark',
     fullscreenArrowIcon: 'fullscreen-arrow', fullscreenArrowExitIcon: 'fullscreen-arrow-exit', playIcon: 'play', pauseIcon: 'pause',
-    stopIcon: 'stop', searchIcon: 'search', menuHorizontalIcon: 'menu-horizontal', arrowUpIcon: 'arrow-up', arrowDownIcon: 'arrow-down',
+    stopIcon: 'stop', searchIcon: 'search', menuHorizontalIcon: 'menu-horizontal', arrowUpIcon: 'arrow-up', arrowDownIcon: 'arrow-down', downloadIcon: 'download',
 };
 
 describe('icon source', () => {
@@ -17,7 +17,7 @@ describe('icon source', () => {
         expect(icons[key].viewBox).toBe('0 0 32 32');
     });
 
-    it('exports all 24 icons', () => {
-        expect(Object.keys(icons)).toHaveLength(24);
+    it('exports all 25 icons', () => {
+        expect(Object.keys(icons)).toHaveLength(25);
     });
 });

@@ -51,5 +51,6 @@ every run. Human lookup for `[[id]]` citations elsewhere in `docs/`.
 | `2026-11-19-release-0-2-0` | [log/2026-11-19-release-0-2-0.md](log/2026-11-19-release-0-2-0.md) | Release v0.2.0: first stable release |
 | `2026-11-22-npm-publish-prep` | [log/2026-11-22-npm-publish-prep.md](log/2026-11-22-npm-publish-prep.md) | Prepare Grille for npm (0.2.1) |
 | `2026-11-22-npm-published` | [log/2026-11-22-npm-published.md](log/2026-11-22-npm-published.md) | @weblings_things/grille 0.2.1 is live on npm |
+| `2026-11-23-download-icon` | [log/2026-11-23-download-icon.md](log/2026-11-23-download-icon.md) | downloadIcon for Aurora's Export graph |
 | `aurora-docs-migration` | [archive/AuroraDocsMigrationPlan.md](archive/AuroraDocsMigrationPlan.md) | Migrate docs infra to Aurora's system (docs/ tree, check scripts, AGENTS.md) |
 | `lesson-agent-coordination` | [lessons/agent-coordination.md](lessons/agent-coordination.md) | Agent coordination lessons |

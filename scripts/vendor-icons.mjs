@@ -5,7 +5,7 @@ import { join } from 'node:path';
 
 const version = JSON.parse(readFileSync('node_modules/media-icons/package.json', 'utf8')).version;
 const names = ['arrow-left', 'add', 'chevron-down', 'chevron-right', 'chevron-up', 'x-mark', 'fullscreen-arrow', 'fullscreen-arrow-exit',
-    'play', 'pause', 'stop', 'search', 'menu-horizontal', 'arrow-up', 'arrow-down'];
+    'play', 'pause', 'stop', 'search', 'menu-horizontal', 'arrow-up', 'arrow-down', 'download'];
 const camel = (n) => n.replace(/-(\w)/g, (_, c) => c.toUpperCase());
 
 for (const name of names) {
