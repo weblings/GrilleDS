@@ -56,3 +56,4 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | 2026-11-22 | [[2026-11-22-npm-publish-prep]] — npm publish prep, rename to @weblings_things/grille, 0.2.1 | Grille-4ve |
 | 2026-11-22 | [[2026-11-22-npm-published]] — @weblings_things/grille 0.2.1 live on npm; release docs updated | Grille-4ve |
 | 2026-11-23 | [[2026-11-23-download-icon]] — downloadIcon from Vidstack, version 0.2.2-dev.1 | Grille-1v8 |
+| 2026-11-23 | [[2026-11-23-switch]] — Switch component matching Aurora's toggle, prerelease held | Grille-0u5.1 |

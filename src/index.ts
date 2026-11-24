@@ -15,6 +15,7 @@ export { Header } from './Header';
 export { Icon, type IconProps } from './Icon';
 export * from './icons';
 export { Slider, type SliderProps } from './Slider';
+export { Switch, type SwitchProps } from './Switch';
 export { Disclosure, type DisclosureProps } from './Disclosure';
 export { Tree, TreeSection, TreeCard, TreeDragHandle, TreeDropIndicator, type TreeProps, type TreeSectionProps, type TreeCardProps, type TreeDragHandleProps, type TreeDropIndicatorProps } from './Tree';
 export { Tabs, type TabsProps, type TabItem } from './Tabs';

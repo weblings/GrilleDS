@@ -8,7 +8,7 @@ import { useRef, useState } from 'react';
 import * as icons from './icons';
 import { chevronDownIcon, type IconData } from './icons';
 import { useDragAndDrop } from 'react-aria-components';
-import { Icon, Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, DialogActions, Drawer, Menu, MenuItem, MenuSection, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, MessageRow, StatusMessage, Tabs, TextField, Tooltip, TooltipTrigger, Tree, TreeCard, TreeDragHandle, TreeDropIndicator, TreeSection } from './index';
+import { Icon, Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, DialogActions, Drawer, Menu, MenuItem, MenuSection, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, Switch, MessageRow, StatusMessage, Tabs, TextField, Tooltip, TooltipTrigger, Tree, TreeCard, TreeDragHandle, TreeDropIndicator, TreeSection } from './index';
 
 afterEach(cleanup);
 
@@ -161,6 +161,31 @@ describe('Slider', () => {
 
     it('has no axe violations', async () => {
         const { container } = render(<FieldList><Slider label="Difficulty" min={0} max={5} step={0.5} value={1} onChange={() => {}} /></FieldList>);
+        await expectNoViolations(container);
+    });
+});
+
+describe('Switch', () => {
+    it('toggles from a label click and from Space', async () => {
+        const onChange = vi.fn();
+        render(<Switch label="Active" isSelected={false} onChange={onChange} />);
+        await userEvent.click(screen.getByText('Active'));
+        expect(onChange).toHaveBeenLastCalledWith(true);
+        screen.getByRole('switch').focus();
+        await userEvent.keyboard(' ');
+        expect(onChange).toHaveBeenCalledTimes(2);
+    });
+
+    it('does not toggle while disabled', async () => {
+        const onChange = vi.fn();
+        render(<Switch label="Active" isSelected onChange={onChange} isDisabled />);
+        await userEvent.click(screen.getByText('Active'));
+        expect(onChange).not.toHaveBeenCalled();
+        expect((screen.getByRole('switch') as HTMLInputElement).disabled).toBe(true);
+    });
+
+    it('has no axe violations', async () => {
+        const { container } = render(<Switch label="Active" isSelected onChange={() => {}} />);
         await expectNoViolations(container);
     });
 });

@@ -7,6 +7,7 @@
   .ui-text-input[data-focus-visible],
   .ui-select-trigger[data-focus-visible],
   .ui-slider-thumb[data-focus-visible],
+  .ui-switch[data-focus-visible] .ui-switch-track,
   .ui-disclosure-trigger[data-focus-visible],
   .ui-tree-section-item[data-focus-visible] > .ui-tree-section,
   .ui-tree-card-item[data-focus-visible] > .ui-tree-card,
@@ -253,6 +254,20 @@
     top: 10px; width: 16px; height: 16px; border-radius: 50%; cursor: pointer;
     background: var(--ui-color-control-accent);
   }
+  .ui-switch {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--ui-size-space-xl);
+    color: var(--ui-color-text-default); font-size: var(--ui-size-font-sm); cursor: pointer;
+  }
+  .ui-switch-track {
+    flex: none; box-sizing: border-box; width: 35px; height: 20px; padding: 2px; border-radius: 10px;
+    background: var(--ui-color-control-bg);
+  }
+  .ui-switch[data-selected] .ui-switch-track { background: var(--ui-color-strong-bg); }
+  .ui-switch-knob {
+    display: block; width: 16px; height: 16px; border-radius: 50%; background: var(--ui-color-text-default);
+  }
+  .ui-switch[data-selected] .ui-switch-knob { transform: translateX(15px); }
+  .ui-switch[data-disabled] { opacity: 0.5; cursor: not-allowed; }
   .ui-slider-output { font-size: var(--ui-size-font-xs); color: var(--ui-color-text-secondary); }
 
   .ui-disclosure { margin-top: var(--ui-size-disclosure-margin-top); }
