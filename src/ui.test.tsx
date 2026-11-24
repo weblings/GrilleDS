@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { act } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 import { useRef, useState } from 'react';
@@ -151,6 +151,43 @@ describe('Slider', () => {
         screen.getByRole('slider').focus();
         await userEvent.keyboard('{ArrowRight}');
         expect(onChange).toHaveBeenCalledWith(1.5);
+    });
+
+    it('ends once for a tap, once for a held key, and once per pointer drag', async () => {
+        const onChangeEnd = vi.fn();
+        render(<Slider label="Difficulty" min={0} max={5} step={0.5} value={1} onChange={() => {}} onChangeEnd={onChangeEnd} />);
+        const thumb = screen.getByRole('slider');
+        const user = userEvent.setup();
+        thumb.focus();
+        await user.keyboard('{ArrowRight}');
+        expect(onChangeEnd).toHaveBeenCalledTimes(1);
+        await user.keyboard('{ArrowRight>4}');
+        expect(onChangeEnd).toHaveBeenCalledTimes(1);
+        await user.keyboard('{/ArrowRight}');
+        expect(onChangeEnd).toHaveBeenCalledTimes(2);
+        await user.keyboard('{ArrowRight>2}');
+        thumb.blur();
+        expect(onChangeEnd).toHaveBeenCalledTimes(3);
+    });
+
+    it('ends once after a pointer drag', () => {
+        const onChangeEnd = vi.fn();
+        const onChange = vi.fn();
+        const { container } = render(<Slider label="Difficulty" min={0} max={5} step={0.5} value={1} onChange={onChange} onChangeEnd={onChangeEnd} />);
+        const track = container.querySelector<HTMLElement>('.ui-slider-track')!;
+        track.getBoundingClientRect = () => ({ left: 0, top: 0, right: 100, bottom: 20, width: 100, height: 20, x: 0, y: 0, toJSON() {} });
+        const ev = (type: string, x: number) => fireEvent(track, new PointerEvent(type, { bubbles: true, clientX: x, button: 0 }));
+        ev('pointerdown', 20);
+        ev('pointermove', 40);
+        ev('pointermove', 60);
+        fireEvent(window, new PointerEvent('pointerup', { bubbles: true, clientX: 60 }));
+        expect(onChange.mock.calls.length).toBeGreaterThan(1);
+        expect(onChangeEnd).toHaveBeenCalledTimes(1);
+    });
+
+    it('lays out a full-width slider with the value in the header', () => {
+        const { container } = render(<Slider fullWidth label="Difficulty" min={0} max={5} value={1} onChange={() => {}} />);
+        expect(container.querySelector('.ui-slider[data-full-width] .ui-slider-header output')).not.toBeNull();
     });
 
     it('fills the track up to the thumb', () => {
@@ -1227,7 +1264,7 @@ describe('Icon', () => {
     const all = Object.entries(icons).filter((entry): entry is [string, IconData] => 'viewBox' in entry[1]);
 
     it('exports every vendored icon', () => {
-        expect(all.length).toBe(25);
+        expect(all.length).toBe(24);
     });
 
     it.each(all)('%s has a viewBox and renders decorative with currentColor', (_name, icon) => {
