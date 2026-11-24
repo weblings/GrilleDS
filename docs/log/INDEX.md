@@ -57,3 +57,4 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | 2026-11-22 | [[2026-11-22-npm-published]] — @weblings_things/grille 0.2.1 live on npm; release docs updated | Grille-4ve |
 | 2026-11-23 | [[2026-11-23-switch]] — Switch component matching Aurora's toggle, prerelease held | Grille-0u5.1 |
 | 2026-11-24 | [[2026-11-24-slider-aurora]] — Slider onChangeEnd, fullWidth layout and Aurora colours, prerelease held | Grille-0u5.2 |
+| 2026-11-24 | [[2026-11-24-select-aurora]] — Select {id, label} options, isDisabled, fullWidth, prerelease held | Grille-0u5.3 |

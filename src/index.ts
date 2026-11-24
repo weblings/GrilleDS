@@ -7,7 +7,7 @@ export { Modal, type ModalProps } from './Modal';
 export { Drawer, type DrawerProps } from './Drawer';
 export { TextField, type TextFieldProps } from './TextField';
 export { FileTrigger, type FileTriggerProps } from './FileTrigger';
-export { Select, type SelectProps } from './Select';
+export { Select, type SelectProps, type SelectOption } from './Select';
 export { SearchField, type SearchFieldProps } from './SearchField';
 export { Autocomplete, type AutocompleteProps } from './Autocomplete';
 export { ListBox, ListBoxItem, Section, type ListBoxProps, type ListBoxItemProps, type SectionProps } from './ListBox';

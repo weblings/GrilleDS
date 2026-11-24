@@ -116,6 +116,8 @@
     background: var(--ui-color-control-bg); color: var(--ui-color-text-default);
     font-size: var(--ui-size-font-sm); font-family: inherit; cursor: pointer;
   }
+  .ui-select[data-full-width] .ui-select-trigger { justify-self: stretch; justify-content: space-between; }
+  .ui-select-trigger[data-disabled] { opacity: 0.4; cursor: not-allowed; }
   .ui-select-trigger[data-hovered] { background: var(--ui-color-control-bg-hover); }
   .ui-popover {
     border-radius: var(--ui-size-radius-sm);

@@ -124,6 +124,32 @@ describe('Select', () => {
         expect(onChange).not.toHaveBeenCalled();
     });
 
+    it('shows the label of an {id, label} option and returns its id', async () => {
+        const onChange = vi.fn();
+        const rates = [{ id: '0', label: 'Auto' }, { id: '60', label: '60 Hz' }];
+        render(<Select label="Rate" options={rates} value="60" onChange={onChange} />);
+        const trigger = screen.getByRole('button', { name: /Rate/ });
+        expect(trigger.textContent).toBe('60 Hz');
+        await userEvent.click(trigger);
+        await userEvent.click(screen.getByRole('option', { name: 'Auto' }));
+        expect(onChange).toHaveBeenCalledWith('0');
+    });
+
+    it('disables the trigger', async () => {
+        const onChange = vi.fn();
+        render(<Select label="Rate" options={options} value="Vocals" onChange={onChange} isDisabled />);
+        const trigger = screen.getByRole('button', { name: /Rate/ });
+        expect(trigger.hasAttribute('disabled')).toBe(true);
+        await userEvent.click(trigger);
+        expect(screen.queryByRole('option')).toBeNull();
+        expect(onChange).not.toHaveBeenCalled();
+    });
+
+    it('marks a full-width select', () => {
+        const { container } = render(<Select fullWidth label="Rate" options={options} value="Vocals" onChange={() => {}} />);
+        expect(container.querySelector('.ui-select[data-full-width]')).not.toBeNull();
+    });
+
     it('draws the chevron as an icon, not a text glyph', () => {
         render(<Select label="Lyrics from" options={options} value="Vocals" onChange={() => {}} />);
         const trigger = screen.getByRole('button');
