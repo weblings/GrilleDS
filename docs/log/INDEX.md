@@ -69,3 +69,4 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | 2026-11-25 | [[2026-11-25-switch-motion]] — Switch eases track and knob over 0.2s, off under reduced motion, released in v0.2.2-dev.4 | Grille-chz |
 | 2026-11-25 | [[2026-11-25-square-chat-icon-padding]] — squareChatIcon viewBox padded to -0.8 -0.8 25.6 25.6, released in v0.2.2-dev.5 | Grille-6co |
 | 2026-11-25 | [[2026-11-25-message-row-icon]] — MessageRow optional icon prop replaces the tone mark, released in v0.2.2-dev.5 | Grille-qy0 |
+| 2026-11-25 | [[2026-11-25-release-0-2-2]] — stable v0.2.2 prepared from v0.2.2-dev.5, npm publish pending | Grille-0p9 |
