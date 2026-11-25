@@ -57,6 +57,9 @@ every run. Human lookup for `[[id]]` citations elsewhere in `docs/`.
 | `2026-11-24-power-icon` | [log/2026-11-24-power-icon.md](log/2026-11-24-power-icon.md) | Power icon |
 | `2026-11-24-select-aurora` | [log/2026-11-24-select-aurora.md](log/2026-11-24-select-aurora.md) | Select matches Aurora's Dropdown |
 | `2026-11-24-slider-aurora` | [log/2026-11-24-slider-aurora.md](log/2026-11-24-slider-aurora.md) | Slider matches Aurora's Tuning sliders |
+| `2026-11-25-power-icon-padding` | [log/2026-11-25-power-icon-padding.md](log/2026-11-25-power-icon-padding.md) | powerIcon viewBox padding |
 | `2026-11-25-release-0-2-2-dev-2` | [log/2026-11-25-release-0-2-2-dev-2.md](log/2026-11-25-release-0-2-2-dev-2.md) | Release v0.2.2-dev.2: Aurora dashboard and NUX controls |
+| `2026-11-25-slider-header-gap` | [log/2026-11-25-slider-header-gap.md](log/2026-11-25-slider-header-gap.md) | Slider header gap variable |
+| `2026-11-25-slider-label-gap` | [log/2026-11-25-slider-label-gap.md](log/2026-11-25-slider-label-gap.md) | Slider fullWidth label gap and colour |
 | `aurora-docs-migration` | [archive/AuroraDocsMigrationPlan.md](archive/AuroraDocsMigrationPlan.md) | Migrate docs infra to Aurora's system (docs/ tree, check scripts, AGENTS.md) |
 | `lesson-agent-coordination` | [lessons/agent-coordination.md](lessons/agent-coordination.md) | Agent coordination lessons |

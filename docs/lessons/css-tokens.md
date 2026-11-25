@@ -141,3 +141,15 @@ depends on Aurora's page gutter, so copying the media query into Grille would be
 (`var(--ui-disclosure-overhang, 21px)`) and let the consumer set it in its own media query.
 
 Origin: Grille-0u5.4.
+
+## An opt-in custom property belongs in the `var()` fallback, not in a default on the component
+Tags: custom-property, inheritance, fallback, regression, consumers
+Applies-when: exposing a spacing or size value that consumers may override from a parent such as a row
+
+A default declared on the component (`.ui-slider { --x: 4px }`) beats any value inherited from a parent, so
+the consumer's setting is silently ignored. A fixed default also stops following the tokens it came from.
+
+**Fix:** declare nothing and keep the old expression as the fallback
+(`var(--ui-slider-header-gap, calc(...))`). The unset layout is then unchanged.
+
+Origin: Grille-rga.

@@ -102,3 +102,15 @@ The base (main) still had the old text-glyph chevron, and the icon-chevron chang
 `git log main..HEAD -- <file>`, or review with `--base <previous commit>` to isolate this bead's effect.
 
 Origin: Grille-0u5.4.
+
+## jsdom does no layout, so measure a CSS change in a real browser, before and after
+Tags: verification, css, layout, playwright, jsdom
+Applies-when: a skin change moves or resizes something and the tests only render in jsdom
+
+Grille-rga: the Slider tests assert DOM structure only, so they pass whatever the header margin is.
+
+**How to apply:** load `tokens.css` plus `ui.css` into a Playwright page with static markup using the
+component's classes, once from `git show HEAD:src/styles/ui.css` and once from the working tree. Compare
+computed values and boxes for the unset case, each way of opting in, and any consumer override.
+
+Origin: Grille-rga.
