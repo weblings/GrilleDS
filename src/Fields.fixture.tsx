@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { FieldList, FieldNote, FileTrigger, Select, Slider, TextField } from './index';
 
 const noop = () => {};
@@ -59,6 +59,7 @@ export default {
     'Select, long option': <FieldList><Select label="Select" options={['An option label that is much longer than the others in the list', 'Short']} value="Short" onChange={noop} /></FieldList>,
     Slider: <SliderDemo />,
     'Slider, full width': <SliderFull />,
+    'Slider, full width, header gap': <div style={{ '--ui-slider-header-gap': '11.5px' } as CSSProperties}><SliderFull /></div>,
     'Slider, at minimum': <SliderAt value={0} />,
     'Slider, at maximum': <SliderAt value={5} />,
 };
