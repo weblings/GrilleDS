@@ -19,6 +19,7 @@ export { pauseIcon } from './pause';
 export { playIcon } from './play';
 export { powerIcon } from './power';
 export { searchIcon } from './search';
+export { squareChatIcon } from './squareChat';
 export { stopIcon } from './stop';
 export { warningIcon } from './warning';
 export { xMarkIcon } from './xMark';

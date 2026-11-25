@@ -1,4 +1,5 @@
 Unreleased:
+- Icons - New squareChatIcon (Zest Free)
 - Slider - New --ui-slider-header-gap CSS variable sets the fullWidth header-to-track gap. Unset, the layout is unchanged
 
 v0.2.2-dev.3:

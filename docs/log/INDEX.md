@@ -65,3 +65,4 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | 2026-11-25 | [[2026-11-25-slider-label-gap]] — Slider fullWidth 10px label gap and secondary label colour, in 0.2.2-dev.3 (not yet tagged) | Grille-cf3 |
 | 2026-11-25 | [[2026-11-25-power-icon-padding]] — powerIcon viewBox repadded to -4 -4 32 32, in 0.2.2-dev.3 (not yet tagged) | Grille-jdf |
 | 2026-11-25 | [[2026-11-25-slider-header-gap]] — --ui-slider-header-gap variable for aligning a fullWidth Slider track, unreleased | Grille-rga |
+| 2026-11-25 | [[2026-11-25-square-chat-icon]] — squareChatIcon from Zest Free, unreleased | Grille-p22 |
