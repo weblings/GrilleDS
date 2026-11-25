@@ -1,4 +1,4 @@
-Unreleased:
+v0.2.2-dev.4:
 - Switch - The track colour and knob now ease over 0.2s, except under prefers-reduced-motion: reduce
 - Icons - New squareChatIcon (Zest Free)
 - Slider - New --ui-slider-header-gap CSS variable sets the fullWidth header-to-track gap. Unset, the layout is unchanged

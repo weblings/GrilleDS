@@ -11,7 +11,7 @@ Id: 2026-11-25-square-chat-icon
 
 ## Open
 
-- Unreleased: committed, not yet tagged or released.
+- Released in v0.2.2-dev.4 (GitHub prerelease).
 - The glyph was not checked by eye in Cosmos.
 
 ## Verification

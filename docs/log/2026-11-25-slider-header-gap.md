@@ -12,7 +12,7 @@ Id: 2026-11-25-slider-header-gap
 
 ## Open
 
-- Committed, not yet tagged or released. The version bump, tag and release are the owner's call. The bead was closed at commit on the owner's instruction.
+- Released in v0.2.2-dev.4 (GitHub prerelease). The bead was closed at commit on the owner's instruction.
 - The `npm run review` page was not run.
 
 ## Verification

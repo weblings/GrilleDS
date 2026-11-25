@@ -10,7 +10,7 @@ Id: 2026-11-25-slider-label-gap
 ## Open
 
 - No CSS-measuring test exists in the repo. The `Slider, full width` fixture is the only coverage, so the 10px gap needs a check on the `npm run review` page.
-- Version bumped to 0.2.2-dev.3, committed, not yet tagged or released (tag and release are the owner's call).
+- Released in v0.2.2-dev.3 (GitHub prerelease).
 
 ## Verification
 

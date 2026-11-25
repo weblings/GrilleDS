@@ -62,5 +62,6 @@ every run. Human lookup for `[[id]]` citations elsewhere in `docs/`.
 | `2026-11-25-slider-header-gap` | [log/2026-11-25-slider-header-gap.md](log/2026-11-25-slider-header-gap.md) | Slider header gap variable |
 | `2026-11-25-slider-label-gap` | [log/2026-11-25-slider-label-gap.md](log/2026-11-25-slider-label-gap.md) | Slider fullWidth label gap and colour |
 | `2026-11-25-square-chat-icon` | [log/2026-11-25-square-chat-icon.md](log/2026-11-25-square-chat-icon.md) | squareChatIcon |
+| `2026-11-25-switch-motion` | [log/2026-11-25-switch-motion.md](log/2026-11-25-switch-motion.md) | Switch motion |
 | `aurora-docs-migration` | [archive/AuroraDocsMigrationPlan.md](archive/AuroraDocsMigrationPlan.md) | Migrate docs infra to Aurora's system (docs/ tree, check scripts, AGENTS.md) |
 | `lesson-agent-coordination` | [lessons/agent-coordination.md](lessons/agent-coordination.md) | Agent coordination lessons |

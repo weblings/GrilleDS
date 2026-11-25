@@ -11,7 +11,7 @@ Id: 2026-11-25-power-icon-padding
 ## Open
 
 - Expected sizes are computed from Aurora's measurements, not re-measured in a browser.
-- Version bumped to 0.2.2-dev.3, committed, not yet tagged or released (tag and release are the owner's call).
+- Released in v0.2.2-dev.3 (GitHub prerelease).
 
 ## Verification
 
