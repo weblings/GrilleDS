@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Button } from './Button';
 import { Icon } from './Icon';
-import { circledExclamationIcon, circledInfoIcon, xMarkIcon } from './icons';
+import { circledExclamationIcon, circledInfoIcon, xMarkIcon, type IconData } from './icons';
 
 export interface MessageRowProps {
     // Lets a field point aria-describedby at the message.
@@ -13,13 +13,15 @@ export interface MessageRowProps {
     onDismiss?: () => void;
     dismissLabel?: string;
     message: ReactNode;
+    // Replaces the tone's mark. The tone colour still applies.
+    icon?: IconData;
 }
 
 // Presentational only: no role or live region, so the caller decides how the message is announced.
-export function MessageRow({ id, tone = 'notice', message, children, onDismiss, dismissLabel = 'Dismiss' }: MessageRowProps) {
+export function MessageRow({ id, tone = 'notice', message, children, onDismiss, dismissLabel = 'Dismiss', icon }: MessageRowProps) {
     return (
         <div id={id} className="ui-message-row" data-tone={tone}>
-            <span className="ui-message-row-mark"><Icon icon={tone === 'error' ? circledExclamationIcon : circledInfoIcon} /></span>
+            <span className="ui-message-row-mark"><Icon icon={icon ?? (tone === 'error' ? circledExclamationIcon : circledInfoIcon)} /></span>
             <div className="ui-message-row-text">{message}</div>
             {onDismiss ? (
                 <span className="ui-message-row-dismiss">

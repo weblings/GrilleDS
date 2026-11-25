@@ -1,4 +1,4 @@
-import { Button, MessageRow } from './index';
+import { Button, MessageRow, squareChatIcon } from './index';
 
 const one = 'Could not save the effect.';
 const two = 'Could not save the effect because the name is already used by another effect in this graph.';
@@ -24,6 +24,10 @@ for (const tone of ['error', 'notice'] as const) {
         fixtures[`${tone} ${name} with dismiss`] = box(width, <MessageRow tone={tone} message={text} onDismiss={() => {}} />);
         fixtures[`${tone} ${name} with buttons and dismiss`] = box(width, <MessageRow tone={tone} message={text} onDismiss={() => {}}>{buttons}</MessageRow>);
     }
+}
+
+for (const tone of ['error', 'notice'] as const) {
+    fixtures[`${tone} custom icon`] = box(420, <MessageRow tone={tone} icon={squareChatIcon} message={one} />);
 }
 
 export default fixtures;

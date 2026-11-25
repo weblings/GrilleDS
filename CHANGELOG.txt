@@ -1,3 +1,7 @@
+v0.2.2-dev.5:
+- Icons - squareChatIcon viewBox is padded (-0.8 -0.8 25.6 25.6), so it draws at 93.75% of its old size, closer in weight to the circled marks
+- MessageRow - New optional icon prop replaces the tone's mark. The error tone colour still applies
+
 v0.2.2-dev.4:
 - Switch - The track colour and knob now ease over 0.2s, except under prefers-reduced-motion: reduce
 - Icons - New squareChatIcon (Zest Free)
