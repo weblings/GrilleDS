@@ -270,6 +270,24 @@ describe('Disclosure', () => {
         expect(trigger.textContent).toBe('Show log');
     });
 
+    it('is controllable from outside and keeps the panel mounted', async () => {
+        function H() {
+            const [open, setOpen] = useState(false);
+            return (<>
+                <Button onPress={() => setOpen(true)}>Open it</Button>
+                <Disclosure variant="accordion" title="Bridge" isExpanded={open} onExpandedChange={setOpen}><p>zones</p></Disclosure>
+            </>);
+        }
+        const { container } = render(<H />);
+        const trigger = screen.getByRole('button', { name: 'Bridge' });
+        expect(trigger.getAttribute('aria-expanded')).toBe('false');
+        expect(container.querySelector('.ui-disclosure-panel')?.textContent).toBe('zones');
+        await userEvent.click(screen.getByRole('button', { name: 'Open it' }));
+        expect(trigger.getAttribute('aria-expanded')).toBe('true');
+        await userEvent.click(trigger);
+        expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    });
+
     it('has no axe violations', async () => {
         const { container } = render(<Disclosure title="Show log"><p>log text</p></Disclosure>);
         await expectNoViolations(container);

@@ -58,3 +58,4 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | 2026-11-23 | [[2026-11-23-switch]] — Switch component matching Aurora's toggle, prerelease held | Grille-0u5.1 |
 | 2026-11-24 | [[2026-11-24-slider-aurora]] — Slider onChangeEnd, fullWidth layout and Aurora colours, prerelease held | Grille-0u5.2 |
 | 2026-11-24 | [[2026-11-24-select-aurora]] — Select {id, label} options, isDisabled, fullWidth, prerelease held | Grille-0u5.3 |
+| 2026-11-24 | [[2026-11-24-disclosure-accordion]] — Disclosure accordion variant, isExpanded/onExpandedChange, prerelease held | Grille-0u5.4 |

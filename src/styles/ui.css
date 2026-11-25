@@ -286,6 +286,13 @@
   }
   .ui-disclosure-trigger .ui-icon { transition: rotate 0.1s; }
   .ui-disclosure-trigger[aria-expanded="true"] .ui-icon { rotate: 90deg; }
+  .ui-disclosure[data-variant="accordion"] .ui-disclosure-trigger {
+    display: flex; justify-content: space-between; width: calc(100% + 2 * var(--ui-disclosure-overhang, 21px)); margin-inline: calc(-1 * var(--ui-disclosure-overhang, 21px));
+    padding-inline: var(--ui-disclosure-overhang, 21px); box-sizing: border-box; text-align: left;
+    padding-block: 12px; border-radius: var(--ui-size-radius-md);
+    background: var(--ui-color-surface-raised); color: var(--ui-color-text-default); font-size: var(--ui-size-font-md);
+  }
+  .ui-disclosure[data-variant="accordion"] .ui-disclosure-trigger[aria-expanded="true"] .ui-icon { rotate: 180deg; }
 
   .ui-tree { display: flex; flex-direction: column; outline: none; }
   .ui-tree-section-item, .ui-tree-card-item { outline: none; }
