@@ -28,4 +28,4 @@ Id: 2026-11-24-power-icon
 
 ## Lessons
 
-- Zest Free label is not proof: filed in `packaging-release.md`.
+- Zest Free label is not proof: filed under packaging and release lessons.
