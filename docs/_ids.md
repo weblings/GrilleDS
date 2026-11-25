@@ -52,6 +52,9 @@ every run. Human lookup for `[[id]]` citations elsewhere in `docs/`.
 | `2026-11-22-npm-publish-prep` | [log/2026-11-22-npm-publish-prep.md](log/2026-11-22-npm-publish-prep.md) | Prepare Grille for npm (0.2.1) |
 | `2026-11-22-npm-published` | [log/2026-11-22-npm-published.md](log/2026-11-22-npm-published.md) | @weblings_things/grille 0.2.1 is live on npm |
 | `2026-11-23-switch` | [log/2026-11-23-switch.md](log/2026-11-23-switch.md) | Switch for Aurora's toggle |
+| `2026-11-24-disclosure-accordion` | [log/2026-11-24-disclosure-accordion.md](log/2026-11-24-disclosure-accordion.md) | Disclosure accordion variant and controlled use |
+| `2026-11-24-power-icon` | [log/2026-11-24-power-icon.md](log/2026-11-24-power-icon.md) | Power icon |
+| `2026-11-24-select-aurora` | [log/2026-11-24-select-aurora.md](log/2026-11-24-select-aurora.md) | Select matches Aurora's Dropdown |
 | `2026-11-24-slider-aurora` | [log/2026-11-24-slider-aurora.md](log/2026-11-24-slider-aurora.md) | Slider matches Aurora's Tuning sliders |
 | `aurora-docs-migration` | [archive/AuroraDocsMigrationPlan.md](archive/AuroraDocsMigrationPlan.md) | Migrate docs infra to Aurora's system (docs/ tree, check scripts, AGENTS.md) |
 | `lesson-agent-coordination` | [lessons/agent-coordination.md](lessons/agent-coordination.md) | Agent coordination lessons |

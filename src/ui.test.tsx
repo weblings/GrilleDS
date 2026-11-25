@@ -1308,7 +1308,15 @@ describe('Icon', () => {
     const all = Object.entries(icons).filter((entry): entry is [string, IconData] => 'viewBox' in entry[1]);
 
     it('exports every vendored icon', () => {
-        expect(all.length).toBe(24);
+        expect(all.length).toBe(25);
+    });
+
+    it('power strokes with round caps', () => {
+        const { container } = render(<Icon icon={icons.powerIcon} />);
+        for (const path of container.querySelectorAll('path')) {
+            expect(path.getAttribute('stroke-linecap')).toBe('round');
+            expect(path.getAttribute('stroke-linejoin')).toBe('round');
+        }
     });
 
     it.each(all)('%s has a viewBox and renders decorative with currentColor', (_name, icon) => {

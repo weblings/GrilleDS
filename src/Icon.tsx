@@ -24,7 +24,7 @@ export function Icon({ icon, label, size = 'md' }: IconProps) {
                     key={i}
                     d={path.d}
                     fillRule={path.fillRule}
-                    {...(path.stroke ? { fill: 'none', stroke: 'currentColor', strokeWidth: path.stroke.width } : {})}
+                    {...(path.stroke ? { fill: 'none', stroke: 'currentColor', strokeWidth: path.stroke.width, ...(path.stroke.round ? { strokeLinecap: 'round', strokeLinejoin: 'round' } : {}) } : {})}
                 />
             ))}
         </svg>

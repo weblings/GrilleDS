@@ -3,7 +3,7 @@ export interface IconPath {
     d: string;
     fillRule?: 'evenodd' | 'nonzero';
     /** Paint with currentColor as a stroke instead of a fill (outline shapes). */
-    stroke?: { width: number };
+    stroke?: { width: number; /** Round line caps and joins. */ round?: boolean };
 }
 
 export interface IconData {

@@ -6,7 +6,7 @@ import * as icons from '../src/icons/index';
 const vidstack = {
     arrowLeftIcon: 'arrow-left', addIcon: 'add', chevronDownIcon: 'chevron-down', chevronUpIcon: 'chevron-up', xMarkIcon: 'x-mark',
     fullscreenArrowIcon: 'fullscreen-arrow', fullscreenArrowExitIcon: 'fullscreen-arrow-exit', playIcon: 'play', pauseIcon: 'pause',
-    stopIcon: 'stop', searchIcon: 'search', menuHorizontalIcon: 'menu-horizontal', arrowUpIcon: 'arrow-up', arrowDownIcon: 'arrow-down', downloadIcon: 'download',
+    stopIcon: 'stop', searchIcon: 'search', menuHorizontalIcon: 'menu-horizontal', arrowUpIcon: 'arrow-up', arrowDownIcon: 'arrow-down',
 };
 
 describe('icon source', () => {

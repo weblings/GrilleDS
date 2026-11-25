@@ -4,7 +4,7 @@ Grille ships the icon artwork below in `src/icons`. Each icon file carries an or
 
 ## Vidstack media-icons 0.10.0 (MIT)
 
-Source: <https://github.com/vidstack/media-icons> (npm `media-icons`). Used for: arrow-left, add, chevron-down, chevron-right, chevron-up, x-mark, fullscreen-arrow, fullscreen-arrow-exit, play, pause, stop, search, menu-horizontal, arrow-up, arrow-down, download.
+Source: <https://github.com/vidstack/media-icons> (npm `media-icons`). Used for: arrow-left, add, chevron-down, chevron-right, chevron-up, x-mark, fullscreen-arrow, fullscreen-arrow-exit, play, pause, stop, search, menu-horizontal, arrow-up, arrow-down.
 
 ```
 MIT License
@@ -57,6 +57,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+## OpenMoji (CC BY-SA 4.0)
+
+Source: <https://openmoji.org/library/emoji-23FB/> (power symbol, U+23FB). Used for: power. Copyright HfG Schwaebisch Gmuend and the OpenMoji contributors. Licensed under CC BY-SA 4.0: <https://creativecommons.org/licenses/by-sa/4.0/>.
+
+Changes: the owner redrew the symbol as two round-capped strokes on a 24 grid. The adapted power icon (`src/icons/power.ts` and its SVG export) is shared under the same licence. The rest of Grille stays MIT.
 
 ## Grille's own icons (MIT)
 
