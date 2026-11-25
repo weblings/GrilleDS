@@ -1,3 +1,9 @@
+v0.2.2:
+- Stable release of the 0.2.2-dev line, same code as v0.2.2-dev.5. The entries below list the details
+- Breaking - undoIcon and redoIcon are removed (they were Zest Pro artwork)
+- New - Switch, powerIcon, squareChatIcon, a Disclosure accordion variant, a MessageRow icon prop, and new Slider and Select options
+- Visual - Every Slider has new track, fill and thumb colours
+
 v0.2.2-dev.5:
 - Icons - squareChatIcon viewBox is padded (-0.8 -0.8 25.6 25.6), so it draws at 93.75% of its old size, closer in weight to the circled marks
 - MessageRow - New optional icon prop replaces the tone's mark. The error tone colour still applies
