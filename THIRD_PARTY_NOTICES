@@ -32,7 +32,7 @@ SOFTWARE.
 
 ## Zest Free icons (Zest Free License)
 
-Source: <https://github.com/32pixelsCo/zest-icons>, taken via SVG Repo. Used for: undo, redo, minus, warning, circled-info, circled-exclamation (built from two Zest symbols).
+Source: <https://github.com/32pixelsCo/zest-icons>, taken via SVG Repo. Used for: minus, warning, circled-info, circled-exclamation (built from two Zest symbols).
 
 ```
 Zest Free License
@@ -57,6 +57,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+## OpenMoji (CC BY-SA 4.0)
+
+Source: <https://openmoji.org/library/emoji-23FB/> (power symbol, U+23FB). Used for: power. Copyright HfG Schwaebisch Gmuend and the OpenMoji contributors. Licensed under CC BY-SA 4.0: <https://creativecommons.org/licenses/by-sa/4.0/>.
+
+Changes: the owner redrew the symbol as two round-capped strokes on a 24 grid. The adapted power icon (`src/icons/power.ts` and its SVG export) is shared under the same licence. The rest of Grille stays MIT.
 
 ## Grille's own icons (MIT)
 

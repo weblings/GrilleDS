@@ -1,7 +1,7 @@
 # Contributing to Grille
 
 Grille is the React design-system library (React Aria components, design tokens, Cosmos
-fixtures) that Aurora installs from a GitHub release tarball. This file covers the workflow
+fixtures) that Aurora installs from npm as `@weblings_things/grille`. This file covers the workflow
 around the code. Coding agents: the full rules are in [AGENTS.md](AGENTS.md).
 
 ## Tasks: beads, not TODO lists
@@ -27,22 +27,24 @@ notes are clone-local), and don't use `bd dolt push/pull`.
 
 ## Version + changelog
 
-The version's single truth is `version` in `package.json` (currently `0.2.0`).
+The version's single truth is `version` in `package.json` (currently `0.2.1`).
 `CHANGELOG.txt` is hand-written, newest first, one `vX.Y.Z:` header per release with `- `
 bullets in consumer terms (what Aurora sees, not how it was built; prefix internal items
 with `Dev -`). Bump both together in a "Version X.Y.Z; ..." commit, only when asked.
 
 ## Release
 
-A version commit publishes nothing. Consumers install from the GitHub release tarball,
-which exists only after the tag is pushed and the Release workflow
-(`.github/workflows/release.yml`) has run.
+A version commit publishes nothing. Pushing the tag runs the Release workflow
+(`.github/workflows/release.yml`), which attaches the tarball to a GitHub release.
+Publishing to npm is manual until Grille-4kh automates it: the owner downloads the
+release asset and runs `npm publish ./weblings_things-grille-X.Y.Z.tgz` (needs 2FA).
 
 - Tag the version commit (`git tag vX.Y.Z <commit>`), then push the branch and the tag.
   The tag must match `package.json`'s version or the workflow fails.
 - **Never re-tag or replace a release asset.** Consumers' lockfiles record its integrity
   hash. To fix a bad release, cut a new version (as dev.4 replaced the unpublished dev.3).
-- Verify with `gh release view vX.Y.Z`.
+- Verify with `gh release view vX.Y.Z` and, once published, `npm view @weblings_things/grille version`.
+  npm versions cannot be reused either.
 
 ## Quality gates
 

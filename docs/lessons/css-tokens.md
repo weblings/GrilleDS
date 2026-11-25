@@ -129,3 +129,15 @@ the input alone does not help while the track's minimum is still `auto`.
 a rule sets `start`). Scope it to the container that needs it so other uses keep their intrinsic width.
 
 Origin: Grille-uqg.2, Aurora Add node menu.
+
+## A consumer's viewport breakpoint doesn't belong in the library: expose the value as a custom property
+Tags: media-query, custom-property, overhang, accordion, disclosure
+Applies-when: a control copies a consumer's layout that changes at a viewport width (negative margins, overhang, gutters)
+
+Aurora's accordion header overhangs its column by 21px and drops to 6px under 650px. That breakpoint
+depends on Aurora's page gutter, so copying the media query into Grille would be wrong for any other layout.
+
+**Fix:** read the value from a custom property with Aurora's number as the fallback
+(`var(--ui-disclosure-overhang, 21px)`) and let the consumer set it in its own media query.
+
+Origin: Grille-0u5.4.

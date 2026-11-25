@@ -15,7 +15,7 @@ const ds = (svg) => [...svg.matchAll(/ d="([^"]+)"/g)].map((m) => m[1]);
 
 describe('icon svg export', () => {
     it('writes one file per icon', () => {
-        expect(names).toHaveLength(24);
+        expect(names).toHaveLength(23);
         expect(readdirSync(dir).sort()).toEqual(names.map((n) => `${n}.svg`).sort());
     });
 
@@ -31,6 +31,11 @@ describe('icon svg export', () => {
         expect(ds(file)).toEqual(ds(react));
         expect(file).toContain(`viewBox="${icon.viewBox}"`);
         expect(file).toContain('fill="currentColor"');
+    });
+
+    it('rounds caps and joins when asked', () => {
+        const svg = iconToSvg({ viewBox: '0 0 10 10', paths: [{ d: 'M0 0h10', stroke: { width: 2, round: true } }] });
+        expect(svg).toContain('stroke-linecap="round" stroke-linejoin="round"');
     });
 
     it('strokes a path that asks for a stroke', () => {

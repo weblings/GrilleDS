@@ -1,14 +1,14 @@
 // @vitest-environment jsdom
 import { act } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe } from 'vitest-axe';
 import { useRef, useState } from 'react';
 import * as icons from './icons';
 import { chevronDownIcon, type IconData } from './icons';
 import { useDragAndDrop } from 'react-aria-components';
-import { Icon, Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, DialogActions, Drawer, Menu, MenuItem, MenuSection, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, MessageRow, StatusMessage, Tabs, TextField, Tooltip, TooltipTrigger, Tree, TreeCard, TreeDragHandle, TreeDropIndicator, TreeSection } from './index';
+import { Icon, Autocomplete, ListBox, ListBoxItem, Section, SearchField, Button, Callout, Dialog, DialogActions, Drawer, Menu, MenuItem, MenuSection, SubmenuItem, Modal, Popover, Disclosure, FieldList, FieldNote, FileTrigger, mountIsland, Select, Slider, Switch, MessageRow, StatusMessage, Tabs, TextField, Tooltip, TooltipTrigger, Tree, TreeCard, TreeDragHandle, TreeDropIndicator, TreeSection } from './index';
 
 afterEach(cleanup);
 
@@ -124,6 +124,32 @@ describe('Select', () => {
         expect(onChange).not.toHaveBeenCalled();
     });
 
+    it('shows the label of an {id, label} option and returns its id', async () => {
+        const onChange = vi.fn();
+        const rates = [{ id: '0', label: 'Auto' }, { id: '60', label: '60 Hz' }];
+        render(<Select label="Rate" options={rates} value="60" onChange={onChange} />);
+        const trigger = screen.getByRole('button', { name: /Rate/ });
+        expect(trigger.textContent).toBe('60 Hz');
+        await userEvent.click(trigger);
+        await userEvent.click(screen.getByRole('option', { name: 'Auto' }));
+        expect(onChange).toHaveBeenCalledWith('0');
+    });
+
+    it('disables the trigger', async () => {
+        const onChange = vi.fn();
+        render(<Select label="Rate" options={options} value="Vocals" onChange={onChange} isDisabled />);
+        const trigger = screen.getByRole('button', { name: /Rate/ });
+        expect(trigger.hasAttribute('disabled')).toBe(true);
+        await userEvent.click(trigger);
+        expect(screen.queryByRole('option')).toBeNull();
+        expect(onChange).not.toHaveBeenCalled();
+    });
+
+    it('marks a full-width select', () => {
+        const { container } = render(<Select fullWidth label="Rate" options={options} value="Vocals" onChange={() => {}} />);
+        expect(container.querySelector('.ui-select[data-full-width]')).not.toBeNull();
+    });
+
     it('draws the chevron as an icon, not a text glyph', () => {
         render(<Select label="Lyrics from" options={options} value="Vocals" onChange={() => {}} />);
         const trigger = screen.getByRole('button');
@@ -153,6 +179,43 @@ describe('Slider', () => {
         expect(onChange).toHaveBeenCalledWith(1.5);
     });
 
+    it('ends once for a tap, once for a held key, and once per pointer drag', async () => {
+        const onChangeEnd = vi.fn();
+        render(<Slider label="Difficulty" min={0} max={5} step={0.5} value={1} onChange={() => {}} onChangeEnd={onChangeEnd} />);
+        const thumb = screen.getByRole('slider');
+        const user = userEvent.setup();
+        thumb.focus();
+        await user.keyboard('{ArrowRight}');
+        expect(onChangeEnd).toHaveBeenCalledTimes(1);
+        await user.keyboard('{ArrowRight>4}');
+        expect(onChangeEnd).toHaveBeenCalledTimes(1);
+        await user.keyboard('{/ArrowRight}');
+        expect(onChangeEnd).toHaveBeenCalledTimes(2);
+        await user.keyboard('{ArrowRight>2}');
+        thumb.blur();
+        expect(onChangeEnd).toHaveBeenCalledTimes(3);
+    });
+
+    it('ends once after a pointer drag', () => {
+        const onChangeEnd = vi.fn();
+        const onChange = vi.fn();
+        const { container } = render(<Slider label="Difficulty" min={0} max={5} step={0.5} value={1} onChange={onChange} onChangeEnd={onChangeEnd} />);
+        const track = container.querySelector<HTMLElement>('.ui-slider-track')!;
+        track.getBoundingClientRect = () => ({ left: 0, top: 0, right: 100, bottom: 20, width: 100, height: 20, x: 0, y: 0, toJSON() {} });
+        const ev = (type: string, x: number) => fireEvent(track, new PointerEvent(type, { bubbles: true, clientX: x, button: 0 }));
+        ev('pointerdown', 20);
+        ev('pointermove', 40);
+        ev('pointermove', 60);
+        fireEvent(window, new PointerEvent('pointerup', { bubbles: true, clientX: 60 }));
+        expect(onChange.mock.calls.length).toBeGreaterThan(1);
+        expect(onChangeEnd).toHaveBeenCalledTimes(1);
+    });
+
+    it('lays out a full-width slider with the value in the header', () => {
+        const { container } = render(<Slider fullWidth label="Difficulty" min={0} max={5} value={1} onChange={() => {}} />);
+        expect(container.querySelector('.ui-slider[data-full-width] .ui-slider-header output')).not.toBeNull();
+    });
+
     it('fills the track up to the thumb', () => {
         const { container } = render(<Slider label="Difficulty" min={0} max={5} step={0.5} value={1.5} onChange={() => {}} />);
         const fill = container.querySelector<HTMLElement>('.ui-slider-fill');
@@ -161,6 +224,31 @@ describe('Slider', () => {
 
     it('has no axe violations', async () => {
         const { container } = render(<FieldList><Slider label="Difficulty" min={0} max={5} step={0.5} value={1} onChange={() => {}} /></FieldList>);
+        await expectNoViolations(container);
+    });
+});
+
+describe('Switch', () => {
+    it('toggles from a label click and from Space', async () => {
+        const onChange = vi.fn();
+        render(<Switch label="Active" isSelected={false} onChange={onChange} />);
+        await userEvent.click(screen.getByText('Active'));
+        expect(onChange).toHaveBeenLastCalledWith(true);
+        screen.getByRole('switch').focus();
+        await userEvent.keyboard(' ');
+        expect(onChange).toHaveBeenCalledTimes(2);
+    });
+
+    it('does not toggle while disabled', async () => {
+        const onChange = vi.fn();
+        render(<Switch label="Active" isSelected onChange={onChange} isDisabled />);
+        await userEvent.click(screen.getByText('Active'));
+        expect(onChange).not.toHaveBeenCalled();
+        expect((screen.getByRole('switch') as HTMLInputElement).disabled).toBe(true);
+    });
+
+    it('has no axe violations', async () => {
+        const { container } = render(<Switch label="Active" isSelected onChange={() => {}} />);
         await expectNoViolations(container);
     });
 });
@@ -180,6 +268,24 @@ describe('Disclosure', () => {
         const trigger = screen.getByRole('button', { name: 'Show log' });
         expect(trigger.querySelector('svg.ui-icon')).toBeTruthy();
         expect(trigger.textContent).toBe('Show log');
+    });
+
+    it('is controllable from outside and keeps the panel mounted', async () => {
+        function H() {
+            const [open, setOpen] = useState(false);
+            return (<>
+                <Button onPress={() => setOpen(true)}>Open it</Button>
+                <Disclosure variant="accordion" title="Bridge" isExpanded={open} onExpandedChange={setOpen}><p>zones</p></Disclosure>
+            </>);
+        }
+        const { container } = render(<H />);
+        const trigger = screen.getByRole('button', { name: 'Bridge' });
+        expect(trigger.getAttribute('aria-expanded')).toBe('false');
+        expect(container.querySelector('.ui-disclosure-panel')?.textContent).toBe('zones');
+        await userEvent.click(screen.getByRole('button', { name: 'Open it' }));
+        expect(trigger.getAttribute('aria-expanded')).toBe('true');
+        await userEvent.click(trigger);
+        expect(trigger.getAttribute('aria-expanded')).toBe('false');
     });
 
     it('has no axe violations', async () => {
@@ -1202,7 +1308,15 @@ describe('Icon', () => {
     const all = Object.entries(icons).filter((entry): entry is [string, IconData] => 'viewBox' in entry[1]);
 
     it('exports every vendored icon', () => {
-        expect(all.length).toBe(24);
+        expect(all.length).toBe(23);
+    });
+
+    it('power strokes with round caps', () => {
+        const { container } = render(<Icon icon={icons.powerIcon} />);
+        for (const path of container.querySelectorAll('path')) {
+            expect(path.getAttribute('stroke-linecap')).toBe('round');
+            expect(path.getAttribute('stroke-linejoin')).toBe('round');
+        }
     });
 
     it.each(all)('%s has a viewBox and renders decorative with currentColor', (_name, icon) => {
