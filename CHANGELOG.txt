@@ -1,3 +1,14 @@
+v0.2.2-dev.2:
+- Switch - New on/off control matching Aurora's toggle, with isSelected, onChange, isDisabled and a label
+- Slider - onChangeEnd fires once per gesture (held keys included). New fullWidth option, header layout with bold label and value, and Aurora's colours
+- Select - Options can be {id, label} and onChange returns the id. New isDisabled and fullWidth. string[] options still work
+- Disclosure - New variant="accordion" header pill, plus isExpanded, defaultExpanded and onExpandedChange. --ui-disclosure-overhang sets the pill's overhang
+- Icons - New powerIcon (OpenMoji 23FB, CC BY-SA 4.0, see THIRD_PARTY_NOTICES). IconPath.stroke takes round for round caps and joins
+- Breaking - undoIcon and redoIcon are removed (they were Zest Pro artwork), and so is downloadIcon from v0.2.2-dev.1
+
+v0.2.2-dev.1:
+- Icons - New downloadIcon (removed again in dev.2)
+
 v0.2.1:
 - Packaging - Now published to npm as @weblings_things/grille (0.2.0 stays GitHub-release-only). Consumers rename the dependency and every import from @weblings/grille to @weblings_things/grille. Same code as v0.2.0
 - Fonts - Inter ships as woff2 only; fonts.css no longer lists woff fallbacks and dist/files has no .woff
