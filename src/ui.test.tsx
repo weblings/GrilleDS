@@ -468,6 +468,13 @@ describe('MessageRow', () => {
         expect(notice.querySelector('.ui-message-row')!.getAttribute('data-tone')).toBe('notice');
     });
 
+    it('draws a passed icon instead of the tone mark, keeping the tone', () => {
+        const { container } = render(<MessageRow tone="error" icon={icons.squareChatIcon} message="x" />);
+        const path = container.querySelector('.ui-message-row-mark path')!;
+        expect(path.getAttribute('d')).toBe(icons.squareChatIcon.paths[0].d);
+        expect(container.querySelector('.ui-message-row')!.getAttribute('data-tone')).toBe('error');
+    });
+
     it('shows slot content and calls onDismiss from a named dismiss button', async () => {
         const onDismiss = vi.fn();
         render(<MessageRow message="Failed" onDismiss={onDismiss} dismissLabel="Close message"><button>Retry</button></MessageRow>);
@@ -1327,7 +1334,7 @@ describe('Icon', () => {
     });
 
     it.each(all)('%s has a viewBox and renders decorative with currentColor', (_name, icon) => {
-        expect(icon.viewBox).toMatch(/^-?\d+ -?\d+ \d+ \d+$/);
+        expect(icon.viewBox).toMatch(/^-?\d+(\.\d+)? -?\d+(\.\d+)? \d+(\.\d+)? \d+(\.\d+)?$/);
         const { container } = render(<Icon icon={icon} />);
         const svg = container.querySelector('svg')!;
         expect(svg.getAttribute('viewBox')).toBe(icon.viewBox);
