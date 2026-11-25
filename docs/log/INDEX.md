@@ -55,3 +55,17 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | 2026-11-19 | [[2026-11-19-release-0-2-0]] — v0.2.0 released, the first stable version | Grille-0up, Grille-uoq, Grille-e5t, Grille-ky2 |
 | 2026-11-22 | [[2026-11-22-npm-publish-prep]] — npm publish prep, rename to @weblings_things/grille, 0.2.1 | Grille-4ve |
 | 2026-11-22 | [[2026-11-22-npm-published]] — @weblings_things/grille 0.2.1 live on npm; release docs updated | Grille-4ve |
+| 2026-11-23 | [[2026-11-23-switch]] — Switch component matching Aurora's toggle, prerelease held | Grille-0u5.1 |
+| 2026-11-24 | [[2026-11-24-slider-aurora]] — Slider onChangeEnd, fullWidth layout and Aurora colours, prerelease held | Grille-0u5.2 |
+| 2026-11-24 | [[2026-11-24-select-aurora]] — Select {id, label} options, isDisabled, fullWidth, prerelease held | Grille-0u5.3 |
+| 2026-11-24 | [[2026-11-24-disclosure-accordion]] — Disclosure accordion variant, isExpanded/onExpandedChange, prerelease held | Grille-0u5.4 |
+| 2026-11-24 | [[2026-11-24-power-icon]] — powerIcon from OpenMoji (CC BY-SA 4.0), round-cap strokes, prerelease held | Grille-0u5.5 |
+| 2026-11-24 | [[2026-11-24-download-icon]] — downloadIcon added in dev.1 then removed, Aurora did not need it | Grille-1v8 |
+| 2026-11-25 | [[2026-11-25-release-0-2-2-dev-2]] — v0.2.2-dev.2 prerelease with the Aurora dashboard and NUX controls | Grille-0u5 |
+| 2026-11-25 | [[2026-11-25-slider-label-gap]] — Slider fullWidth 10px label gap and secondary label colour, released in v0.2.2-dev.3 | Grille-cf3 |
+| 2026-11-25 | [[2026-11-25-power-icon-padding]] — powerIcon viewBox repadded to -4 -4 32 32, released in v0.2.2-dev.3 | Grille-jdf |
+| 2026-11-25 | [[2026-11-25-slider-header-gap]] — --ui-slider-header-gap variable for aligning a fullWidth Slider track, released in v0.2.2-dev.4 | Grille-rga |
+| 2026-11-25 | [[2026-11-25-square-chat-icon]] — squareChatIcon from Zest Free, released in v0.2.2-dev.4 | Grille-p22 |
+| 2026-11-25 | [[2026-11-25-switch-motion]] — Switch eases track and knob over 0.2s, off under reduced motion, released in v0.2.2-dev.4 | Grille-chz |
+| 2026-11-25 | [[2026-11-25-square-chat-icon-padding]] — squareChatIcon viewBox padded to -0.8 -0.8 25.6 25.6, released in v0.2.2-dev.5 | Grille-6co |
+| 2026-11-25 | [[2026-11-25-message-row-icon]] — MessageRow optional icon prop replaces the tone mark, released in v0.2.2-dev.5 | Grille-qy0 |

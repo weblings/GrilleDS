@@ -20,6 +20,19 @@ Origin: Aurora build-toolchain.md — Vite's license output lists JS modules onl
 
 ---
 
+## A "Zest Free" label on a vendored icon is not proof, so diff it against the zest-free tree
+Tags: icons, licenses, zest, notices
+Applies-when: vendoring an icon someone else handed over, or writing its origin comment and notice
+
+Undo and redo were added "from Zest Free ... taken on the owner's word" via SVG Repo, which does not
+say Free or Pro. Both turned out to match `packages/zest-pro/.../wysiwyg/undo.svg` and `redo.svg`
+(Free has neither), and shipped under a Free notice for weeks.
+
+**Fix:** list `packages/zest-free` in `32pixelsCo/zest-icons` (`gh api .../git/trees/HEAD?recursive=1`)
+and compare path data before writing the notice. If the icon is only in `zest-pro`, don't ship it.
+
+---
+
 ## npm publishes need 2FA or a granular bypass token, and CI should use trusted publishing instead
 Tags: npm, publish, 2fa, tokens, oidc, trusted-publishing
 Applies-when: publishing to npm by hand or adding npm publishing to the Release workflow

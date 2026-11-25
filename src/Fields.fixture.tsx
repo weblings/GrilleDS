@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import { FieldList, FieldNote, FileTrigger, Select, Slider, TextField } from './index';
 
 const noop = () => {};
@@ -28,6 +28,11 @@ function SliderDemo() {
     return <FieldList><Slider label="Slider" min={0} max={5} step={0.5} value={level} onChange={setLevel} /></FieldList>;
 }
 
+function SliderFull() {
+    const [level, setLevel] = useState(2);
+    return <div style={{ width: 320 }}><Slider fullWidth label="Slider" min={0} max={5} step={0.5} value={level} onChange={setLevel} onChangeEnd={noop} /></div>;
+}
+
 function TextFieldLong() {
     const [text, setText] = useState('A very long value that runs past the visible width of the input and has to scroll inside it');
     return <FieldList><TextField label="A label long enough that it may wrap beside the input" value={text} onChange={setText} /></FieldList>;
@@ -53,6 +58,8 @@ export default {
     Select: <SelectDemo />,
     'Select, long option': <FieldList><Select label="Select" options={['An option label that is much longer than the others in the list', 'Short']} value="Short" onChange={noop} /></FieldList>,
     Slider: <SliderDemo />,
+    'Slider, full width': <SliderFull />,
+    'Slider, full width, header gap': <div style={{ '--ui-slider-header-gap': '11.5px' } as CSSProperties}><SliderFull /></div>,
     'Slider, at minimum': <SliderAt value={0} />,
     'Slider, at maximum': <SliderAt value={5} />,
 };

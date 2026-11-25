@@ -1,3 +1,27 @@
+v0.2.2-dev.5:
+- Icons - squareChatIcon viewBox is padded (-0.8 -0.8 25.6 25.6), so it draws at 93.75% of its old size, closer in weight to the circled marks
+- MessageRow - New optional icon prop replaces the tone's mark. The error tone colour still applies
+
+v0.2.2-dev.4:
+- Switch - The track colour and knob now ease over 0.2s, except under prefers-reduced-motion: reduce
+- Icons - New squareChatIcon (Zest Free)
+- Slider - New --ui-slider-header-gap CSS variable sets the fullWidth header-to-track gap. Unset, the layout is unchanged
+
+v0.2.2-dev.3:
+- Slider - fullWidth label is now secondary-coloured, and the gap from label to track is 10px (was 16px)
+- Icons - powerIcon viewBox is padded (-4 -4 32 32) so its ink is about 60% of the box like the arrows, not 97%
+
+v0.2.2-dev.2:
+- Switch - New on/off control matching Aurora's toggle, with isSelected, onChange, isDisabled and a label
+- Slider - onChangeEnd fires once per gesture (held keys included). New fullWidth option, header layout with bold label and value, and Aurora's colours
+- Select - Options can be {id, label} and onChange returns the id. New isDisabled and fullWidth. string[] options still work
+- Disclosure - New variant="accordion" header pill, plus isExpanded, defaultExpanded and onExpandedChange. --ui-disclosure-overhang sets the pill's overhang
+- Icons - New powerIcon (OpenMoji 23FB, CC BY-SA 4.0, see THIRD_PARTY_NOTICES). IconPath.stroke takes round for round caps and joins
+- Breaking - undoIcon and redoIcon are removed (they were Zest Pro artwork), and so is downloadIcon from v0.2.2-dev.1
+
+v0.2.2-dev.1:
+- Icons - New downloadIcon (removed again in dev.2)
+
 v0.2.1:
 - Packaging - Now published to npm as @weblings_things/grille (0.2.0 stays GitHub-release-only). Consumers rename the dependency and every import from @weblings/grille to @weblings_things/grille. Same code as v0.2.0
 - Fonts - Inter ships as woff2 only; fonts.css no longer lists woff fallbacks and dist/files has no .woff

@@ -9,7 +9,7 @@ const attr = (value) => String(value).replace(/&/g, '&amp;').replace(/"/g, '&quo
 export function iconToSvg(icon) {
     const paths = icon.paths.map((p) => {
         const rule = p.fillRule ? ` fill-rule="${p.fillRule}"` : '';
-        const stroke = p.stroke ? ` fill="none" stroke="currentColor" stroke-width="${p.stroke.width}"` : '';
+        const stroke = p.stroke ? ` fill="none" stroke="currentColor" stroke-width="${p.stroke.width}"${p.stroke.round ? ' stroke-linecap="round" stroke-linejoin="round"' : ''}` : '';
         return `<path d="${attr(p.d)}"${rule}${stroke}/>`;
     });
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${attr(icon.viewBox)}" fill="currentColor">${paths.join('')}</svg>\n`;

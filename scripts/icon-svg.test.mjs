@@ -33,6 +33,11 @@ describe('icon svg export', () => {
         expect(file).toContain('fill="currentColor"');
     });
 
+    it('rounds caps and joins when asked', () => {
+        const svg = iconToSvg({ viewBox: '0 0 10 10', paths: [{ d: 'M0 0h10', stroke: { width: 2, round: true } }] });
+        expect(svg).toContain('stroke-linecap="round" stroke-linejoin="round"');
+    });
+
     it('strokes a path that asks for a stroke', () => {
         const svg = iconToSvg({ viewBox: '0 0 10 10', paths: [{ d: 'M0 0h10', stroke: { width: 1.5 } }] });
         expect(svg).toContain('fill="none" stroke="currentColor" stroke-width="1.5"');
