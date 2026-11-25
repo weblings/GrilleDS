@@ -276,6 +276,10 @@
   }
   .ui-switch[data-selected] .ui-switch-knob { transform: translateX(15px); }
   .ui-switch[data-disabled] { opacity: 0.5; cursor: not-allowed; }
+  @media (prefers-reduced-motion: no-preference) {
+    .ui-switch-track { transition: background-color 0.2s; }
+    .ui-switch-knob { transition: transform 0.2s; }
+  }
   .ui-slider-output { font-size: var(--ui-size-font-xs); color: var(--ui-color-text-secondary); }
 
   .ui-disclosure { margin-top: var(--ui-size-disclosure-margin-top); }
