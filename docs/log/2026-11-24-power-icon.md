@@ -14,7 +14,7 @@ Id: 2026-11-24-power-icon
 ## Zest licence audit
 
 - Compared against `32pixelsCo/zest-icons`: minus, circled-info and triangle-exclaimation (warning, and the bar and dot of circled-exclamation) are in `zest-free`. Paths match.
-- `undoIcon` and `redoIcon` are Zest Pro only (`zest-pro/images/wysiwyg/undo.svg`, `redo.svg`, same paths). Free has no undo or redo. The notices wrongly call them Zest Free. Tracked in a new bug bead.
+- `undoIcon` and `redoIcon` are Zest Pro only (`zest-pro/images/wysiwyg/undo.svg`, `redo.svg`, same paths). Free has no undo or redo. The notices wrongly call them Zest Free. Removed `undoIcon` and `redoIcon` (`Grille-oat`) since Aurora 1.2.0 uses undo and redo only as text in its Edit menu. Breaking for any consumer importing them. Aurora's matching cleanup is `Aurora-atpm`.
 - `downloadIcon` removed (Vidstack path, dropped as unneeded). Its old log entry was deleted.
 
 ## Open
@@ -28,4 +28,4 @@ Id: 2026-11-24-power-icon
 
 ## Lessons
 
-- none
+- Zest Free label is not proof: filed in `packaging-release.md`.

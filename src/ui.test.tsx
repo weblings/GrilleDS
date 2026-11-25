@@ -1308,7 +1308,7 @@ describe('Icon', () => {
     const all = Object.entries(icons).filter((entry): entry is [string, IconData] => 'viewBox' in entry[1]);
 
     it('exports every vendored icon', () => {
-        expect(all.length).toBe(25);
+        expect(all.length).toBe(23);
     });
 
     it('power strokes with round caps', () => {
