@@ -90,3 +90,15 @@ showed it (883px changed on "Actions with built-in controls").
 **Fix:** when a default changes, grep every use outside the expected container (fixtures and consumers,
 e.g. `rg "<TextField" src ../Aurora`) and decide each one. New fixtures follow the house layout (fields in
 a FieldList), not whatever a neighbouring fixture does. Run `npm run review -- --base <ref>` before release.
+
+## A review-page diff against main also shows earlier branch work: check the base before blaming the current change
+Tags: review, screenshots, base-ref, regression
+Applies-when: `npm run review` flags an existing fixture as Changed that the current bead did not touch
+
+Grille-0u5.4 (2026-11-24): the default Disclosure fixture showed as Changed, but the code was untouched.
+The base (main) still had the old text-glyph chevron, and the icon-chevron change was already on the branch.
+
+**How to apply:** before chasing a diff, open the `.base` and `.head` images and compare against
+`git log main..HEAD -- <file>`, or review with `--base <previous commit>` to isolate this bead's effect.
+
+Origin: Grille-0u5.4.

@@ -25,4 +25,4 @@ Fixtures `accordion closed`, `accordion open`, `accordion driven from outside` a
 
 ## Lessons
 
-- none
+- Two filed: a consumer's viewport breakpoint becomes a custom property (css-tokens), and a review diff against main also shows earlier branch work (engineering-hygiene).
