@@ -61,3 +61,6 @@ No backfill: earlier work is recorded in git history and closed beads (`bd list 
 | 2026-11-24 | [[2026-11-24-disclosure-accordion]] — Disclosure accordion variant, isExpanded/onExpandedChange, prerelease held | Grille-0u5.4 |
 | 2026-11-24 | [[2026-11-24-power-icon]] — powerIcon from OpenMoji (CC BY-SA 4.0), round-cap strokes, prerelease held | Grille-0u5.5 |
 | 2026-11-24 | [[2026-11-24-download-icon]] — downloadIcon added in dev.1 then removed, Aurora did not need it | Grille-1v8 |
+| 2026-11-25 | [[2026-11-25-release-0-2-2-dev-2]] — v0.2.2-dev.2 prerelease with the Aurora dashboard and NUX controls | Grille-0u5 |
+| 2026-11-25 | [[2026-11-25-slider-label-gap]] — Slider fullWidth 10px label gap and secondary label colour, in 0.2.2-dev.3 (not yet tagged) | Grille-cf3 |
+| 2026-11-25 | [[2026-11-25-power-icon-padding]] — powerIcon viewBox repadded to -4 -4 32 32, in 0.2.2-dev.3 (not yet tagged) | Grille-jdf |

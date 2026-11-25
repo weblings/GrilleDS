@@ -1311,6 +1311,13 @@ describe('Icon', () => {
         expect(all.length).toBe(23);
     });
 
+    it('power is padded so its ink weighs like the arrows', () => {
+        // Ink spans about 19.4 x 20.3 of the 24 grid. Arrow ink is about 60% of its box.
+        const [, , w] = icons.powerIcon.viewBox.split(' ').map(Number);
+        expect(19.4 / w).toBeGreaterThan(0.55);
+        expect(19.4 / w).toBeLessThan(0.7);
+    });
+
     it('power strokes with round caps', () => {
         const { container } = render(<Icon icon={icons.powerIcon} />);
         for (const path of container.querySelectorAll('path')) {
@@ -1320,7 +1327,7 @@ describe('Icon', () => {
     });
 
     it.each(all)('%s has a viewBox and renders decorative with currentColor', (_name, icon) => {
-        expect(icon.viewBox).toMatch(/^0 0 \d+ \d+$/);
+        expect(icon.viewBox).toMatch(/^-?\d+ -?\d+ \d+ \d+$/);
         const { container } = render(<Icon icon={icon} />);
         const svg = container.querySelector('svg')!;
         expect(svg.getAttribute('viewBox')).toBe(icon.viewBox);
